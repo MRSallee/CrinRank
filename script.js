@@ -168,6 +168,7 @@ function applyState(state) {
 
 // Filter functions
 function dataFilter(data, filters) {
+    console.log(filters);
     return data;
 }
 
@@ -192,9 +193,12 @@ function sortDefault(a, b) {
     
     if (sumA > sumB) {
         return -1
+    } else if (sumA === sumB && a.price < b.price) {
+        return -1
     } else {
         return 1
     }
+    
     return 0;
 }
 
