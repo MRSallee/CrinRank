@@ -40,37 +40,39 @@ document.querySelector('body').append(elemList);
 // Define state object for the list
 let state = {
     'environment': 'dev',
+    'jqueryLoaded': false,
     'listMode': 'cards',
-    'sort': 'Default',
+    'sort': 'Raw',
     'filters': {
-        'soundSig': {
-            'u-shaped': true
+        'availability': {
+            'buyableOnly': false,
+            'crinApprovedOnly': false,
+            'crinTestedOnly': false,
+            'demoableOnly': false,
+            'discontinued': true,
             },
-        'connector': {
-            '2pin': true,
+        'connection': {
+            'twopin': true,
+            'ipx': true,
             'mmcx': true,
-            'ipx': true
             },
         'drivers': {
-            'dd': true,
             'ba': true,
+            'dd': true,
             'est': true,
+            'planar': true,
             'hybrid': true,
-            'tribrid': true
+            'tribrid': true,
             },
-        'availability': {
-            'discontinued': true,
-            'crinTested': true,
-            'crinApproved': true
-            },
+        'searchString': '',
         'shop': {
-            'demoable': true,
-            'buyable': true,
             'priceMin': 0,
-            'priceMax': 10000
-            }
-        },
-        'jqueryLoaded': false
+            'priceMax': 20000,
+            },
+        'soundSig': {
+            'u-shaped': true,
+            },
+        }
     };
 
 // Set data variables
@@ -168,8 +170,67 @@ function applyState(state) {
 
 // Filter functions
 function dataFilter(data, filters) {
+    // https://stackoverflow.com/questions/2722159/how-to-filter-object-array-based-on-attributes
     console.log(filters);
-    return data;
+    
+    var filteredData = data.filter(function (item) {
+        let fullName = item.brand + ' ' + item.model,
+            meetsDemoFilter = filters.availability.demoableOnly ? item.demoable.toLowerCase() === 'yes' ? 1 : 0 : 1,
+            
+            // Driver filters
+            isBa = item.drivers.toLowerCase().indexOf('ba') > -1 ? 1 : 0,
+            isDd = item.drivers.toLowerCase().indexOf('dd') > -1 ? 1 : 0,
+            isEst = item.drivers.toLowerCase().indexOf('est') > -1 ? 1 : 0,
+            isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
+            isHybrid = isBa + isDd + isEst + isPlanar >= 2 ? true : false,
+            isTribrid = isBa + isDd + isEst + isPlanar >= 3 ? true : false,
+            meetsDriverBaFilter = filters.drivers.ba ? true : !isBa,
+            meetsDriverDdFilter = filters.drivers.dd ? true : !isDd,
+            meetsDriverEstFilter = filters.drivers.est ? true : !isEst,
+            meetsDriverPlanarFilter = filters.drivers.planar ? true : !isPlanar,
+            
+            // Connection filters
+            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
+            meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
+            meetsConnectionIpxFilter = filters.connection.ipx ? true : item.connection.toLowerCase().indexOf('ipx') === -1,
+            
+            // Availability filters
+            meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
+            meetsTestedFilter = filters.availability.crinTestedOnly ? item.tested === 'yes' : true,
+            meetsApprovedFilter = filters.availability.crinApprovedOnly ? item.approved === 'yes' : true,
+            meetsDiscontinuedFilter = filters.availability.discontinued ? true : item.status.toLowerCase().indexOf('discontinued') < 0;
+        
+        // if (fullName.toLowerCase().indexOf('thie') > -1) console.log(fullName, isHybrid, isTribrid);
+        
+        // Search filter
+        return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
+        
+        // Price filters
+        && item.price >= filters.shop.priceMin
+        && item.price <= filters.shop.priceMax
+        
+        // Demo filter
+        && meetsDemoFilter
+        
+        // Driver filters
+        && meetsDriverBaFilter
+        && meetsDriverDdFilter
+        && meetsDriverEstFilter
+        && meetsDriverPlanarFilter
+        
+        // Connection filters
+        && meetsConnectionTwopinFilter
+        && meetsConnectionMmcxFilter
+        && meetsConnectionIpxFilter
+        
+        // Availability filters
+        && meetsBuyableFilter
+        && meetsTestedFilter
+        && meetsApprovedFilter
+        && meetsDiscontinuedFilter
+    });
+    
+    return filteredData;
 }
 
 
@@ -181,6 +242,10 @@ function dataSort(data, sort) {
     data.sort(window[sortFunction]);
     
     return data;
+}
+
+function sortRaw(a, b) {
+    return 0;
 }
 
 function sortDefault(a, b) {
@@ -234,6 +299,7 @@ function buildListItems(data, listMode) {
 }
 
 function buildCards(data) {
+    // Clear DOM & set mode
     elemList.innerHTML = '';
     elemList.setAttribute('list-mode', 'cards');
     
@@ -249,6 +315,10 @@ function buildCards(data) {
         elemCardContainer.append(elemCardHeader);
         elemCardContainer.append(elemCardBody);
         elemCardContainer.append(elemCardFooter);
+        
+        if (item.approved.toLowerCase() === 'yes') elemCardContainer.setAttribute('data-approved', 'true');
+        if (item.tested.toLowerCase() === 'yes') elemCardContainer.setAttribute('data-tested', 'true');
+        if (item.status.toLowerCase() === 'discontinued') elemCardContainer.setAttribute('data-discontinued', 'true');
         
         // Card header
         let headerPhoneId = newElem('div', 'phone-id'),
