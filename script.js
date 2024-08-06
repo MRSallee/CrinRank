@@ -42,7 +42,7 @@ let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
     'listMode': 'cards',
-    'sort': 'Raw',
+    'sort': 'Default',
     'filters': {
         'availability': {
             'buyableOnly': false,
@@ -74,6 +74,21 @@ let state = {
             },
         }
     };
+
+// Set proxy for state object
+let proxyHandler = {
+    get(target, name) {
+        let v = target[name];
+        return typeof v == 'object' ? new Proxy(v, proxyHandler) : v;
+    },
+    set(obj, prop, value) {
+        obj[prop] = value;
+        applyState(state);
+    }
+};
+let stateP = new Proxy(state, proxyHandler);
+
+
 
 // Set data variables
 let json = 'data.json',
@@ -156,6 +171,8 @@ function getDataFresh (json) {
 
 // Apply the state to the app
 function applyState(state) {
+    console.log('Applying state');
+    console.log(state);
     // Filter data
     let filteredData = dataFilter(freshData, state.filters);
     
@@ -171,7 +188,7 @@ function applyState(state) {
 // Filter functions
 function dataFilter(data, filters) {
     // https://stackoverflow.com/questions/2722159/how-to-filter-object-array-based-on-attributes
-    console.log(filters);
+    // console.log(filters);
     
     var filteredData = data.filter(function (item) {
         let fullName = item.brand + ' ' + item.model,
@@ -303,7 +320,7 @@ function buildCards(data) {
     elemList.innerHTML = '';
     elemList.setAttribute('list-mode', 'cards');
     
-    console.log(data[0]);
+    // console.log(data[0]);
     
     data.forEach(function(item) {
         // Core card structure
