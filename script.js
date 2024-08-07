@@ -34,7 +34,11 @@ function priceDisplay(price) {
 
 
 // Initialization
-let elemList = newElem('main', 'list');
+let elemList = newElem('main', 'list'),
+    elemListContents = newElem('section', 'list-contents'),
+    elemListFilters = newElem('section', 'list-filters');
+elemList.append(elemListFilters);
+elemList.append(elemListContents);
 document.querySelector('body').append(elemList);
 
 // Define state object for the list
@@ -46,7 +50,7 @@ let state = {
     'filters': {
         'availability': {
             'buyableOnly': false,
-            'crinApprovedOnly': false,
+            'crinApprovedOnly': true,
             'crinTestedOnly': false,
             'demoableOnly': false,
             'discontinued': true,
@@ -317,8 +321,8 @@ function buildListItems(data, listMode) {
 
 function buildCards(data) {
     // Clear DOM & set mode
-    elemList.innerHTML = '';
-    elemList.setAttribute('list-mode', 'cards');
+    elemListContents.innerHTML = '';
+    elemListContents.setAttribute('list-mode', 'cards');
     
     // console.log(data[0]);
     
@@ -394,6 +398,6 @@ function buildCards(data) {
         elemCardFooter.append(footerStatus);
         
         // Add finished card DOM
-        elemList.append(elemCardContainer);
+        elemListContents.append(elemCardContainer);
     });
 }
