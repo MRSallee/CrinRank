@@ -58,6 +58,9 @@ Cards basics */
 
 main.list {
     display: flex;
+    
+    flex: 100% 1 1;
+    max-width: 1000px;
 }
 
 section.list-filters {
@@ -76,7 +79,7 @@ article.card-container {
     flex-direction: column;
     
 	border: 1px solid var(--color-orange);
-    border-radius: 8px;
+    border-radius: 2rem;
     
     overflow: hidden;
 }
@@ -184,7 +187,7 @@ a.phone-link {
     padding: 4rem;
     
     border: 1px solid var(--color-orange);
-    border-radius: 8px;
+    border-radius: 2rem;
     
     color: var(--color-orange);
     font-size: 4rem;
@@ -399,4 +402,29 @@ article[data-discontinued="true"] div.phone-tested {
 
 article[data-discontinued="true"] a.phone-link:not(.phone-link-store):before {
     background-color: var(--color-orange);
+}
+
+
+/* -----
+Phones missing */
+
+article.phones-missing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    padding: 12rem 4rem;
+    margin: 4rem 0 0 0;
+    
+    border: 1px solid var(--color-brown);
+    background-color: var(--color-brown);
+    border-radius: 2rem;
+    
+    color: var(--color-cream);
+    font-size: 4rem;
+    line-height: 5rem;
+}
+
+div.phones-missing {
+    
 }

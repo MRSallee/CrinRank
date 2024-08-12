@@ -18,17 +18,22 @@ function newElem(type, classes, attributes, content) {
 }
 
 // Helper: Convert value to display price
-function priceDisplay(price) {
-    let formatter = new Intl.NumberFormat('en-uS', {
-        style: 'currency',
-        currency: 'USD',
-        
-        // These options are needed to round to whole numbers if that's what you want.
-        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-    });
-    
-    return(formatter.format(price));
+//function priceDisplay(price) {
+function numDisplay(num, style, currencyVar) {
+    if (currencyVar) {
+        let formatter = new Intl.NumberFormat('en-uS', {
+            style: style,
+            currency: currencyVar,
+        });
+
+        return(formatter.format(num));
+    } else {
+        let formatter = new Intl.NumberFormat('en-uS', {
+            style: style,
+        });
+
+        return(formatter.format(num));
+    }
 }
 
 
@@ -50,8 +55,8 @@ let state = {
     'filters': {
         'availability': {
             'buyableOnly': false,
-            'crinApprovedOnly': true,
-            'crinTestedOnly': false,
+            'crinApprovedOnly': false,
+            'crinTestedOnly': true,
             'demoableOnly': false,
             'discontinued': true,
             },
@@ -91,6 +96,65 @@ let proxyHandler = {
     }
 };
 let stateP = new Proxy(state, proxyHandler);
+
+
+// Object for available controls
+let controls = {
+    'displayMode': {
+        'type': 'onlyOne',
+        'location': 'controlsPanel',
+        'options': [
+            {
+                'name': 'cards',
+                'label': 'Cards',
+                'default': true,
+                //'onState': stateP.listMode = 'cards',
+            },
+            {
+                'name': 'table',
+                'label': 'Table view',
+                'default': false,
+                //'onState': stateP.listMode = 'table',
+            }
+        ]
+    },
+    'sorting': {
+        'type': 'sorting',
+        'location': 'controlsPanel',
+        'options': [
+            {
+                'name': 'default',
+                'label': 'Default',
+                'default': true,
+                //'onState': stateP.sort = 'Default',
+            },
+            {
+                'name': 'priceHighLow',
+                'label': 'Price: High to low',
+                'default': false,
+                //'onState': stateP.sort = 'PriceHighLow',
+            },
+            {
+                'name': 'priceLowHigh',
+                'label': 'Price: Low to high',
+                'default': false,
+                //'onState': stateP.sort = 'PriceLowHigh',
+            },
+        ]
+    },
+    'filtersAvailability': {
+        'type': 'filter',
+        'location': 'controlsPanel',
+        'options': [
+            {
+                'name': 'buyableOnly',
+                'label': 'Price: High to low',
+                'default': false,
+                //'onState': stateP.sort = 'PriceHighLow',
+            }
+        ]
+    }
+};
 
 
 
@@ -191,9 +255,6 @@ function applyState(state) {
 
 // Filter functions
 function dataFilter(data, filters) {
-    // https://stackoverflow.com/questions/2722159/how-to-filter-object-array-based-on-attributes
-    // console.log(filters);
-    
     var filteredData = data.filter(function (item) {
         let fullName = item.brand + ' ' + item.model,
             meetsDemoFilter = filters.availability.demoableOnly ? item.demoable.toLowerCase() === 'yes' ? 1 : 0 : 1,
@@ -222,7 +283,7 @@ function dataFilter(data, filters) {
             meetsDiscontinuedFilter = filters.availability.discontinued ? true : item.status.toLowerCase().indexOf('discontinued') < 0;
         
         // if (fullName.toLowerCase().indexOf('thie') > -1) console.log(fullName, isHybrid, isTribrid);
-        
+
         // Search filter
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
@@ -384,7 +445,7 @@ function buildCards(data) {
             linkStore = item.linkStore
                             ? newElem('a', 'phone-link phone-link-store', [{'key': 'href', 'val': item.linkStore}], 'Buy')
                             : newElem('a', 'phone-link phone-link-store', null, 'Buy'),
-            storePrice = newElem('span', 'phone-store-price', null, priceDisplay(item.price));
+            storePrice = newElem('span', 'phone-store-price', null, numDisplay(item.price, 'currency', 'usd'));
         
         elemCardBody.append(bodyLinks);
         bodyLinks.append(linkShowcase);
@@ -400,4 +461,16 @@ function buildCards(data) {
         // Add finished card DOM
         elemListContents.append(elemCardContainer);
     });
+    
+    let countDataItems = data.length,
+        countDataItemsTotal = freshData.length,
+        countDataItemsMissing = countDataItemsTotal - countDataItems,
+        dipslayItemsMissing = numDisplay(countDataItemsMissing, 'decimal', false),
+        missingWarningContainer = newElem('article', 'phones-missing-container'),
+        missingWarningCopy = newElem('div', 'phones-missing', null, dipslayItemsMissing + ' models hidden by current filters');
+    
+    if (countDataItemsMissing) {
+        missingWarningContainer.append(missingWarningCopy);
+        elemListContents.append(missingWarningContainer);
+    }
 }
