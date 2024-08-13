@@ -51,12 +51,12 @@ let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
     'listMode': 'cards',
-    'sort': 'Default',
+    'sort': 'PriceHighLow',
     'filters': {
         'availability': {
             'buyableOnly': false,
             'crinApprovedOnly': false,
-            'crinTestedOnly': true,
+            'crinTestedOnly': false,
             'demoableOnly': false,
             'discontinued': true,
             },
@@ -73,11 +73,11 @@ let state = {
             'hybrid': true,
             'tribrid': true,
             },
-        'searchString': '',
-        'shop': {
+        'price': {
             'priceMin': 0,
             'priceMax': 20000,
             },
+        'searchString': '',
         'soundSig': {
             'u-shaped': true,
             },
@@ -93,69 +93,164 @@ let proxyHandler = {
     set(obj, prop, value) {
         obj[prop] = value;
         applyState(state);
+        console.log('changed');
     }
 };
 let stateP = new Proxy(state, proxyHandler);
 
 
 // Object for available controls
-let controls = {
-    'displayMode': {
-        'type': 'onlyOne',
+let controls = [
+    {
+        'name': 'viewMode',
+        'displayName': 'View mode',
+        'type': 'toggle',
         'location': 'controlsPanel',
-        'options': [
+        'toggles': [
             {
-                'name': 'cards',
-                'label': 'Cards',
-                'default': true,
-                //'onState': stateP.listMode = 'cards',
-            },
-            {
-                'name': 'table',
-                'label': 'Table view',
-                'default': false,
-                //'onState': stateP.listMode = 'table',
+                'name': 'tableView',
+                'displayName': 'Table view',
+                'values': [
+                    true,
+                    false
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.tableMode = val }
             }
         ]
     },
-    'sorting': {
+    {
+        'name': 'sortBy',
+        'displayName': 'Sort by',
         'type': 'sorting',
         'location': 'controlsPanel',
-        'options': [
+        'values': [
             {
-                'name': 'default',
-                'label': 'Default',
-                'default': true,
-                //'onState': stateP.sort = 'Default',
+                'displayName': 'Default',
+                'value': 'default',
             },
             {
-                'name': 'priceHighLow',
-                'label': 'Price: High to low',
-                'default': false,
-                //'onState': stateP.sort = 'PriceHighLow',
+                'displayName': 'Price: High to low',
+                'value': 'priceHighLow',
+                
             },
             {
-                'name': 'priceLowHigh',
-                'label': 'Price: Low to high',
-                'default': false,
-                //'onState': stateP.sort = 'PriceLowHigh',
+                'displayName': 'Price: Low to high',
+                'value': 'priceLowHigh',
             },
-        ]
+        ],
+        'defaultValue': 'default',
+        'stateLoc': function(val) { stateP.sort = val }
     },
-    'filtersAvailability': {
-        'type': 'filter',
+    {
+        'name': 'availability',
+        'displayName': 'Availability',
+        'type': 'toggle',
         'location': 'controlsPanel',
-        'options': [
+        'toggles': [
             {
                 'name': 'buyableOnly',
-                'label': 'Price: High to low',
-                'default': false,
-                //'onState': stateP.sort = 'PriceHighLow',
-            }
-        ]
+                'displayName': 'Buyable only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.filters.availability.buyableOnly = val }
+            },
+            {
+                'name': 'crinApprovedOnly',
+                'displayName': 'Crin-approved only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.filters.availability.crinApprovedOnly = val }
+            },
+            {
+                'name': 'crinTestedOnly',
+                'displayName': 'Crin-tested only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.filters.availability.crinTestedOnly = val }
+            },
+            {
+                'name': 'demoableOnly',
+                'displayName': 'Demoable only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                //'stateLoc': stateP.filters.availability.demoableOnly
+                'stateLoc': function(val) { stateP.filters.availability.demoableOnly = val }
+            },
+            {
+                'name': 'discontinued',
+                'displayName': 'Show discontinued',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.availability.discontinued = val }
+            },
+        ],
+    },
+    {
+        'label': 'Search',
+        'name': 'search',
+        'type': 'search',
+        'location': 'controlsPanel',
+        'defaultValue': ''
     }
-};
+];
 
+// Construct filter controls
+function constructFiltersUi(controls) {
+    // elemListFilters
+    
+    console.log('Constructing controls UI');
+    controls.forEach(function(control) {
+        if (control.name === 'availability') {
+            // Create section container for control
+            let controlContainer = newElem('section', 'control-container'),
+                controlHeading = newElem('h3', 'control-headingf', null, control.displayName);
+            controlContainer.append(controlHeading);
+            elemListFilters.append(controlContainer);
+            
+            // Create toggle UIs
+            control.toggles.forEach(function(toggle) {
+                let toggleContainer = newElem('article', 'toggle-container'),
+                    toggleHeading = newElem('h4', 'toggle-heading', null, toggle.displayName),
+                    toggleLabel = newElem('label', 'toggle-label'),
+                    toggleInput = newElem('input', 'toggle-input', [{'key': 'type', 'val': 'checkbox'}]),
+                    toggleSlider = newElem('span', 'toggle-slider');
+                toggleContainer.append(toggleHeading);
+                if (toggle.defaultValue) toggleInput.checked = true;
+                toggleLabel.append(toggleInput);
+                toggleLabel.append(toggleSlider);
+                toggleContainer.append(toggleLabel);
+                controlContainer.append(toggleContainer);
+                
+                toggleInput.addEventListener('change', function(e) {
+                    toggle.stateLoc(e.target.checked);
+                });
+            });
+        }
+    });
+}
+constructFiltersUi(controls);
+
+
+//<label class="switch">
+//  <input type="checkbox">
+//  <span class="slider"></span>
+//</label>
 
 
 // Set data variables
@@ -288,8 +383,8 @@ function dataFilter(data, filters) {
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
         // Price filters
-        && item.price >= filters.shop.priceMin
-        && item.price <= filters.shop.priceMax
+        && item.price >= filters.price.priceMin
+        && item.price <= filters.price.priceMax
         
         // Demo filter
         && meetsDemoFilter
@@ -381,12 +476,25 @@ function buildListItems(data, listMode) {
 }
 
 function buildCards(data) {
+    
     // Clear DOM & set mode
     elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'cards');
     
-    // console.log(data[0]);
+    // Add count of hidden items
+    let countDataItems = data.length,
+        countDataItemsTotal = freshData.length,
+        countDataItemsMissing = countDataItemsTotal - countDataItems,
+        dipslayItemsMissing = numDisplay(countDataItemsMissing, 'decimal', false),
+        missingWarningContainer = newElem('article', 'phones-missing-container'),
+        missingWarningCopy = newElem('div', 'phones-missing', null, dipslayItemsMissing + ' models hidden by current filters');
     
+    if (countDataItemsMissing) {
+        missingWarningContainer.append(missingWarningCopy);
+        elemListContents.append(missingWarningContainer);
+    }
+    
+    // Handle each item in filtered + sorted list
     data.forEach(function(item) {
         // Core card structure
         let elemCardContainer = newElem('article', 'card-container'),
@@ -461,16 +569,4 @@ function buildCards(data) {
         // Add finished card DOM
         elemListContents.append(elemCardContainer);
     });
-    
-    let countDataItems = data.length,
-        countDataItemsTotal = freshData.length,
-        countDataItemsMissing = countDataItemsTotal - countDataItems,
-        dipslayItemsMissing = numDisplay(countDataItemsMissing, 'decimal', false),
-        missingWarningContainer = newElem('article', 'phones-missing-container'),
-        missingWarningCopy = newElem('div', 'phones-missing', null, dipslayItemsMissing + ' models hidden by current filters');
-    
-    if (countDataItemsMissing) {
-        missingWarningContainer.append(missingWarningCopy);
-        elemListContents.append(missingWarningContainer);
-    }
 }

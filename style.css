@@ -405,6 +405,7 @@ article[data-discontinued="true"] a.phone-link:not(.phone-link-store):before {
 }
 
 
+
 /* -----
 Phones missing */
 
@@ -413,14 +414,14 @@ article.phones-missing-container {
     justify-content: center;
     align-items: center;
     
-    padding: 12rem 4rem;
-    margin: 4rem 0 0 0;
+    padding: 4rem 4rem;
+    margin: 0 0 4rem 0;
     
-    border: 1px solid var(--color-brown);
-    background-color: var(--color-brown);
+    border: 1px dotted var(--color-orange);
+    background-color: var(--color-white);
     border-radius: 2rem;
     
-    color: var(--color-cream);
+    color: var(--color-orange);
     font-size: 4rem;
     line-height: 5rem;
 }
