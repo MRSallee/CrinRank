@@ -52,7 +52,7 @@ let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
     'tableMode': false,
-    'sort': 'Default',
+    'sort': 'PriceLowHigh',
     'filters': {
         'availability': {
             'buyableOnly': false,
@@ -76,7 +76,7 @@ let state = {
             },
         'price': {
             'priceMin': 0,
-            'priceMax': 20000,
+            'priceMax': 0,
             },
         'searchString': '',
         'soundSig': {
@@ -92,10 +92,10 @@ let proxyHandler = {
         return typeof v == 'object' ? new Proxy(v, proxyHandler) : v;
     },
     set(obj, prop, value) {
-        document.querySelector('body').setAttribute('list-change', 'true');
+        //document.querySelector('body').setAttribute('list-change', 'true');
         obj[prop] = value;
         applyState(state);
-        document.querySelector('body').setAttribute('list-change', 'false');
+        //document.querySelector('body').setAttribute('list-change', 'false');
         console.log('State changed');
     }
 };
@@ -104,24 +104,24 @@ let stateP = new Proxy(state, proxyHandler);
 
 // Object for available controls
 let controls = [
-//    {
-//        'name': 'listMode',
-//        'displayName': 'List mode',
-//        'type': 'toggle',
-//        'location': 'controlsPanel',
-//        'toggles': [
-//            {
-//                'name': 'tableView',
-//                'displayName': 'Table view',
-//                'values': [
-//                    true,
-//                    false
-//                ],
-//                'defaultValue': false,
-//                'stateLoc': function(val) { stateP.tableMode = val }
-//            }
-//        ]
-//    },
+    {
+        'name': 'listMode',
+        'displayName': 'List mode',
+        'type': 'toggle',
+        'location': 'controlsPanel',
+        'toggles': [
+            {
+                'name': 'tableView',
+                'displayName': 'Table view',
+                'values': [
+                    true,
+                    false
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.tableMode = val }
+            }
+        ]
+    },
     {
         'name': 'sortBy',
         'displayName': 'Sort by',
@@ -129,8 +129,8 @@ let controls = [
         'location': 'controlsPanel',
         'values': [
             {
-                'displayName': 'Default',
-                'value': 'Default',
+                'displayName': '(unsorted)',
+                'value': 'Unsorted',
             },
             {
                 'displayName': 'Price: High to low',
@@ -142,7 +142,7 @@ let controls = [
                 'value': 'PriceLowHigh',
             },
         ],
-        'defaultValue': 'Default',
+        'defaultValue': 'PriceLowHigh',
         'stateLoc': function(val) { stateP.sort = val }
     },
     {
@@ -152,6 +152,27 @@ let controls = [
         'type': 'search',
         'location': 'controlsPanel',
         'stateLoc': function(val) { stateP.filters.searchString = val }
+    },
+    {
+        'name': 'priceRange',
+        'displayName': 'Price range',
+        'type': 'range',
+        'location': 'controlsPanel',
+        'values': [
+            {
+                'displayName': 'Min',
+                'name': 'min',
+                'value': '',
+                'stateLoc': function(val) { stateP.filters.price.priceMin = val }
+            },
+            {
+                'displayName': 'Max',
+                'name': 'max',
+                'value': '',
+                'stateLoc': function(val) { stateP.filters.price.priceMax = val }
+                
+            },
+        ],
     },
     {
         'name': 'availability',
@@ -369,7 +390,30 @@ function constructFiltersUi(controls) {
                 searchDelay = setTimeout(function() {
                     control.stateLoc(searchInput.value);
                 }, 500);
-            })
+            });
+        }
+        
+        // Create range
+        if (control.type === 'range') {
+            let controlContainer = newElem('section', 'control-price'),
+                pricehHeading = newElem('h3', 'price-heading', null, control.displayName),
+                priceForm = newElem('form', 'price');
+            controlContainer.append(pricehHeading);
+            controlContainer.append(priceForm);
+            elemStickyFilters.append(controlContainer);
+            
+            control.values.forEach(function(value) {
+                console.log(value.displayName);
+                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}]);
+                priceForm.append(valueInput);
+                
+                valueInput.addEventListener('input', function(e) {
+                    try { clearTimeout(searchDelay); } catch {}
+                    searchDelay = setTimeout(function() {
+                        value.stateLoc(valueInput.value);
+                    }, 500);
+                });
+            });
         }
     });
 }
@@ -478,6 +522,10 @@ function dataFilter(data, filters) {
         let fullName = item.brand + ' ' + item.model,
             meetsDemoFilter = filters.availability.demoableOnly ? item.demoable.toLowerCase() === 'yes' ? 1 : 0 : 1,
             
+            // Price range filters
+            meetsMinPrice =  filters.price.priceMin > 0 ? item.price >= filters.price.priceMin : true,
+            meetsMaxPrice =  filters.price.priceMax > 0 ? item.price <= filters.price.priceMax : true,
+            
             // Driver filters
             isBa = item.drivers.toLowerCase().indexOf('ba') > -1 ? 1 : 0,
             isDd = item.drivers.toLowerCase().indexOf('dd') > -1 ? 1 : 0,
@@ -507,8 +555,8 @@ function dataFilter(data, filters) {
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
         // Price filters
-        && item.price >= filters.price.priceMin
-        && item.price <= filters.price.priceMax
+        && meetsMinPrice
+        && meetsMaxPrice
         
         // Demo filter
         && meetsDemoFilter
@@ -549,7 +597,30 @@ function sortRaw(a, b) {
     return 0;
 }
 
-function sortDefault(a, b) {
+function sortUnsorted(a, b) {
+    return 0;
+}
+
+function sortPriceHighLow(a, b) {
+    let testedA = a.tested === 'yes' ? 1 : 0,
+        testedB = b.tested === 'yes' ? 1 : 0,
+        approvedA = a.approved === 'yes'  ? 5 : 0,
+        approvedB = b.approved === 'yes' ? 5 : 0,
+        sumA = testedA + approvedA,
+        sumB = testedB + approvedB;
+    
+    if (sumA > sumB) {
+        return -1
+    } else if (sumA === sumB && a.price > b.price) {
+        return -1
+    } else {
+        return 1
+    }
+    
+    return 0;
+}
+
+function sortPriceLowHigh(a, b) {
     let testedA = a.tested === 'yes' ? 1 : 0,
         testedB = b.tested === 'yes' ? 1 : 0,
         approvedA = a.approved === 'yes'  ? 5 : 0,
@@ -566,26 +637,6 @@ function sortDefault(a, b) {
     }
     
     return 0;
-}
-
-function sortPriceHighLow(a, b) {
-    if (a.price > b.price) {
-        return -1
-    }
-    else {
-        return 1
-    }
-    return 0
-}
-
-function sortPriceLowHigh(a, b) {
-    if (a.price > b.price) {
-        return 1
-    }
-    else {
-        return -1
-    }
-    return 0
 }
 
 
@@ -685,7 +736,7 @@ function buildCards(data) {
         linkStore.append(storePrice);
         
         // Card footer
-        let footerStatus = newElem('div', 'phone-status', [{'key': 'status', 'val': item.status}], item.status);
+        let footerStatus = newElem('div', 'phone-status', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}], item.status);
         
         elemCardFooter.append(footerStatus);
         
