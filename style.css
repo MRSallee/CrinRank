@@ -67,6 +67,11 @@ section.list-filters {
     flex: 300px 0 0;
 }
 
+body[list-change="true"] section.list-contents {
+    opacity: 0.2;
+    transition: opacity 0.1s ease;
+}
+
 section.list-contents[list-mode='cards'] {
     box-sizing: border-box;
     flex: auto 1 1;

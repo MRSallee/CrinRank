@@ -8,7 +8,8 @@ function newElem(type, classes, attributes, content) {
     
     if (attributes) {
         attributes.forEach(function(attribute) {
-            element.setAttribute(attribute.key.toLowerCase().replace(' ', '-'), attribute.val.toLowerCase().replace(' ', '-'));
+            //element.setAttribute(attribute.key.toLowerCase().replace(' ', '-'), attribute.val.toLowerCase().replace(' ', '-'));
+            element.setAttribute(attribute.key, attribute.val);
         })
     }
     
@@ -50,15 +51,15 @@ document.querySelector('body').append(elemList);
 let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
-    'listMode': 'cards',
-    'sort': 'PriceHighLow',
+    'tableMode': false,
+    'sort': 'Default',
     'filters': {
         'availability': {
             'buyableOnly': false,
             'crinApprovedOnly': false,
             'crinTestedOnly': false,
             'demoableOnly': false,
-            'discontinued': true,
+            'discontinued': false,
             },
         'connection': {
             'twopin': true,
@@ -91,9 +92,11 @@ let proxyHandler = {
         return typeof v == 'object' ? new Proxy(v, proxyHandler) : v;
     },
     set(obj, prop, value) {
+        document.querySelector('body').setAttribute('list-change', 'true');
         obj[prop] = value;
         applyState(state);
-        console.log('changed');
+        document.querySelector('body').setAttribute('list-change', 'false');
+        console.log('State changed');
     }
 };
 let stateP = new Proxy(state, proxyHandler);
@@ -102,8 +105,8 @@ let stateP = new Proxy(state, proxyHandler);
 // Object for available controls
 let controls = [
     {
-        'name': 'viewMode',
-        'displayName': 'View mode',
+        'name': 'listMode',
+        'displayName': 'List mode',
         'type': 'toggle',
         'location': 'controlsPanel',
         'toggles': [
@@ -122,24 +125,24 @@ let controls = [
     {
         'name': 'sortBy',
         'displayName': 'Sort by',
-        'type': 'sorting',
+        'type': 'dropdown',
         'location': 'controlsPanel',
         'values': [
             {
                 'displayName': 'Default',
-                'value': 'default',
+                'value': 'Default',
             },
             {
                 'displayName': 'Price: High to low',
-                'value': 'priceHighLow',
+                'value': 'PriceHighLow',
                 
             },
             {
                 'displayName': 'Price: Low to high',
-                'value': 'priceLowHigh',
+                'value': 'PriceLowHigh',
             },
         ],
-        'defaultValue': 'default',
+        'defaultValue': 'Default',
         'stateLoc': function(val) { stateP.sort = val }
     },
     {
@@ -191,12 +194,12 @@ let controls = [
             },
             {
                 'name': 'discontinued',
-                'displayName': 'Show discontinued',
+                'displayName': 'Hide discontinued',
                 'values': [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 'stateLoc': function(val) { stateP.filters.availability.discontinued = val }
             },
         ],
@@ -204,9 +207,10 @@ let controls = [
     {
         'label': 'Search',
         'name': 'search',
+        'displayName': 'Search',
         'type': 'search',
         'location': 'controlsPanel',
-        'defaultValue': ''
+        'stateLoc': function(val) { stateP.filters.searchString = val }
     }
 ];
 
@@ -216,7 +220,10 @@ function constructFiltersUi(controls) {
     
     console.log('Constructing controls UI');
     controls.forEach(function(control) {
-        if (control.name === 'availability') {
+        console.log(control);
+        
+        // Create toggles
+        if (control.type === 'toggle') {
             // Create section container for control
             let controlContainer = newElem('section', 'control-container'),
                 controlHeading = newElem('h3', 'control-headingf', null, control.displayName);
@@ -242,15 +249,48 @@ function constructFiltersUi(controls) {
                 });
             });
         }
+        
+        // Create dropdowns
+        if (control.type === 'dropdown') {
+            let controlContainer = newElem('section', 'control-container'),
+                controlHeading = newElem('h3', 'control-heading', null, control.displayName),
+                dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]);
+            controlContainer.append(controlHeading);
+            controlContainer.append(dropdownContainer);
+            elemListFilters.append(controlContainer);
+            
+            // Create dropdown UIs
+            control.values.forEach(function(value) {
+                let option = newElem('option', null, [{'key': 'value', 'val': value.value}], value.displayName);
+                dropdownContainer.append(option);
+            });
+            dropdownContainer.value = control.defaultValue;
+            
+            dropdownContainer.addEventListener('change', function(e){
+                control.stateLoc(e.target.value);
+            });
+        }
+        
+        // Create search
+        if (control.type === 'search') {
+            let controlContainer = newElem('section', 'control-search'),
+                searchHeading = newElem('h3', 'search-heading', null, control.displayName),
+                searchInput = newElem('input', 'search-input');
+            controlContainer.append(searchHeading);
+            controlContainer.append(searchInput);
+            elemListFilters.append(controlContainer);
+            
+            searchInput.addEventListener('input', function(e) {
+                try { clearTimeout(searchDelay); } catch {}
+                searchDelay = setTimeout(function() {
+                    control.stateLoc(searchInput.value);
+                }, 500);
+            })
+        }
     });
 }
 constructFiltersUi(controls);
 
-
-//<label class="switch">
-//  <input type="checkbox">
-//  <span class="slider"></span>
-//</label>
 
 
 // Set data variables
@@ -343,7 +383,7 @@ function applyState(state) {
     let sortedData = dataSort(filteredData, state.sort);
     
     // Build list items DOM
-    buildListItems(sortedData, state.listMode);
+    buildListItems(sortedData, state.tableMode);
 }
 
 
@@ -375,7 +415,7 @@ function dataFilter(data, filters) {
             meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
             meetsTestedFilter = filters.availability.crinTestedOnly ? item.tested === 'yes' : true,
             meetsApprovedFilter = filters.availability.crinApprovedOnly ? item.approved === 'yes' : true,
-            meetsDiscontinuedFilter = filters.availability.discontinued ? true : item.status.toLowerCase().indexOf('discontinued') < 0;
+            meetsDiscontinuedFilter = filters.availability.discontinued ? item.status.toLowerCase().indexOf('discontinued') < 0 : true;
         
         // if (fullName.toLowerCase().indexOf('thie') > -1) console.log(fullName, isHybrid, isTribrid);
 
@@ -467,10 +507,9 @@ function sortPriceLowHigh(a, b) {
 
 
 // Build DOM functions
-function buildListItems(data, listMode) {
-    if (listMode === 'table') {
-        
-    } else if (listMode === 'cards') {
+function buildListItems(data, tableMode) {
+    if (tableMode) {
+    } else {
         buildCards(data);
     }
 }
