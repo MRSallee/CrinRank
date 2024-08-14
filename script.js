@@ -104,24 +104,24 @@ let stateP = new Proxy(state, proxyHandler);
 
 // Object for available controls
 let controls = [
-    {
-        'name': 'listMode',
-        'displayName': 'List mode',
-        'type': 'toggle',
-        'location': 'controlsPanel',
-        'toggles': [
-            {
-                'name': 'tableView',
-                'displayName': 'Table view',
-                'values': [
-                    true,
-                    false
-                ],
-                'defaultValue': false,
-                'stateLoc': function(val) { stateP.tableMode = val }
-            }
-        ]
-    },
+//    {
+//        'name': 'listMode',
+//        'displayName': 'List mode',
+//        'type': 'toggle',
+//        'location': 'controlsPanel',
+//        'toggles': [
+//            {
+//                'name': 'tableView',
+//                'displayName': 'Table view',
+//                'values': [
+//                    true,
+//                    false
+//                ],
+//                'defaultValue': false,
+//                'stateLoc': function(val) { stateP.tableMode = val }
+//            }
+//        ]
+//    },
     {
         'name': 'sortBy',
         'displayName': 'Sort by',
@@ -144,6 +144,14 @@ let controls = [
         ],
         'defaultValue': 'Default',
         'stateLoc': function(val) { stateP.sort = val }
+    },
+    {
+        'label': 'Search',
+        'name': 'search',
+        'displayName': 'Search',
+        'type': 'search',
+        'location': 'controlsPanel',
+        'stateLoc': function(val) { stateP.filters.searchString = val }
     },
     {
         'name': 'availability',
@@ -205,30 +213,106 @@ let controls = [
         ],
     },
     {
-        'label': 'Search',
-        'name': 'search',
-        'displayName': 'Search',
-        'type': 'search',
+        'name': 'driver',
+        'displayName': 'Driver configurations',
+        'type': 'toggle',
         'location': 'controlsPanel',
-        'stateLoc': function(val) { stateP.filters.searchString = val }
-    }
-];
+        'toggles': [
+            {
+                'name': 'ba',
+                'displayName': 'Balanced armature',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.drivers.ba = val }
+            },
+            {
+                'name': 'dd',
+                'displayName': 'Dynamic driver',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.drivers.dd = val }
+            },
+            {
+                'name': 'est',
+                'displayName': 'Electrostat',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.drivers.est = val }
+            },
+            {
+                'name': 'planar',
+                'displayName': 'Planar',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.drivers.planar = val }
+            },
+        ],
+    },
+    {
+        'name': 'connection',
+        'displayName': 'Connection type',
+        'type': 'toggle',
+        'location': 'controlsPanel',
+        'toggles': [
+            {
+                'name': 'twopin',
+                'displayName': '2-pin',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.connection.twopin = val }
+            },
+            {
+                'name': 'mmcx',
+                'displayName': 'MMCX',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.connection.mmcx = val }
+            },
+            {
+                'name': 'ipx',
+                'displayName': 'IPX',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                'stateLoc': function(val) { stateP.filters.connection.ipx = val }
+            },
+        ],
+    },];
 
 // Construct filter controls
 function constructFiltersUi(controls) {
     // elemListFilters
+    let elemStickyFilters = newElem('div', 'list-filters-sticky');
+    elemListFilters.append(elemStickyFilters);
     
-    console.log('Constructing controls UI');
     controls.forEach(function(control) {
-        console.log(control);
-        
         // Create toggles
         if (control.type === 'toggle') {
             // Create section container for control
             let controlContainer = newElem('section', 'control-container'),
                 controlHeading = newElem('h3', 'control-headingf', null, control.displayName);
             controlContainer.append(controlHeading);
-            elemListFilters.append(controlContainer);
+            elemStickyFilters.append(controlContainer);
             
             // Create toggle UIs
             control.toggles.forEach(function(toggle) {
@@ -257,7 +341,7 @@ function constructFiltersUi(controls) {
                 dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]);
             controlContainer.append(controlHeading);
             controlContainer.append(dropdownContainer);
-            elemListFilters.append(controlContainer);
+            elemStickyFilters.append(controlContainer);
             
             // Create dropdown UIs
             control.values.forEach(function(value) {
@@ -278,7 +362,7 @@ function constructFiltersUi(controls) {
                 searchInput = newElem('input', 'search-input');
             controlContainer.append(searchHeading);
             controlContainer.append(searchInput);
-            elemListFilters.append(controlContainer);
+            elemStickyFilters.append(controlContainer);
             
             searchInput.addEventListener('input', function(e) {
                 try { clearTimeout(searchDelay); } catch {}

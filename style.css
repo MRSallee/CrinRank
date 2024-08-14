@@ -96,6 +96,31 @@ article.card-container + article.card-container {
 
 
 /* -----
+Filters */
+
+div.list-filters-sticky {
+    position: sticky;
+    top: 0;
+    
+    box-sizing: border-box;
+    height: 100vh;
+    padding: 4rem;
+    
+    overflow: scroll;
+    overscroll-behavior: contain;
+}
+
+section.list-filters h3 {
+    margin-top: 12rem;
+}
+
+section.list-filters h4 {
+    font-weight: 400;
+}
+
+
+
+/* -----
 Card header */
 
 section.card-header {
