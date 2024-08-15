@@ -70,7 +70,7 @@ section.list-filters-container {
 section.list-contents-container {
     box-sizing: border-box;
     flex: auto 1 1;
-    padding: 4rem;
+    padding: 0 4rem 4rem 4rem;
 }
 
 div.list-contents[list-mode='cards'] {
@@ -106,10 +106,6 @@ div.list-filters {
     
     overflow: scroll;
     overscroll-behavior: contain;
-}
-
-div.list-manager {
-    display: flex;
 }
 
 h3 {
@@ -259,6 +255,34 @@ form.price {
 input.max,
 input.min {
     flex: calc(100px - 2rem) 0 0;
+}
+
+/* -----
+List manager */
+
+section.list-manager-container {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    
+    display: flex;
+    padding: 4rem;
+    
+    background-color: var(--color-cream);
+}
+
+div.list-manager {
+    display: flex;
+    flex: auto 1 1;
+}
+
+div.list-manager section.control-toggle {
+    flex: auto 0 0;
+}
+
+div.list-manager section.control-dropdown {
+    flex: auto 0 0;
+    margin-left: auto;
 }
 
 

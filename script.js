@@ -169,7 +169,7 @@ let controls = [
                 'value': 'priceLowHigh',
             },
         ],
-        'defaultValue': 'unsorted',
+        'defaultValue': 'priceLowHigh',
         'stateLoc': function(val) { stateP.sort = val }
     },
     {
@@ -353,7 +353,7 @@ function constructFiltersUi(controls) {
         // Create toggles
         if (control.type === 'toggle') {
             // Create section container for control
-            let controlContainer = newElem('section', 'control-container'),
+            let controlContainer = newElem('section', 'control-toggle'),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
                 parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(controlHeading);
@@ -381,7 +381,7 @@ function constructFiltersUi(controls) {
         
         // Create dropdowns
         if (control.type === 'dropdown') {
-            let controlContainer = newElem('section', 'control-container'),
+            let controlContainer = newElem('section', 'control-dropdown'),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
                 dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]),
                 parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
@@ -448,7 +448,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data-test.json',
+let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
