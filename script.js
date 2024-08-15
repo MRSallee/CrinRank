@@ -52,7 +52,7 @@ let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
     'tableMode': false,
-    'sort': 'PriceLowHigh',
+    'sort': 'priceLowHigh',
     'filters': {
         'availability': {
             'buyableOnly': false,
@@ -130,19 +130,19 @@ let controls = [
         'values': [
             {
                 'displayName': '(unsorted)',
-                'value': 'Unsorted',
+                'value': 'unsorted',
             },
             {
                 'displayName': 'Price: High to low',
-                'value': 'PriceHighLow',
+                'value': 'priceHighLow',
                 
             },
             {
                 'displayName': 'Price: Low to high',
-                'value': 'PriceLowHigh',
+                'value': 'priceLowHigh',
             },
         ],
-        'defaultValue': 'PriceLowHigh',
+        'defaultValue': 'priceLowHigh',
         'stateLoc': function(val) { stateP.sort = val }
     },
     {
@@ -403,8 +403,7 @@ function constructFiltersUi(controls) {
             elemStickyFilters.append(controlContainer);
             
             control.values.forEach(function(value) {
-                console.log(value.displayName);
-                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}]);
+                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}]);
                 priceForm.append(valueInput);
                 
                 valueInput.addEventListener('input', function(e) {
@@ -586,57 +585,40 @@ function dataFilter(data, filters) {
 
 // Sort functions
 function dataSort(data, sort) {
-    let sortFunction = 'sort' + sort;
-    
-    data.sort(window[sortFunction]);
+    data.sort(function(a, b) {
+        let testedA = a.tested === 'yes' ? 1 : 0,
+            testedB = b.tested === 'yes' ? 1 : 0,
+            approvedA = a.approved === 'yes'  ? 5 : 0,
+            approvedB = b.approved === 'yes' ? 5 : 0,
+            buyableA = a.linkStore === 'yes' ? 10 : 0,
+            buyableB = b.linkStore === 'yes' ? 10 : 0,
+            sumA = testedA + approvedA + buyableA,
+            sumB = testedB + approvedB + buyableB;
+        
+        // Sort: Price low to high
+        if (sort === 'priceLowHigh') {
+            if (sumA > sumB) {
+                return -1
+            } else if (sumA === sumB && a.price < b.price) {
+                return -1
+            } else {
+                return 0
+            }
+        // Sort: Price high to low
+        } else if (sort === 'priceHighLow') {
+            if (sumA > sumB) {
+                return -1
+            } else if (sumA === sumB && a.price > b.price) {
+                return -1
+            } else {
+                return 0
+            }
+        } else if (sort === 'unsorted') {
+            return 0;
+        }
+    });
     
     return data;
-}
-
-function sortRaw(a, b) {
-    return 0;
-}
-
-function sortUnsorted(a, b) {
-    return 0;
-}
-
-function sortPriceHighLow(a, b) {
-    let testedA = a.tested === 'yes' ? 1 : 0,
-        testedB = b.tested === 'yes' ? 1 : 0,
-        approvedA = a.approved === 'yes'  ? 5 : 0,
-        approvedB = b.approved === 'yes' ? 5 : 0,
-        sumA = testedA + approvedA,
-        sumB = testedB + approvedB;
-    
-    if (sumA > sumB) {
-        return -1
-    } else if (sumA === sumB && a.price > b.price) {
-        return -1
-    } else {
-        return 1
-    }
-    
-    return 0;
-}
-
-function sortPriceLowHigh(a, b) {
-    let testedA = a.tested === 'yes' ? 1 : 0,
-        testedB = b.tested === 'yes' ? 1 : 0,
-        approvedA = a.approved === 'yes'  ? 5 : 0,
-        approvedB = b.approved === 'yes' ? 5 : 0,
-        sumA = testedA + approvedA,
-        sumB = testedB + approvedB;
-    
-    if (sumA > sumB) {
-        return -1
-    } else if (sumA === sumB && a.price < b.price) {
-        return -1
-    } else {
-        return 1
-    }
-    
-    return 0;
 }
 
 
@@ -644,6 +626,8 @@ function sortPriceLowHigh(a, b) {
 // Build DOM functions
 function buildListItems(data, tableMode) {
     if (tableMode) {
+        elemListContents.innerHTML = '';
+        elemListContents.setAttribute('list-mode', 'table');
     } else {
         buildCards(data);
     }
@@ -659,9 +643,10 @@ function buildCards(data) {
     let countDataItems = data.length,
         countDataItemsTotal = freshData.length,
         countDataItemsMissing = countDataItemsTotal - countDataItems,
-        dipslayItemsMissing = numDisplay(countDataItemsMissing, 'decimal', false),
+        displayItems = numDisplay(countDataItems, 'decimal', false),
+        displayItemsMissing = numDisplay(countDataItemsMissing, 'decimal', false),
         missingWarningContainer = newElem('article', 'phones-missing-container'),
-        missingWarningCopy = newElem('div', 'phones-missing', null, dipslayItemsMissing + ' models hidden by current filters');
+        missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)');
     
     if (countDataItemsMissing) {
         missingWarningContainer.append(missingWarningCopy);
@@ -726,7 +711,7 @@ function buildCards(data) {
                                 : '',
             linkStore = item.linkStore
                             ? newElem('a', 'phone-link phone-link-store', [{'key': 'href', 'val': item.linkStore}], 'Buy')
-                            : newElem('a', 'phone-link phone-link-store', null, 'Buy'),
+                            : newElem('a', 'phone-link phone-link-store', null, ''),
             storePrice = newElem('span', 'phone-store-price', null, numDisplay(item.price, 'currency', 'usd'));
         
         elemCardBody.append(bodyLinks);
