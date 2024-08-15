@@ -120,10 +120,6 @@ h4 {
 Phones missing */
 
 article.phones-missing-container {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    
     display: flex;
     justify-content: center;
     align-items: center;
