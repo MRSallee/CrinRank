@@ -41,10 +41,18 @@ function numDisplay(num, style, currencyVar) {
 
 // Initialization
 let elemList = newElem('main', 'list'),
-    elemListContents = newElem('section', 'list-contents'),
-    elemListFilters = newElem('section', 'list-filters');
-elemList.append(elemListFilters);
-elemList.append(elemListContents);
+    elemListContentsContainer = newElem('section', 'list-contents-container'),
+    elemListContents = newElem('div', 'list-contents'),
+    elemListFiltersContainer = newElem('section', 'list-filters-container'),
+    elemListFilters = newElem('div', 'list-filters'),
+    elemListManagerContainer = newElem('section', 'list-manager-container'),
+    elemListManager = newElem('div', 'list-manager');
+elemListFiltersContainer.append(elemListFilters);
+elemList.append(elemListFiltersContainer);
+elemListManagerContainer.append(elemListManager);
+elemListContentsContainer.append(elemListManagerContainer);
+elemListContentsContainer.append(elemListContents);
+elemList.append(elemListContentsContainer);
 document.querySelector('body').append(elemList);
 
 // Define state object for the list
@@ -53,6 +61,7 @@ let state = {
     'jqueryLoaded': false,
     'tableMode': false,
     'sort': 'priceLowHigh',
+    'overlayFilters': false,
     'filters': {
         'availability': {
             'buyableOnly': false,
@@ -108,7 +117,7 @@ let controls = [
         'name': 'listMode',
         'displayName': 'List mode',
         'type': 'toggle',
-        'location': 'controlsPanel',
+        'location': 'listManager',
         'toggles': [
             {
                 'name': 'tableView',
@@ -123,10 +132,28 @@ let controls = [
         ]
     },
     {
+        'name': 'filtersOverlay',
+        'displayName': 'Filters overlay',
+        'type': 'toggle',
+        'location': 'listManager',
+        'toggles': [
+            {
+                'name': 'filtersOverlay',
+                'displayName': 'Overlay filters',
+                'values': [
+                    true,
+                    false
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.overlayFilters = val }
+            }
+        ]
+    },
+    {
         'name': 'sortBy',
         'displayName': 'Sort by',
         'type': 'dropdown',
-        'location': 'controlsPanel',
+        'location': 'listManager',
         'values': [
             {
                 'displayName': '(unsorted)',
@@ -142,7 +169,7 @@ let controls = [
                 'value': 'priceLowHigh',
             },
         ],
-        'defaultValue': 'priceLowHigh',
+        'defaultValue': 'unsorted',
         'stateLoc': function(val) { stateP.sort = val }
     },
     {
@@ -150,14 +177,14 @@ let controls = [
         'name': 'search',
         'displayName': 'Search',
         'type': 'search',
-        'location': 'controlsPanel',
+        'location': 'listFilters',
         'stateLoc': function(val) { stateP.filters.searchString = val }
     },
     {
         'name': 'priceRange',
         'displayName': 'Price range',
         'type': 'range',
-        'location': 'controlsPanel',
+        'location': 'listFilters',
         'values': [
             {
                 'displayName': 'Min',
@@ -170,7 +197,6 @@ let controls = [
                 'name': 'max',
                 'value': '',
                 'stateLoc': function(val) { stateP.filters.price.priceMax = val }
-                
             },
         ],
     },
@@ -178,7 +204,7 @@ let controls = [
         'name': 'availability',
         'displayName': 'Availability',
         'type': 'toggle',
-        'location': 'controlsPanel',
+        'location': 'listFilters',
         'toggles': [
             {
                 'name': 'buyableOnly',
@@ -237,7 +263,7 @@ let controls = [
         'name': 'driver',
         'displayName': 'Driver configurations',
         'type': 'toggle',
-        'location': 'controlsPanel',
+        'location': 'listFilters',
         'toggles': [
             {
                 'name': 'ba',
@@ -285,7 +311,7 @@ let controls = [
         'name': 'connection',
         'displayName': 'Connection type',
         'type': 'toggle',
-        'location': 'controlsPanel',
+        'location': 'listFilters',
         'toggles': [
             {
                 'name': 'twopin',
@@ -323,17 +349,15 @@ let controls = [
 // Construct filter controls
 function constructFiltersUi(controls) {
     // elemListFilters
-    let elemStickyFilters = newElem('div', 'list-filters-sticky');
-    elemListFilters.append(elemStickyFilters);
-    
     controls.forEach(function(control) {
         // Create toggles
         if (control.type === 'toggle') {
             // Create section container for control
             let controlContainer = newElem('section', 'control-container'),
-                controlHeading = newElem('h3', 'control-headingf', null, control.displayName);
+                controlHeading = newElem('h3', 'control-heading', null, control.displayName),
+                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(controlHeading);
-            elemStickyFilters.append(controlContainer);
+            parentContainer.append(controlContainer);
             
             // Create toggle UIs
             control.toggles.forEach(function(toggle) {
@@ -359,10 +383,11 @@ function constructFiltersUi(controls) {
         if (control.type === 'dropdown') {
             let controlContainer = newElem('section', 'control-container'),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
-                dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]);
+                dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]),
+                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(controlHeading);
             controlContainer.append(dropdownContainer);
-            elemStickyFilters.append(controlContainer);
+            parentContainer.append(controlContainer);
             
             // Create dropdown UIs
             control.values.forEach(function(value) {
@@ -380,10 +405,11 @@ function constructFiltersUi(controls) {
         if (control.type === 'search') {
             let controlContainer = newElem('section', 'control-search'),
                 searchHeading = newElem('h3', 'search-heading', null, control.displayName),
-                searchInput = newElem('input', 'search-input');
+                searchInput = newElem('input', 'search-input', [{'key': 'placeholder', 'val': 'Search'}]),
+                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(searchHeading);
             controlContainer.append(searchInput);
-            elemStickyFilters.append(controlContainer);
+            parentContainer.append(controlContainer);
             
             searchInput.addEventListener('input', function(e) {
                 try { clearTimeout(searchDelay); } catch {}
@@ -397,10 +423,11 @@ function constructFiltersUi(controls) {
         if (control.type === 'range') {
             let controlContainer = newElem('section', 'control-price'),
                 pricehHeading = newElem('h3', 'price-heading', null, control.displayName),
-                priceForm = newElem('form', 'price');
+                priceForm = newElem('form', 'price'),
+                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(pricehHeading);
             controlContainer.append(priceForm);
-            elemStickyFilters.append(controlContainer);
+            parentContainer.append(controlContainer);
             
             control.values.forEach(function(value) {
                 let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}]);
@@ -421,7 +448,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data.json',
+let json = 'data-test.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -590,10 +617,12 @@ function dataSort(data, sort) {
             testedB = b.tested === 'yes' ? 1 : 0,
             approvedA = a.approved === 'yes'  ? 5 : 0,
             approvedB = b.approved === 'yes' ? 5 : 0,
-            buyableA = a.linkStore === 'yes' ? 10 : 0,
-            buyableB = b.linkStore === 'yes' ? 10 : 0,
-            sumA = testedA + approvedA + buyableA,
-            sumB = testedB + approvedB + buyableB;
+            buyableA = a.linkStore ? 10 : 0,
+            buyableB = b.linkStore ? 10 : 0,
+            discontinuedA = a.status.toLowerCase() === 'discontinued' ? -3 : 0,
+            discontinuedB = b.status.toLowerCase() === 'discontinued' ? -3 : 0,
+            sumA = testedA + approvedA + buyableA + discontinuedA,
+            sumB = testedB + approvedB + buyableB + discontinuedB;
         
         // Sort: Price low to high
         if (sort === 'priceLowHigh') {
@@ -634,6 +663,7 @@ function buildListItems(data, tableMode) {
 }
 
 function buildCards(data) {
+    console.log(data);
     
     // Clear DOM & set mode
     elemListContents.innerHTML = '';
