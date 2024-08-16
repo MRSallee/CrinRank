@@ -448,7 +448,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data-test.json',
+let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -668,7 +668,8 @@ function buildTable(data) {
     elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'table');
     // Create header row
-    let tableHead = newElem('article', 'table-head'),
+    let tableBody = newElem('section', 'list-table'),
+        tableHead = newElem('article', 'table-head'),
         headName = newElem('div', 'table-head-name', null, 'Name'),
         headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
         headBuy = newElem('div', 'table-head-buy', null, 'Price'),
@@ -687,7 +688,8 @@ function buildTable(data) {
     tableHead.append(headSignature);
     tableHead.append(headDrivers);
     tableHead.append(headConnection);
-    elemListContents.append(tableHead);
+    tableBody.append(tableHead);
+    elemListContents.append(tableBody);
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
@@ -729,7 +731,7 @@ function buildTable(data) {
         phoneContainer.append(phoneDrivers);
         phoneContainer.append(phoneConnection);
         
-        elemListContents.append(phoneContainer);
+        tableBody.append(phoneContainer);
     });
 }
 

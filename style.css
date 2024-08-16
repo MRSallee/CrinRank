@@ -604,22 +604,31 @@ Table styles */
 
 section.list-contents-container {
     max-width: calc(100vw - 300px);
-    overflow-x: scroll;
+    overflow: hidden;
 }
 
 div.list-contents[list-mode="table"] {
+    width: 100%;
+    height: calc(100vh - 200px);
+    
+    overflow: scroll;
+}
+
+section.list-table {
     display: table;
     width: 320rem;
+    
+    border-radius: 2rem;
     
     font-size: 3rem;
     line-height: 1em;
 }
 
-div.list-contents[list-mode="table"] article {
+section.list-table article {
     display: table-row;
 }
 
-div.list-contents[list-mode="table"] div {
+section.list-table div {
     display: table-cell;
 }
 
@@ -628,19 +637,19 @@ div.list-contents[list-mode="table"] div {
 Table header */
 
 article.table-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    
+    background-color: var(--color-white);
 }
 
 article.table-head div {
-    vertical-align: bottom;
+    text-align: center;
+    vertical-align: middle;
     
     box-sizing: border-box;
-    padding: 2rem;
-    
-    border-bottom: 1px solid var(--color-orange);
-}
-
-article.table-head div + div {
-    border-left: 1px solid var(--color-orange);
+    padding: 4rem 2rem;
 }
 
 div.table-head-tested {
@@ -648,11 +657,21 @@ div.table-head-tested {
     text-align: center;
 }
 
-div.table-head-name {
+article.table-head div.table-head-name {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    
+    text-align: left;
+    
     width: 60rem;
+    
+    background: linear-gradient(to right, var(--color-white) calc(100% - 2rem), transparent);
 }
 
 div.table-head-buy {
+    text-align: center;
+    
     width: 30rem;
 }
 
@@ -682,7 +701,7 @@ article.table-phone-container {
 article.table-phone-container div {
     vertical-align: middle;
     
-    border-bottom: 1px solid var(--color-gray-dark);
+    border-bottom: 1px solid var(--color-gray-light);
 }
 
 div.list-contents[list-mode="table"] article.table-phone-container div + div {
@@ -694,15 +713,21 @@ div.list-contents[list-mode="table"] article.table-phone-container div + div {
 Specific cell styles */
 
 div.table-phone-name {
-    height: 16rem;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    
     
     box-sizing: border-box;
     width: 60rem;
+    height: 16rem;
     padding: 4rem 2rem;
     
     font-size: 4rem;
     line-height: 1em;
     font-weight: 800;
+    
+    background: linear-gradient(to right, var(--color-cream) calc(100% - 4rem), transparent);
 }
 
 div.table-phone-tested {
@@ -884,4 +909,8 @@ article.table-phone-container[status="discontinued"] {
     background-color: var(--color-gray-light);
     
     color: var(--color-gray-dark);
+}
+
+article.table-phone-container[status="discontinued"] div.table-phone-name {
+    background: linear-gradient(to right, var(--color-gray-light) calc(100% - 4rem), transparent);
 }
