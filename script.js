@@ -448,7 +448,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data.json',
+let json = 'data-test.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -499,7 +499,7 @@ function getDataFresh (json) {
                     'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
                     'brand': item['Brand'],
                     'connection': item['Connection'],
-                    'demoable': item['Physical demo unit available now?'],
+                    'demoable': item['Available at Hangout for Demo'] === 'Yes' ? true : false,
                     'drivers': item['Driver Configuration'],
                     'linkStore': item['Hangout Store Link'],
                     'linkShowcase': item['Showcase Link (YouTube)'],
@@ -654,17 +654,86 @@ function dataSort(data, sort) {
 
 // Build DOM functions
 function buildListItems(data, tableMode) {
+    console.log(data[0]);
+    
     if (tableMode) {
-        elemListContents.innerHTML = '';
-        elemListContents.setAttribute('list-mode', 'table');
+        buildTable(data)
     } else {
         buildCards(data);
     }
 }
 
-function buildCards(data) {
-    console.log(data);
+function buildTable(data) {
+    // Clear DOM & set mode
+    elemListContents.innerHTML = '';
+    elemListContents.setAttribute('list-mode', 'table');
+    // Create header row
+    let tableHead = newElem('article', 'table-head'),
+        headName = newElem('div', 'table-head-name', null, 'Name'),
+        headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
+        headBuy = newElem('div', 'table-head-buy', null, 'Price'),
+        headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
+        headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
+        headMeasurement = newElem('div', 'table-head-measurement', null, 'Graph'),
+        headSignature = newElem('div', 'table-head-signature', null, 'Sound signature'),
+        headDrivers = newElem('div', 'table-head-drivers', null, 'Driver config'),
+        headConnection = newElem('div', 'table-head-connection', null, 'Connection');
+    tableHead.append(headName);
+    tableHead.append(headTested);
+    tableHead.append(headBuy);
+    tableHead.append(headDemoable);
+    tableHead.append(headShowcase);
+    tableHead.append(headMeasurement);
+    tableHead.append(headSignature);
+    tableHead.append(headDrivers);
+    tableHead.append(headConnection);
+    elemListContents.append(tableHead);
     
+    // Handle each item in filtered + sorted list
+    data.forEach(function(item) {
+        let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
+            phoneName = newElem('div', 'table-phone-name', null, item.brand + ' ' + item.model),
+            phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]);
+        phoneContainer.append(phoneName);
+        phoneContainer.append(phoneTested);
+        
+        let phoneBuy = newElem('div', 'table-phone-buy'),
+            phoneBuyLink = item.linkStore
+                ? newElem('a', 'table-phone-buy-link', [{'key': 'href', 'val': item.linkStore}])
+                : newElem('a', 'table-phone-buy-link'),
+            phonePrice = newElem('span', 'table-phone-price', null, numDisplay(item.price, 'currency', 'usd')),
+            phoneDemoable = newElem('div', 'table-phone-demoable', [{'key': 'data-demoable', 'val': item.demoable}]);
+        phoneBuyLink.append(phonePrice);
+        phoneBuy.append(phoneBuyLink);
+        phoneContainer.append(phoneBuy);
+        phoneContainer.append(phoneDemoable);
+        
+        let phoneShowcase = newElem('div', 'table-phone-showcase'),
+            phoneShowcasehLink = item.linkShowcase
+                ? newElem('a', 'table-phone-showcase-link', [{'key': 'href', 'val': item.linkShowcase}])
+                : '';
+        phoneShowcase.append(phoneShowcasehLink);
+        phoneContainer.append(phoneShowcase);
+        
+        let phoneGraph = newElem('div', 'table-phone-graph'),
+            phoneGraphLink = item.linkMeasurement
+                ? newElem('a', 'table-phone-graph-link', [{'key': 'href', 'val': item.linkMeasurement}])
+                : '';
+        phoneGraph.append(phoneGraphLink);
+        phoneContainer.append(phoneGraph);
+        
+        let phoneSignature = newElem('div', 'table-phone-signature', null, item.signature),
+            phoneDrivers = newElem('div', 'table-phone-drivers', null, item.drivers),
+            phoneConnection = newElem('div', 'table-phone-connection', null, item.connection);
+        phoneContainer.append(phoneSignature);
+        phoneContainer.append(phoneDrivers);
+        phoneContainer.append(phoneConnection);
+        
+        elemListContents.append(phoneContainer);
+    });
+}
+
+function buildCards(data) {
     // Clear DOM & set mode
     elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'cards');
