@@ -160,12 +160,12 @@ let controls = [
                 'value': 'unsorted',
             },
             {
-                'displayName': 'Price: High to low',
+                'displayName': 'Price: Highest first',
                 'value': 'priceHighLow',
                 
             },
             {
-                'displayName': 'Price: Low to high',
+                'displayName': 'Price: Lowest first',
                 'value': 'priceLowHigh',
             },
         ],
