@@ -143,26 +143,35 @@ div.phones-missing {
 h3.control-heading {
     margin: 8rem 0 4rem 0;
     
-    font-size: 5rem;
+    font-size: 4rem;
+    line-height: 1em;
     font-weight: 800;
 }
 
 h4.toggle-heading {
     margin: 4rem 0 2rem 0;
     
-    font-size: 4rem;
+    font-size: 3rem;
+    line-height: 1em;
     font-weight: 400;
 }
 
 /* -----
 Toggles */
 
+article.toggle-container {
+    display: flex;
+    align-items: center;
+}
+
 label.toggle-label {
     position: relative;
+    order: -1;
     
     display: flex;
     width: 16rem;
     height: 8rem;
+    margin: 0 4rem 0 0;
     overflow: hidden;
     
     cursor: pointer;
@@ -210,6 +219,10 @@ label.toggle-label input:checked + span.toggle-slider:before {
     background-color: var(--color-cream);
 }
 
+section[control-id="filtersOverlay"] {
+    display: none;
+}
+
 /* -----
 Inputs */
 
@@ -255,6 +268,44 @@ input.min {
 }
 
 /* -----
+Dropdown */
+
+select.controls-dropdown {
+    position: relative;
+    
+    width: 40rem;
+    height: 8rem;
+    padding: 0 2rem;
+    
+    background-color: var(--color-orange);
+    border: none;
+    border-radius: 8rem;
+    outline: none;
+    
+    color: var(--color-white);
+    font-family: var(--font-primary);
+    font-size: 3rem;
+    line-height: 4rem;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select.controls-dropdown:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 4rem;
+    
+    background-color: magenta;
+    
+}
+
+/* -----
 List manager */
 
 section.list-manager-container {
@@ -280,6 +331,10 @@ div.list-manager section.control-toggle {
 div.list-manager section.control-dropdown {
     flex: auto 0 0;
     margin-left: auto;
+}
+
+section.list-manager-container h3 {
+    display: none;
 }
 
 
@@ -609,7 +664,8 @@ section.list-contents-container {
 
 div.list-contents[list-mode="table"] {
     width: 100%;
-    height: calc(100vh - 200px);
+    box-sizing: border-box;
+    height: calc(100vh - 21rem);
     
     overflow: scroll;
 }
@@ -650,11 +706,9 @@ article.table-head div {
     
     box-sizing: border-box;
     padding: 4rem 2rem;
-}
-
-div.table-head-tested {
-    width: 20rem;
-    text-align: center;
+    
+    border-top: 1px solid var(--color-orange);
+    border-bottom: 1px solid var(--color-orange);
 }
 
 article.table-head div.table-head-name {
@@ -665,8 +719,14 @@ article.table-head div.table-head-name {
     text-align: left;
     
     width: 60rem;
+    padding: 4rem;
     
     background: linear-gradient(to right, var(--color-white) calc(100% - 2rem), transparent);
+}
+
+div.table-head-tested {
+    width: 20rem;
+    text-align: center;
 }
 
 div.table-head-buy {
@@ -702,6 +762,8 @@ article.table-phone-container div {
     vertical-align: middle;
     
     border-bottom: 1px solid var(--color-gray-light);
+    border-bottom: 1px dotted var(--color-orange);
+    
 }
 
 div.list-contents[list-mode="table"] article.table-phone-container div + div {
@@ -721,7 +783,7 @@ div.table-phone-name {
     box-sizing: border-box;
     width: 60rem;
     height: 16rem;
-    padding: 4rem 2rem;
+    padding: 4rem;
     
     font-size: 4rem;
     line-height: 1em;

@@ -114,24 +114,6 @@ let stateP = new Proxy(state, proxyHandler);
 // Object for available controls
 let controls = [
     {
-        'name': 'listMode',
-        'displayName': 'List mode',
-        'type': 'toggle',
-        'location': 'listManager',
-        'toggles': [
-            {
-                'name': 'tableView',
-                'displayName': 'Table view',
-                'values': [
-                    true,
-                    false
-                ],
-                'defaultValue': false,
-                'stateLoc': function(val) { stateP.tableMode = val }
-            }
-        ]
-    },
-    {
         'name': 'filtersOverlay',
         'displayName': 'Filters overlay',
         'type': 'toggle',
@@ -146,6 +128,24 @@ let controls = [
                 ],
                 'defaultValue': false,
                 'stateLoc': function(val) { stateP.overlayFilters = val }
+            }
+        ]
+    },
+    {
+        'name': 'listMode',
+        'displayName': 'List mode',
+        'type': 'toggle',
+        'location': 'listManager',
+        'toggles': [
+            {
+                'name': 'tableView',
+                'displayName': 'Table view',
+                'values': [
+                    true,
+                    false
+                ],
+                'defaultValue': false,
+                'stateLoc': function(val) { stateP.tableMode = val }
             }
         ]
     },
@@ -353,7 +353,7 @@ function constructFiltersUi(controls) {
         // Create toggles
         if (control.type === 'toggle') {
             // Create section container for control
-            let controlContainer = newElem('section', 'control-toggle'),
+            let controlContainer = newElem('section', 'control-toggle', [{'key': 'control-id', 'val': control.name}]),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
                 parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(controlHeading);
@@ -448,7 +448,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data.json',
+let json = 'data-test.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
