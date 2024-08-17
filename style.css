@@ -72,6 +72,7 @@ section.list-contents-container {
     padding: 0 4rem 4rem 4rem;
     
     height: 100vh;
+    max-height: -webkit-fill-available;
     overflow: scroll;
 }
 
@@ -105,6 +106,7 @@ div.list-filters {
     
     box-sizing: border-box;
     height: 100vh;
+    max-height: -webkit-fill-available;
     padding: 0 4rem 4rem 4rem;
     
     overflow: scroll;
@@ -766,6 +768,7 @@ div.list-contents[list-mode="table"] {
     box-sizing: border-box;
     width: 100%;
     height: calc(100vh - 16rem);
+    max-height: -webkit-fill-available;
     padding: 0 4rem 4rem 0;
     
     overflow: scroll;
@@ -1100,6 +1103,7 @@ Mobile styles */
         
         width: 100vw;
         height: calc(100vh - 16rem - 1px);
+        max-height: -webkit-fill-available;
         
         background-color: var(--color-cream);
         
