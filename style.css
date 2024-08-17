@@ -909,6 +909,7 @@ div.table-phone-tested:before {
     content: '';
     
     display: inline-block;
+    display: none;
     width: 6rem;
     height: 6rem;
     
