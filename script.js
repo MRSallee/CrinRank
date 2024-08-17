@@ -545,7 +545,7 @@ function applyState(state) {
     buildListItems(sortedData, state.tableMode);
     
     // Filters overlay
-    elemList.setAttribute('filters-overlay', state.overlayFilters);
+    document.querySelector('body').setAttribute('filters-overlay', state.overlayFilters);
 }
 
 

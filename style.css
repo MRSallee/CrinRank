@@ -1113,7 +1113,15 @@ Mobile styles */
         height: 100%;
     }
     
-    main.list[filters-overlay="true"] section.list-filters-container {
+    body[filters-overlay="true"] {
+        overflow: hidden;
+    }
+    
+    body[filters-overlay="true"] section.list-contents-container {
+        overflow: hidden;
+    }
+    
+    body[filters-overlay="true"] section.list-filters-container {
         opacity: 1.0;
         pointer-events: all;
     }
