@@ -543,6 +543,9 @@ function applyState(state) {
     
     // Build list items DOM
     buildListItems(sortedData, state.tableMode);
+    
+    // Filters overlay
+    elemList.setAttribute('filters-overlay', state.overlayFilters);
 }
 
 
@@ -659,13 +662,23 @@ function dataSort(data, sort) {
 
 // Build DOM functions
 function buildListItems(data, tableMode) {
-    console.log(data[0]);
-    
     if (tableMode) {
         buildTable(data)
     } else {
         buildCards(data);
     }
+    
+    // Add count of hidden items
+    let countDataItems = data.length,
+        countDataItemsTotal = freshData.length,
+        countDataItemsMissing = countDataItemsTotal - countDataItems,
+        displayItems = numDisplay(countDataItems, 'decimal', false),
+        displayItemsMissing = countDataItemsMissing != countDataItemsTotal ? numDisplay(countDataItemsMissing, 'decimal', false) : 'All',
+        missingWarningContainer = newElem('article', 'phones-missing-container'),
+        missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)'),
+        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItemsMissing + ' models hidden by filters';
+    
+    document.querySelector('#filter-result').textContent = resultCopy;
 }
 
 function buildTable(data) {
@@ -746,23 +759,6 @@ function buildCards(data) {
     elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
-    
-    // Add count of hidden items
-    let countDataItems = data.length,
-        countDataItemsTotal = freshData.length,
-        countDataItemsMissing = countDataItemsTotal - countDataItems,
-        displayItems = numDisplay(countDataItems, 'decimal', false),
-        displayItemsMissing = countDataItemsMissing != countDataItemsTotal ? numDisplay(countDataItemsMissing, 'decimal', false) : 'All',
-        missingWarningContainer = newElem('article', 'phones-missing-container'),
-        missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)'),
-        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItemsMissing + ' models hidden by filters';
-    
-    document.querySelector('#filter-result').textContent = resultCopy;
-    
-    if (countDataItemsMissing) {
-//        missingWarningContainer.append(missingWarningCopy);
-//        elemListFilters.prepend(missingWarningContainer);
-    }
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
