@@ -442,6 +442,11 @@ function constructFiltersUi(controls) {
             });
         }
     });
+    
+    let filtersResultContainer = newElem('section', 'filter-result-container', [{'key': 'phones-hiddem', 'val': "false"}]),
+        filtersResult = newElem('span', 'filter-result', [{'key': 'id', 'val': 'filter-result'}]);
+    filtersResultContainer.append(filtersResult);
+    elemListFilters.prepend(filtersResultContainer);
 }
 constructFiltersUi(controls);
 
@@ -667,6 +672,7 @@ function buildTable(data) {
     // Clear DOM & set mode
     elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'table');
+    elemList.setAttribute('list-mode', 'table');
     // Create header row
     let tableBody = newElem('section', 'list-table'),
         tableHead = newElem('article', 'table-head'),
@@ -739,19 +745,23 @@ function buildCards(data) {
     // Clear DOM & set mode
     elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'cards');
+    elemList.setAttribute('list-mode', 'cards');
     
     // Add count of hidden items
     let countDataItems = data.length,
         countDataItemsTotal = freshData.length,
         countDataItemsMissing = countDataItemsTotal - countDataItems,
         displayItems = numDisplay(countDataItems, 'decimal', false),
-        displayItemsMissing = numDisplay(countDataItemsMissing, 'decimal', false),
+        displayItemsMissing = countDataItemsMissing != countDataItemsTotal ? numDisplay(countDataItemsMissing, 'decimal', false) : 'All',
         missingWarningContainer = newElem('article', 'phones-missing-container'),
-        missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)');
+        missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)'),
+        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItemsMissing + ' models hidden by filters';
+    
+    document.querySelector('#filter-result').textContent = resultCopy;
     
     if (countDataItemsMissing) {
-        missingWarningContainer.append(missingWarningCopy);
-        elemListContents.append(missingWarningContainer);
+//        missingWarningContainer.append(missingWarningCopy);
+//        elemListFilters.prepend(missingWarningContainer);
     }
     
     // Handle each item in filtered + sorted list
