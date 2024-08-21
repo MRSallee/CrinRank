@@ -81,6 +81,13 @@ div.list-contents[list-mode='cards'] {
     padding-top: 4rem;
 }
 
+div.group-container {
+    max-width: 500px;
+    overflow: hidden;
+    
+    border: 10px solid var(--color-orange);
+}
+
 article.card-container {
     display: flex;
     flex-direction: column;

@@ -110,6 +110,18 @@ let proxyHandler = {
 };
 let stateP = new Proxy(state, proxyHandler);
 
+let stateData = {
+    'groupSize': 100,
+    'readyData': '',
+    'countItems': 0,
+    'countGroups': 0,
+    'countItemsLastGroup': 0,
+    'groupLastSeen': 0,
+    'groupContainers': [
+        
+    ]
+};
+
 
 // Object for available controls
 let controls = [
@@ -453,7 +465,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data-test.json',
+let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -662,15 +674,27 @@ function dataSort(data, sort) {
 
 // Build DOM functions
 function buildListItems(data, tableMode) {
+    // Set stateData values
+    let dataGroupSize = 100,
+        countDataItems = data.length;
+    
+    stateData.readyData = data;
+    stateData.countItems = data.length;
+    stateData.countGroups = Math.ceil(stateData.countItems / dataGroupSize);
+    stateData.countItemsLastGroup = stateData.countItems - ((stateData.countGroups -1 ) * dataGroupSize);
+    
+    console.log(stateData);
+    
     if (tableMode) {
-        buildTable(data)
+        //buildTable(data)
     } else {
-        buildCards(data);
+        //buildCards(data);
     }
     
+    testBuild(data, 0);
+    
     // Add count of hidden items
-    let countDataItems = data.length,
-        countDataItemsTotal = freshData.length,
+    let countDataItemsTotal = freshData.length,
         countDataItemsMissing = countDataItemsTotal - countDataItems,
         displayItems = numDisplay(countDataItems, 'decimal', false),
         displayItemsMissing = countDataItemsMissing != countDataItemsTotal ? numDisplay(countDataItemsMissing, 'decimal', false) : 'All',
@@ -679,6 +703,61 @@ function buildListItems(data, tableMode) {
         resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItemsMissing + ' models hidden by filters';
     
     document.querySelector('#filter-result').textContent = resultCopy;
+}
+
+function testBuild(data, groupIndex) {
+    let groupA = groupIndex > 1 ? groupIndex - 1 : 0,
+        groupB = groupIndex === 0 ? 1 : groupIndex,
+        groupC = groupB < stateData.countGroups ? groupB + 1 : 0,
+        groupsActive = [];
+    
+    if (groupA) groupsActive.push(groupA);
+    if (groupB) groupsActive.push(groupB);
+    if (groupC) groupsActive.push(groupC);
+    
+    // Clear group containers
+    function clearInactive() {
+        let allGroupContainers = document.querySelectorAll('div.group-container');
+        
+        allGroupContainers.forEach(function(groupContainer) {
+            let groupId = parseInt(groupContainer.getAttribute('group-index')),
+                groupValid = groupId <= stateData.countGroups ? true : false,
+                groupActive = groupsActive.includes(groupId);
+            
+            console.log(groupId, groupValid, groupActive);
+            
+            if (!groupValid) {
+                groupContainer.remove();
+            } else if (!groupActive) {
+                groupContainer.innerHTML = '';
+            }
+        });
+    }
+    clearInactive()
+    
+    // Populate group containers
+    if (groupA) next(groupA);
+    if (groupB) next(groupB);
+    if (groupC) next(groupC);
+    
+    function next(groupIndex) {
+        let indexStart = groupIndex * stateData.groupSize - stateData.groupSize,
+            indexEnd = groupIndex < stateData.countGroups ? groupIndex * stateData.groupSize : indexStart + stateData.countItemsLastGroup,
+            groupData = data.slice(indexStart, indexEnd);
+        
+        let groupContainerExists = document.querySelector('div[group-index="' + groupIndex + '"'),
+            groupContainer = groupContainerExists ? document.querySelector('div[group-index="' + groupIndex + '"') : newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
+        
+        if (!groupContainerExists) elemListContents.append(groupContainer);
+        groupContainer.append(JSON.stringify(groupData));
+        
+        groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
+    
+        //console.log(groupIndex, indexStart, indexEnd);
+        //console.log(groupData);
+        //console.log(groupContainer);
+    }
+    
 }
 
 function buildTable(data) {
