@@ -797,6 +797,15 @@ section.list-table div {
     display: table-cell;
 }
 
+/* -----
+Table column widths */
+
+article.table-head div.table-head-name,
+div.table-phone-name {
+    box-sizing: border-box;
+    width: 60rem;
+}
+
 
 /* -----
 Table header */

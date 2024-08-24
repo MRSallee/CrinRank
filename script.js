@@ -757,7 +757,7 @@ function buildGroup(data, groupIndex) {
         groupContainer.innerHTML = '';
         
         if (state.tableMode) {
-            buildTable(groupData, groupContainer);
+            buildTableHeader(groupData, groupContainer);
         } else {
             buildCards(groupData, groupContainer);
         }
@@ -779,10 +779,7 @@ function createGroupContainer(groupIndex, data) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 console.log(groupIndex +' in view');
-                entry.target.style.backgroundColor = 'var(--color-cream)';
                 buildGroup(data, groupIndex);
-            } else {
-                entry.target.style.backgroundColor = 'var(--color-orange)';
             }
         })
     };
@@ -792,32 +789,44 @@ function createGroupContainer(groupIndex, data) {
     return groupContainer;
 }
 
+function buildTableHeader(data, container) {
+    let tableHeaderExists = document.querySelectorAll('section.list-table').length ? true : false;
+    
+    if (!tableHeaderExists) {
+        // Clear DOM & set mode
+        elemListContents.setAttribute('list-mode', 'table');
+        elemList.setAttribute('list-mode', 'table');
+
+        // Create header row
+        let tableBody = newElem('section', 'list-table'),
+            tableHead = newElem('article', 'table-head'),
+            headName = newElem('div', 'table-head-name', null, 'Name'),
+            headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
+            headBuy = newElem('div', 'table-head-buy', null, 'Price'),
+            headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
+            headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
+            headMeasurement = newElem('div', 'table-head-measurement', null, 'Graph'),
+            headSignature = newElem('div', 'table-head-signature', null, 'Sound signature'),
+            headDrivers = newElem('div', 'table-head-drivers', null, 'Driver config'),
+            headConnection = newElem('div', 'table-head-connection', null, 'Connection');
+        tableHead.append(headName);
+        tableHead.append(headTested);
+        tableHead.append(headBuy);
+        tableHead.append(headDemoable);
+        tableHead.append(headShowcase);
+        tableHead.append(headMeasurement);
+        tableHead.append(headSignature);
+        tableHead.append(headDrivers);
+        tableHead.append(headConnection);
+        tableBody.append(tableHead);
+        elemListContents.prepend(tableBody);
+    }
+    
+    buildTable(data, container);
+}
+
 function buildTable(data, container) {
-    // Clear DOM & set mode
-    elemListContents.setAttribute('list-mode', 'table');
-    elemList.setAttribute('list-mode', 'table');
-    // Create header row
-    let tableBody = newElem('section', 'list-table'),
-        tableHead = newElem('article', 'table-head'),
-        headName = newElem('div', 'table-head-name', null, 'Name'),
-        headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
-        headBuy = newElem('div', 'table-head-buy', null, 'Price'),
-        headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
-        headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
-        headMeasurement = newElem('div', 'table-head-measurement', null, 'Graph'),
-        headSignature = newElem('div', 'table-head-signature', null, 'Sound signature'),
-        headDrivers = newElem('div', 'table-head-drivers', null, 'Driver config'),
-        headConnection = newElem('div', 'table-head-connection', null, 'Connection');
-    tableHead.append(headName);
-    tableHead.append(headTested);
-    tableHead.append(headBuy);
-    tableHead.append(headDemoable);
-    tableHead.append(headShowcase);
-    tableHead.append(headMeasurement);
-    tableHead.append(headSignature);
-    tableHead.append(headDrivers);
-    tableHead.append(headConnection);
-    tableBody.append(tableHead);
+    let tableBody = newElem('section', 'list-table');
     container.append(tableBody);
     
     // Handle each item in filtered + sorted list
