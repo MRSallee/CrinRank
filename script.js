@@ -772,7 +772,8 @@ function createGroupContainer(groupIndex, data) {
     let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
     
     let observerOptions = {
-            root: document.querySelector('body'),
+            //root: document.querySelector('body'),
+            root: elemListContentsContainer,
             rootMargin: "-200px",
             threshold: 0.000001
     };
