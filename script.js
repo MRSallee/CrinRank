@@ -465,7 +465,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data.json',
+let json = 'data-test.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -754,8 +754,14 @@ function buildGroup(data, groupIndex) {
         
         if (!groupContainerExists) elemListContents.append(groupContainer);
         groupContainer.innerHTML = '';
-        //groupContainer.append(JSON.stringify(groupData));
-        buildCards(groupData, groupContainer);
+        
+        if (state.tableMode) {
+            buildTable(groupData, groupContainer);
+        } else {
+            buildCards(groupData, groupContainer);
+        }
+        
+        
         
         groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
     }
@@ -768,9 +774,8 @@ function createGroupContainer(groupIndex, data) {
     let observerOptions = {
             root: document.querySelector('body'),
             rootMargin: "-200px",
-            threshold: 0.0,
-        };
-
+            threshold: 0.0
+    };
     let observerCallback = (entries, observerOptions) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -782,17 +787,14 @@ function createGroupContainer(groupIndex, data) {
             }
         })
     };
-
     let observer = new IntersectionObserver(observerCallback, observerOptions)
-
     observer.observe(groupContainer);
     
     return groupContainer;
 }
 
-function buildTable(data) {
+function buildTable(data, container) {
     // Clear DOM & set mode
-    elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'table');
     elemList.setAttribute('list-mode', 'table');
     // Create header row
@@ -817,7 +819,7 @@ function buildTable(data) {
     tableHead.append(headDrivers);
     tableHead.append(headConnection);
     tableBody.append(tableHead);
-    elemListContents.append(tableBody);
+    container.append(tableBody);
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
