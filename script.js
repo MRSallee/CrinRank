@@ -678,6 +678,7 @@ function buildListItems(data, tableMode) {
     let dataGroupSize = 100,
         countDataItems = data.length;
     
+    // Set data state values
     stateData.readyData = data;
     stateData.countItems = data.length;
     stateData.countGroups = Math.ceil(stateData.countItems / dataGroupSize);
@@ -752,11 +753,35 @@ function testBuild(data, groupIndex) {
         groupContainer.append(JSON.stringify(groupData));
         
         groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
-    
-        //console.log(groupIndex, indexStart, indexEnd);
-        //console.log(groupData);
-        //console.log(groupContainer);
+        
+        let observerOptions = {
+                root: document.querySelector('body'),
+                rootMargin: "-200px",
+                threshold: 0.0,
+            };
+        
+        let observerCallback = (entries, observerOptions) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    console.log(groupIndex +' in view');
+                    entry.target.style.backgroundColor = 'var(--color-cream)';
+                    //testBuild(data, groupIndex);
+                } else {
+                    console.log(groupIndex +' out of view')
+                    entry.target.style.backgroundColor = 'var(--color-orange)';
+                }
+            })
+        };
+        
+        let observer = new IntersectionObserver(observerCallback, observerOptions)
+
+        observer.observe(groupContainer);
     }
+    
+}
+    
+function createGroupContainer(groupIndex) {
+    let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
     
 }
 
