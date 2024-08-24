@@ -733,6 +733,7 @@ function buildGroup(data, groupIndex) {
             if (!groupValid) {
                 groupContainer.remove();
             } else if (!groupActive) {
+                groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
                 groupContainer.innerHTML = '';
             }
         });
@@ -760,10 +761,6 @@ function buildGroup(data, groupIndex) {
         } else {
             buildCards(groupData, groupContainer);
         }
-        
-        
-        
-        groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
     }
     
 }
