@@ -82,10 +82,10 @@ div.list-contents[list-mode='cards'] {
 }
 
 div.group-container {
+    box-sizing: border-box;
+    
     max-width: 500px;
     overflow: hidden;
-    
-    border: 10px solid var(--color-orange);
 }
 
 article.card-container {

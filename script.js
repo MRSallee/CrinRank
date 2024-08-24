@@ -674,6 +674,8 @@ function dataSort(data, sort) {
 
 // Build DOM functions
 function buildListItems(data, tableMode) {
+    elemListContentsContainer.scrollTop = 0;
+    
     // Set stateData values
     let dataGroupSize = 100,
         countDataItems = data.length;
@@ -725,7 +727,7 @@ function testBuild(data, groupIndex) {
                 groupValid = groupId <= stateData.countGroups ? true : false,
                 groupActive = groupsActive.includes(groupId);
             
-            console.log(groupId, groupValid, groupActive);
+            //console.log(groupId, groupValid, groupActive);
             
             if (!groupValid) {
                 groupContainer.remove();
@@ -747,42 +749,43 @@ function testBuild(data, groupIndex) {
             groupData = data.slice(indexStart, indexEnd);
         
         let groupContainerExists = document.querySelector('div[group-index="' + groupIndex + '"'),
-            groupContainer = groupContainerExists ? document.querySelector('div[group-index="' + groupIndex + '"') : newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
+            groupContainer = groupContainerExists ? document.querySelector('div[group-index="' + groupIndex + '"') : createGroupContainer(groupIndex, data);
         
         if (!groupContainerExists) elemListContents.append(groupContainer);
+        groupContainer.innerHTML = '';
         groupContainer.append(JSON.stringify(groupData));
         
         groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
-        
-        let observerOptions = {
-                root: document.querySelector('body'),
-                rootMargin: "-200px",
-                threshold: 0.0,
-            };
-        
-        let observerCallback = (entries, observerOptions) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    console.log(groupIndex +' in view');
-                    entry.target.style.backgroundColor = 'var(--color-cream)';
-                    //testBuild(data, groupIndex);
-                } else {
-                    console.log(groupIndex +' out of view')
-                    entry.target.style.backgroundColor = 'var(--color-orange)';
-                }
-            })
-        };
-        
-        let observer = new IntersectionObserver(observerCallback, observerOptions)
-
-        observer.observe(groupContainer);
     }
     
 }
     
-function createGroupContainer(groupIndex) {
+function createGroupContainer(groupIndex, data) {
     let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
     
+    let observerOptions = {
+            root: document.querySelector('body'),
+            rootMargin: "-200px",
+            threshold: 0.0,
+        };
+
+    let observerCallback = (entries, observerOptions) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                console.log(groupIndex +' in view');
+                entry.target.style.backgroundColor = 'var(--color-cream)';
+                testBuild(data, groupIndex);
+            } else {
+                entry.target.style.backgroundColor = 'var(--color-orange)';
+            }
+        })
+    };
+
+    let observer = new IntersectionObserver(observerCallback, observerOptions)
+
+    observer.observe(groupContainer);
+    
+    return groupContainer;
 }
 
 function buildTable(data) {
