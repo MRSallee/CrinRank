@@ -1168,4 +1168,14 @@ Mobile styles */
     html {
         font-size: 3px;
     }
+    
+    section.filter-result-container,
+    h4.toggle-heading,
+    input.search-input,
+    input.max,
+    input.min,
+    select.controls-dropdown,
+    section.list-table {
+        font-size: 4rem;
+    }
 }
