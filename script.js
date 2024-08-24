@@ -774,7 +774,7 @@ function createGroupContainer(groupIndex, data) {
     let observerOptions = {
             root: document.querySelector('body'),
             rootMargin: "-200px",
-            threshold: 0.0
+            threshold: 0.000001
     };
     let observerCallback = (entries, observerOptions) => {
         entries.forEach(entry => {
