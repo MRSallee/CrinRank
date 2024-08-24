@@ -675,6 +675,7 @@ function dataSort(data, sort) {
 // Build DOM functions
 function buildListItems(data, tableMode) {
     elemListContentsContainer.scrollTop = 0;
+    elemListContents.innerHTML = '';
     
     // Set stateData values
     let dataGroupSize = 100,
@@ -694,7 +695,7 @@ function buildListItems(data, tableMode) {
         //buildCards(data);
     }
     
-    testBuild(data, 0);
+    buildGroup(data, 0);
     
     // Add count of hidden items
     let countDataItemsTotal = freshData.length,
@@ -708,7 +709,7 @@ function buildListItems(data, tableMode) {
     document.querySelector('#filter-result').textContent = resultCopy;
 }
 
-function testBuild(data, groupIndex) {
+function buildGroup(data, groupIndex) {
     let groupA = groupIndex > 1 ? groupIndex - 1 : 0,
         groupB = groupIndex === 0 ? 1 : groupIndex,
         groupC = groupB < stateData.countGroups ? groupB + 1 : 0,
@@ -753,7 +754,8 @@ function testBuild(data, groupIndex) {
         
         if (!groupContainerExists) elemListContents.append(groupContainer);
         groupContainer.innerHTML = '';
-        groupContainer.append(JSON.stringify(groupData));
+        //groupContainer.append(JSON.stringify(groupData));
+        buildCards(groupData, groupContainer);
         
         groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
     }
@@ -774,7 +776,7 @@ function createGroupContainer(groupIndex, data) {
             if (entry.isIntersecting) {
                 console.log(groupIndex +' in view');
                 entry.target.style.backgroundColor = 'var(--color-cream)';
-                testBuild(data, groupIndex);
+                buildGroup(data, groupIndex);
             } else {
                 entry.target.style.backgroundColor = 'var(--color-orange)';
             }
@@ -861,9 +863,8 @@ function buildTable(data) {
     });
 }
 
-function buildCards(data) {
+function buildCards(data, container) {
     // Clear DOM & set mode
-    elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
     
@@ -940,6 +941,6 @@ function buildCards(data) {
         elemCardFooter.append(footerStatus);
         
         // Add finished card DOM
-        elemListContents.append(elemCardContainer);
+        container.append(elemCardContainer);
     });
 }
