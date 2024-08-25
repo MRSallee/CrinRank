@@ -797,8 +797,19 @@ section.list-table div {
     display: table-cell;
 }
 
+div.list-contents[list-mode="table"] div.group-container {
+    width: 320rem;
+    max-width: none;
+}
+
+
+
 /* -----
 Table column widths */
+
+section.list-table {
+    width: 320rem;
+}
 
 article.table-head div.table-head-name,
 div.table-phone-name {
@@ -806,15 +817,66 @@ div.table-phone-name {
     width: 60rem;
 }
 
+div.table-head-tested,
+div.table-phone-tested {
+    box-sizing: border-box;
+    width: 20rem;
+}
+
+div.table-head-buy,
+div.table-phone-buy {
+    box-sizing: border-box;
+    width: 30rem;
+}
+
+div.table-head-demoable,
+div.table-phone-demoable {
+    box-sizing: border-box;
+    width: 30rem;
+}
+
+div.table-head-showcase,
+div.table-phone-showcase {
+    box-sizing: border-box;
+    width: 30rem;
+}
+
+div.table-head-measurement,
+div.table-phone-graph {
+    box-sizing: border-box;
+    width: 30rem;
+}
+
+div.table-head-signature,
+div.table-phone-signature {
+    box-sizing: border-box;
+    width: 50rem;
+6}
+
+div.table-head-drivers,
+div.table-phone-drivers {
+    box-sizing: border-box;
+    width: 30rem;
+}
+
+div.table-head-connection,
+div.table-phone-connection {
+    box-sizing: border-box;
+    width: 30rem;
+}
+
 
 /* -----
 Table header */
 
-article.table-head {
+section.list-table.table-header {
     position: sticky;
     top: 0;
     z-index: 2;
     
+}
+
+article.table-head {
     background-color: var(--color-white);
 }
 
@@ -835,22 +897,17 @@ article.table-head div.table-head-name {
     
     text-align: left;
     
-    width: 60rem;
     padding: 4rem;
     
-/*    background: linear-gradient(to right, var(--color-white) calc(100% - 2rem), transparent);*/
     background-color: var(--color-white);
 }
 
 div.table-head-tested {
-    width: 20rem;
     text-align: center;
 }
 
 div.table-head-buy {
     text-align: center;
-    
-    width: 30rem;
 }
 
 div.table-head-demoable,
@@ -858,14 +915,10 @@ div.table-head-showcase,
 div.table-head-measurement,
 div.table-head-connection {
     text-align: center;
-    
-    width: 30rem;
 }
 
 div.table-head-signature,
 div.table-head-drivers {
-    width: 40rem;
-    
     text-align: center;
 }
 

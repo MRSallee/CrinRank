@@ -465,7 +465,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data.json',
+let json = 'data-test.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -798,7 +798,7 @@ function buildTableHeader(data, container) {
         elemList.setAttribute('list-mode', 'table');
 
         // Create header row
-        let tableBody = newElem('section', 'list-table'),
+        let tableBody = newElem('section', 'list-table table-header'),
             tableHead = newElem('article', 'table-head'),
             headName = newElem('div', 'table-head-name', null, 'Name'),
             headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
