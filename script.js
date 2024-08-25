@@ -826,8 +826,8 @@ function buildTableHeader(data, container) {
 }
 
 function buildTable(data, container) {
-    let tableBody = newElem('section', 'list-table');
-    container.append(tableBody);
+    //let tableBody = newElem('section', 'list-table');
+    //container.append(tableBody);
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
@@ -869,7 +869,7 @@ function buildTable(data, container) {
         phoneContainer.append(phoneDrivers);
         phoneContainer.append(phoneConnection);
         
-        tableBody.append(phoneContainer);
+        container.append(phoneContainer);
     });
 }
 

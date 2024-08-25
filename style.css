@@ -22,6 +22,7 @@
     --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-chevron-down'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M6 9l6 6l6 -6' /%3E%3C/svg%3E");
     --icon-table: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-table'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z' /%3E%3Cpath d='M3 10h18' /%3E%3Cpath d='M10 3v18' /%3E%3C/svg%3E");
     --icon-sliders: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-adjustments-horizontal'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 6l8 0' /%3E%3Cpath d='M16 6l4 0' /%3E%3Cpath d='M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 12l2 0' /%3E%3Cpath d='M10 12l10 0' /%3E%3Cpath d='M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 18l11 0' /%3E%3Cpath d='M19 18l1 0' /%3E%3C/svg%3E");
+    --icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-x'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M18 6l-12 12' /%3E%3Cpath d='M6 6l12 12' /%3E%3C/svg%3E");
 }
 
 html {
@@ -83,9 +84,6 @@ div.list-contents[list-mode='cards'] {
 
 div.group-container {
     box-sizing: border-box;
-    
-    max-width: 500px;
-    overflow: hidden;
 }
 
 article.card-container {
@@ -396,6 +394,11 @@ section[control-id="listMode"] label:before {
     -webkit-mask-size: 100%;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
+}
+
+body[filters-overlay="true"] section[control-id="filtersOverlay"] label:before {
+    mask-image: var(--icon-close);
+    -webkit-mask-image: var(--icon-close);
 }
 
 section[control-id="listMode"] label:before {
@@ -789,7 +792,8 @@ section.list-table {
     line-height: 1em;
 }
 
-section.list-table article {
+article.table-head,
+article.table-phone-container {
     display: table-row;
 }
 
@@ -814,54 +818,63 @@ section.list-table {
 article.table-head div.table-head-name,
 div.table-phone-name {
     box-sizing: border-box;
+    display: table-cell;
     width: 60rem;
 }
 
 div.table-head-tested,
 div.table-phone-tested {
     box-sizing: border-box;
+    display: table-cell;
     width: 20rem;
 }
 
 div.table-head-buy,
 div.table-phone-buy {
     box-sizing: border-box;
+    display: table-cell;
     width: 30rem;
 }
 
 div.table-head-demoable,
 div.table-phone-demoable {
     box-sizing: border-box;
+    display: table-cell;
     width: 30rem;
 }
 
 div.table-head-showcase,
 div.table-phone-showcase {
     box-sizing: border-box;
+    display: table-cell;
     width: 30rem;
 }
 
 div.table-head-measurement,
 div.table-phone-graph {
     box-sizing: border-box;
+    display: table-cell;
     width: 30rem;
 }
 
 div.table-head-signature,
 div.table-phone-signature {
     box-sizing: border-box;
+    display: table-cell;
     width: 50rem;
 6}
 
 div.table-head-drivers,
 div.table-phone-drivers {
     box-sizing: border-box;
+    display: table-cell;
     width: 30rem;
 }
 
 div.table-head-connection,
 div.table-phone-connection {
     box-sizing: border-box;
+    display: table-cell;
     width: 30rem;
 }
 
@@ -927,6 +940,10 @@ div.table-head-connection {
 
 /* -----
 Phone items */
+
+main[list-mode="table"] div.group-container {
+    display: table;
+}
 
 article.table-phone-container {
     
@@ -999,6 +1016,8 @@ div.table-phone-tested[crin-approved='yes']:before {
 div.table-phone-demoable {
     text-align: center;
     vertical-align: middle;
+    
+    font-size: 3rem;
 }
 
 div.table-phone-demoable:before {
@@ -1137,6 +1156,8 @@ div.table-phone-connection {
     
     text-align: center;
     vertical-align: middle;
+    
+    font-size: 3rem;
 }
 
 /* -----
@@ -1237,7 +1258,15 @@ Mobile styles */
     input.max,
     input.min,
     select.controls-dropdown,
-    section.list-table {
+    section.list-table,
+    div.table-phone-demoable,
+    div.table-phone-signature,
+    div.table-phone-drivers,
+    div.table-phone-connection {
         font-size: 4rem;
+    }
+    
+    select.controls-dropdown {
+        width: 50rem;
     }
 }
