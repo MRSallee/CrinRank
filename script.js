@@ -704,7 +704,7 @@ function buildListItems(data, tableMode) {
         displayItemsMissing = countDataItemsMissing != countDataItemsTotal ? numDisplay(countDataItemsMissing, 'decimal', false) : 'All',
         missingWarningContainer = newElem('article', 'phones-missing-container'),
         missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)'),
-        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItemsMissing + ' models hidden by filters';
+        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItems + ' displayed (' + displayItemsMissing + ' hidden by filters)';
     
     document.querySelector('#filter-result').textContent = resultCopy;
 }
