@@ -465,7 +465,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data-test.json',
+let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 

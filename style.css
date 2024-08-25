@@ -815,7 +815,7 @@ section.list-table {
     width: 320rem;
 }
 
-article.table-head div.table-head-name,
+div.table-head-name,
 div.table-phone-name {
     box-sizing: border-box;
     display: table-cell;
@@ -1268,5 +1268,20 @@ Mobile styles */
     
     select.controls-dropdown {
         width: 50rem;
+    }
+    
+    div.table-head-name,
+    div.table-phone-name {
+        width: 50rem;
+    }
+    
+    div.table-head-tested,
+    div.table-phone-tested {
+        width: 25rem;
+    }
+    
+    div.table-head-drivers,
+    div.table-phone-drivers {
+        width: 35rem;
     }
 }
