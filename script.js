@@ -110,6 +110,18 @@ let proxyHandler = {
 };
 let stateP = new Proxy(state, proxyHandler);
 
+let stateData = {
+    'groupSize': 100,
+    'readyData': '',
+    'countItems': 0,
+    'countGroups': 0,
+    'countItemsLastGroup': 0,
+    'groupLastSeen': 0,
+    'groupContainers': [
+        
+    ]
+};
+
 
 // Object for available controls
 let controls = [
@@ -453,7 +465,7 @@ constructFiltersUi(controls);
 
 
 // Set data variables
-let json = 'data-test.json',
+let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -662,53 +674,160 @@ function dataSort(data, sort) {
 
 // Build DOM functions
 function buildListItems(data, tableMode) {
+    elemListContentsContainer.scrollTop = 0;
+    elemListContents.innerHTML = '';
+    
+    // Set stateData values
+    let dataGroupSize = 100,
+        countDataItems = data.length;
+    
+    // Set data state values
+    stateData.readyData = data;
+    stateData.countItems = data.length;
+    stateData.countGroups = Math.ceil(stateData.countItems / dataGroupSize);
+    stateData.countItemsLastGroup = stateData.countItems - ((stateData.countGroups -1 ) * dataGroupSize);
+    
+    console.log(stateData);
+    
     if (tableMode) {
-        buildTable(data)
+        //buildTable(data)
     } else {
-        buildCards(data);
+        //buildCards(data);
     }
     
+    buildGroup(data, 0);
+    
     // Add count of hidden items
-    let countDataItems = data.length,
-        countDataItemsTotal = freshData.length,
+    let countDataItemsTotal = freshData.length,
         countDataItemsMissing = countDataItemsTotal - countDataItems,
         displayItems = numDisplay(countDataItems, 'decimal', false),
         displayItemsMissing = countDataItemsMissing != countDataItemsTotal ? numDisplay(countDataItemsMissing, 'decimal', false) : 'All',
         missingWarningContainer = newElem('article', 'phones-missing-container'),
         missingWarningCopy = newElem('div', 'phones-missing', null, displayItems + ' models match filters (' + displayItemsMissing + ' hidden)'),
-        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItemsMissing + ' models hidden by filters';
+        resultCopy = countDataItemsMissing === 0 ? 'All ' + displayItems + ' models displayed' : displayItems + ' displayed (' + displayItemsMissing + ' hidden by filters)';
     
     document.querySelector('#filter-result').textContent = resultCopy;
 }
 
-function buildTable(data) {
-    // Clear DOM & set mode
-    elemListContents.innerHTML = '';
-    elemListContents.setAttribute('list-mode', 'table');
-    elemList.setAttribute('list-mode', 'table');
-    // Create header row
-    let tableBody = newElem('section', 'list-table'),
-        tableHead = newElem('article', 'table-head'),
-        headName = newElem('div', 'table-head-name', null, 'Name'),
-        headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
-        headBuy = newElem('div', 'table-head-buy', null, 'Price'),
-        headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
-        headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
-        headMeasurement = newElem('div', 'table-head-measurement', null, 'Graph'),
-        headSignature = newElem('div', 'table-head-signature', null, 'Sound signature'),
-        headDrivers = newElem('div', 'table-head-drivers', null, 'Driver config'),
-        headConnection = newElem('div', 'table-head-connection', null, 'Connection');
-    tableHead.append(headName);
-    tableHead.append(headTested);
-    tableHead.append(headBuy);
-    tableHead.append(headDemoable);
-    tableHead.append(headShowcase);
-    tableHead.append(headMeasurement);
-    tableHead.append(headSignature);
-    tableHead.append(headDrivers);
-    tableHead.append(headConnection);
-    tableBody.append(tableHead);
-    elemListContents.append(tableBody);
+function buildGroup(data, groupIndex) {
+    let groupA = groupIndex > 1 ? groupIndex - 1 : 0,
+        groupB = groupIndex === 0 ? 1 : groupIndex,
+        groupC = groupB < stateData.countGroups ? groupB + 1 : 0,
+        groupsActive = [];
+    
+    if (groupA) groupsActive.push(groupA);
+    if (groupB) groupsActive.push(groupB);
+    if (groupC) groupsActive.push(groupC);
+    
+    // Clear group containers
+    function clearInactive() {
+        let allGroupContainers = document.querySelectorAll('div.group-container');
+        
+        allGroupContainers.forEach(function(groupContainer) {
+            let groupId = parseInt(groupContainer.getAttribute('group-index')),
+                groupValid = groupId <= stateData.countGroups ? true : false,
+                groupActive = groupsActive.includes(groupId);
+            
+            //console.log(groupId, groupValid, groupActive);
+            
+            if (!groupValid) {
+                groupContainer.remove();
+            } else if (!groupActive) {
+                groupContainer.setAttribute('style', 'height: ' + groupContainer.offsetHeight + 'px;');
+                groupContainer.innerHTML = '';
+            }
+        });
+    }
+    clearInactive()
+    
+    // Populate group containers
+    if (groupA) next(groupA);
+    if (groupB) next(groupB);
+    if (groupC) next(groupC);
+    
+    function next(groupIndex) {
+        let indexStart = groupIndex * stateData.groupSize - stateData.groupSize,
+            indexEnd = groupIndex < stateData.countGroups ? groupIndex * stateData.groupSize : indexStart + stateData.countItemsLastGroup,
+            groupData = data.slice(indexStart, indexEnd);
+        
+        let groupContainerExists = document.querySelector('div[group-index="' + groupIndex + '"'),
+            groupContainer = groupContainerExists ? document.querySelector('div[group-index="' + groupIndex + '"') : createGroupContainer(groupIndex, data);
+        
+        if (!groupContainerExists) elemListContents.append(groupContainer);
+        groupContainer.innerHTML = '';
+        
+        if (state.tableMode) {
+            buildTableHeader(groupData, groupContainer);
+        } else {
+            buildCards(groupData, groupContainer);
+        }
+    }
+    
+}
+    
+function createGroupContainer(groupIndex, data) {
+    let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
+    
+    let observerOptions = {
+            root: document.querySelector('body'),
+            //root: elemListContentsContainer,
+            //rootMargin: "-200px",
+            rootMargin: "0px",
+            threshold: 0.000001
+    };
+    let observerCallback = (entries, observerOptions) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                console.log(groupIndex +' in view');
+                buildGroup(data, groupIndex);
+            }
+        })
+    };
+    let observer = new IntersectionObserver(observerCallback, observerOptions)
+    observer.observe(groupContainer);
+    
+    return groupContainer;
+}
+
+function buildTableHeader(data, container) {
+    let tableHeaderExists = document.querySelectorAll('section.list-table').length ? true : false;
+    
+    if (!tableHeaderExists) {
+        // Clear DOM & set mode
+        elemListContents.setAttribute('list-mode', 'table');
+        elemList.setAttribute('list-mode', 'table');
+
+        // Create header row
+        let tableBody = newElem('section', 'list-table table-header'),
+            tableHead = newElem('article', 'table-head'),
+            headName = newElem('div', 'table-head-name', null, 'Name'),
+            headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
+            headBuy = newElem('div', 'table-head-buy', null, 'Price'),
+            headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
+            headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
+            headMeasurement = newElem('div', 'table-head-measurement', null, 'Graph'),
+            headSignature = newElem('div', 'table-head-signature', null, 'Sound signature'),
+            headDrivers = newElem('div', 'table-head-drivers', null, 'Driver config'),
+            headConnection = newElem('div', 'table-head-connection', null, 'Connection');
+        tableHead.append(headName);
+        tableHead.append(headTested);
+        tableHead.append(headBuy);
+        tableHead.append(headDemoable);
+        tableHead.append(headShowcase);
+        tableHead.append(headMeasurement);
+        tableHead.append(headSignature);
+        tableHead.append(headDrivers);
+        tableHead.append(headConnection);
+        tableBody.append(tableHead);
+        elemListContents.prepend(tableBody);
+    }
+    
+    buildTable(data, container);
+}
+
+function buildTable(data, container) {
+    //let tableBody = newElem('section', 'list-table');
+    //container.append(tableBody);
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
@@ -750,13 +869,12 @@ function buildTable(data) {
         phoneContainer.append(phoneDrivers);
         phoneContainer.append(phoneConnection);
         
-        tableBody.append(phoneContainer);
+        container.append(phoneContainer);
     });
 }
 
-function buildCards(data) {
+function buildCards(data, container) {
     // Clear DOM & set mode
-    elemListContents.innerHTML = '';
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
     
@@ -833,6 +951,6 @@ function buildCards(data) {
         elemCardFooter.append(footerStatus);
         
         // Add finished card DOM
-        elemListContents.append(elemCardContainer);
+        container.append(elemCardContainer);
     });
 }
