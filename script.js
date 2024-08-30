@@ -566,7 +566,7 @@ function applyState(state) {
 function dataFilter(data, filters) {
     var filteredData = data.filter(function (item) {
         let fullName = item.brand + ' ' + item.model,
-            meetsDemoFilter = filters.availability.demoableOnly ? item.demoable.toLowerCase() === 'yes' ? 1 : 0 : 1,
+            meetsDemoFilter = filters.availability.demoableOnly ? item.demoable : 1,
             
             // Price range filters
             meetsMinPrice =  filters.price.priceMin > 0 ? item.price >= filters.price.priceMin : true,
