@@ -648,7 +648,7 @@ function dataSort(data, sort) {
         if (sort === 'priceLowHigh') {
             if (sumA > sumB) {
                 return -1
-            } else if (sumA === sumB && a.price < b.price) {
+            } else if (sumA === sumB && a.price > 0 && a.price < b.price) {
                 return -1
             } else {
                 return 0
@@ -841,7 +841,7 @@ function buildTable(data, container) {
             phoneBuyLink = item.linkStore
                 ? newElem('a', 'table-phone-buy-link', [{'key': 'href', 'val': item.linkStore}])
                 : newElem('a', 'table-phone-buy-link'),
-            phonePrice = newElem('span', 'table-phone-price', null, numDisplay(item.price, 'currency', 'usd')),
+            phonePrice = item.price > 0 ? newElem('span', 'table-phone-price', null, numDisplay(item.price, 'currency', 'usd')): newElem('span', 'table-phone-price', null, 'unknown'),
             phoneDemoable = newElem('div', 'table-phone-demoable', [{'key': 'data-demoable', 'val': item.demoable}]);
         phoneBuyLink.append(phonePrice);
         phoneBuy.append(phoneBuyLink);
@@ -937,7 +937,7 @@ function buildCards(data, container) {
             linkStore = item.linkStore
                             ? newElem('a', 'phone-link phone-link-store', [{'key': 'href', 'val': item.linkStore}], 'Buy')
                             : newElem('a', 'phone-link phone-link-store', null, ''),
-            storePrice = newElem('span', 'phone-store-price', null, numDisplay(item.price, 'currency', 'usd'));
+            storePrice = item.price > 0 ? newElem('span', 'phone-store-price', null, numDisplay(item.price, 'currency', 'usd')) : newElem('span', 'phone-store-price', null, 'unknown');
         
         elemCardBody.append(bodyLinks);
         bodyLinks.append(linkShowcase);
