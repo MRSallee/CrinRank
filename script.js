@@ -841,7 +841,8 @@ function buildTable(data, container) {
             phoneBuyLink = item.linkStore
                 ? newElem('a', 'table-phone-buy-link', [{'key': 'href', 'val': item.linkStore}])
                 : newElem('a', 'table-phone-buy-link'),
-            phonePrice = item.price > 0 ? newElem('span', 'table-phone-price', null, numDisplay(item.price, 'currency', 'usd')): newElem('span', 'table-phone-price', null, 'unknown'),
+            displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
+            phonePrice = newElem('span', 'table-phone-price', null, displayPrice),
             phoneDemoable = newElem('div', 'table-phone-demoable', [{'key': 'data-demoable', 'val': item.demoable}]);
         phoneBuyLink.append(phonePrice);
         phoneBuy.append(phoneBuyLink);
@@ -937,7 +938,8 @@ function buildCards(data, container) {
             linkStore = item.linkStore
                             ? newElem('a', 'phone-link phone-link-store', [{'key': 'href', 'val': item.linkStore}], 'Buy')
                             : newElem('a', 'phone-link phone-link-store', null, ''),
-            storePrice = item.price > 0 ? newElem('span', 'phone-store-price', null, numDisplay(item.price, 'currency', 'usd')) : newElem('span', 'phone-store-price', null, 'unknown');
+            displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
+            storePrice = newElem('span', 'phone-store-price', null, displayPrice);
         
         elemCardBody.append(bodyLinks);
         bodyLinks.append(linkShowcase);
