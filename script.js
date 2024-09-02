@@ -137,7 +137,7 @@ let controls = [
                     false
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.overlayFilters = val }
+                'stateSet': function(val) { stateP.overlayFilters = val }
             }
         ]
     },
@@ -155,7 +155,7 @@ let controls = [
                     false
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'unsorted'} else {stateP.sort = 'priceLowHigh'}; }
+                'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'unsorted'} else {stateP.sort = 'priceLowHigh'}; }
             }
         ]
     },
@@ -180,7 +180,7 @@ let controls = [
             },
         ],
         'defaultValue': 'priceLowHigh',
-        'stateLoc': function(val) { stateP.sort = val }
+        'stateSet': function(val) { stateP.sort = val }
     },
     {
         'label': 'Search',
@@ -188,7 +188,7 @@ let controls = [
         'displayName': 'Search',
         'type': 'search',
         'location': 'listFilters',
-        'stateLoc': function(val) { stateP.filters.searchString = val }
+        'stateSet': function(val) { stateP.filters.searchString = val }
     },
     {
         'name': 'priceRange',
@@ -200,13 +200,13 @@ let controls = [
                 'displayName': 'Min',
                 'name': 'min',
                 'value': '',
-                'stateLoc': function(val) { stateP.filters.price.priceMin = val }
+                'stateSet': function(val) { stateP.filters.price.priceMin = val }
             },
             {
                 'displayName': 'Max',
                 'name': 'max',
                 'value': '',
-                'stateLoc': function(val) { stateP.filters.price.priceMax = val }
+                'stateSet': function(val) { stateP.filters.price.priceMax = val }
             },
         ],
     },
@@ -224,7 +224,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.filters.availability.buyableOnly = val }
+                'stateSet': function(val) { stateP.filters.availability.buyableOnly = val }
             },
             {
                 'name': 'crinApprovedOnly',
@@ -234,7 +234,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.filters.availability.crinApprovedOnly = val; if (val) {stateP.filters.availability.crinTestedOnly = val}; }
+                'stateSet': function(val) { stateP.filters.availability.crinApprovedOnly = val; if (val) {stateP.filters.availability.crinTestedOnly = val}; }
             },
             {
                 'name': 'crinTestedOnly',
@@ -244,7 +244,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.filters.availability.crinTestedOnly = val }
+                'stateSet': function(val) { stateP.filters.availability.crinTestedOnly = val }
             },
             {
                 'name': 'demoableOnly',
@@ -254,8 +254,8 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                //'stateLoc': stateP.filters.availability.demoableOnly
-                'stateLoc': function(val) { stateP.filters.availability.demoableOnly = val }
+                //'stateSet': stateP.filters.availability.demoableOnly
+                'stateSet': function(val) { stateP.filters.availability.demoableOnly = val }
             },
             {
                 'name': 'discontinued',
@@ -265,7 +265,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.filters.availability.discontinued = val }
+                'stateSet': function(val) { stateP.filters.availability.discontinued = val }
             },
         ],
     },
@@ -283,7 +283,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.drivers.ba = val }
+                'stateSet': function(val) { stateP.filters.drivers.ba = val }
             },
             {
                 'name': 'dd',
@@ -293,7 +293,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.drivers.dd = val }
+                'stateSet': function(val) { stateP.filters.drivers.dd = val }
             },
             {
                 'name': 'est',
@@ -303,7 +303,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.drivers.est = val }
+                'stateSet': function(val) { stateP.filters.drivers.est = val }
             },
             {
                 'name': 'planar',
@@ -313,7 +313,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.drivers.planar = val }
+                'stateSet': function(val) { stateP.filters.drivers.planar = val }
             },
         ],
     },
@@ -331,7 +331,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.connection.twopin = val }
+                'stateSet': function(val) { stateP.filters.connection.twopin = val }
             },
             {
                 'name': 'mmcx',
@@ -341,7 +341,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.connection.mmcx = val }
+                'stateSet': function(val) { stateP.filters.connection.mmcx = val }
             },
             {
                 'name': 'ipx',
@@ -351,7 +351,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
-                'stateLoc': function(val) { stateP.filters.connection.ipx = val }
+                'stateSet': function(val) { stateP.filters.connection.ipx = val }
             },
         ],
     },];
@@ -384,7 +384,7 @@ function constructFiltersUi(controls) {
                 controlContainer.append(toggleContainer);
                 
                 toggleInput.addEventListener('change', function(e) {
-                    toggle.stateLoc(e.target.checked);
+                    toggle.stateSet(e.target.checked);
                 });
             });
         }
@@ -407,7 +407,7 @@ function constructFiltersUi(controls) {
             dropdownContainer.value = control.defaultValue;
             
             dropdownContainer.addEventListener('change', function(e){
-                control.stateLoc(e.target.value);
+                control.stateSet(e.target.value);
             });
         }
         
@@ -424,7 +424,7 @@ function constructFiltersUi(controls) {
             searchInput.addEventListener('input', function(e) {
                 try { clearTimeout(searchDelay); } catch {}
                 searchDelay = setTimeout(function() {
-                    control.stateLoc(searchInput.value);
+                    control.stateSet(searchInput.value);
                 }, 500);
             });
         }
@@ -446,7 +446,7 @@ function constructFiltersUi(controls) {
                 valueInput.addEventListener('input', function(e) {
                     try { clearTimeout(searchDelay); } catch {}
                     searchDelay = setTimeout(function() {
-                        value.stateLoc(valueInput.value);
+                        value.stateSet(valueInput.value);
                     }, 500);
                 });
             });
@@ -459,6 +459,16 @@ function constructFiltersUi(controls) {
     elemListFilters.prepend(filtersResultContainer);
 }
 constructFiltersUi(controls);
+
+
+
+// Apply state to the controls
+function applyStateControls() {
+    console.log(controls);
+}
+applyStateControls();
+
+
 
 
 
