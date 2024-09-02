@@ -137,6 +137,7 @@ let controls = [
                     false
                 ],
                 'defaultValue': false,
+                get stateLoc() { return stateP.overlayFilters },
                 'stateSet': function(val) { stateP.overlayFilters = val }
             }
         ]
@@ -155,6 +156,7 @@ let controls = [
                     false
                 ],
                 'defaultValue': false,
+                get stateLoc() { return stateP.tableMode },
                 'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'unsorted'} else {stateP.sort = 'priceLowHigh'}; }
             }
         ]
@@ -180,6 +182,7 @@ let controls = [
             },
         ],
         'defaultValue': 'priceLowHigh',
+        get stateLoc() { return stateP.sort },
         'stateSet': function(val) { stateP.sort = val }
     },
     {
@@ -188,6 +191,7 @@ let controls = [
         'displayName': 'Search',
         'type': 'search',
         'location': 'listFilters',
+        get stateLoc() { return stateP.filters.searchString },
         'stateSet': function(val) { stateP.filters.searchString = val }
     },
     {
@@ -200,12 +204,14 @@ let controls = [
                 'displayName': 'Min',
                 'name': 'min',
                 'value': '',
+                get stateLoc() { return stateP.filters.price.priceMin },
                 'stateSet': function(val) { stateP.filters.price.priceMin = val }
             },
             {
                 'displayName': 'Max',
                 'name': 'max',
                 'value': '',
+                get stateLoc() { return stateP.filters.price.priceMax },
                 'stateSet': function(val) { stateP.filters.price.priceMax = val }
             },
         ],
@@ -224,6 +230,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
+                get stateLoc() { return stateP.filters.availability.buyableOnly },
                 'stateSet': function(val) { stateP.filters.availability.buyableOnly = val }
             },
             {
@@ -234,6 +241,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
+                get stateLoc() { return stateP.filters.availability.crinApprovedOnly },
                 'stateSet': function(val) { stateP.filters.availability.crinApprovedOnly = val; if (val) {stateP.filters.availability.crinTestedOnly = val}; }
             },
             {
@@ -244,6 +252,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
+                get stateLoc() { return stateP.filters.availability.crinTestedOnly },
                 'stateSet': function(val) { stateP.filters.availability.crinTestedOnly = val }
             },
             {
@@ -254,7 +263,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                //'stateSet': stateP.filters.availability.demoableOnly
+                get stateLoc() { return stateP.filters.availability.demoableOnly },
                 'stateSet': function(val) { stateP.filters.availability.demoableOnly = val }
             },
             {
@@ -265,6 +274,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
+                get stateLoc() { return stateP.filters.availability.discontinued },
                 'stateSet': function(val) { stateP.filters.availability.discontinued = val }
             },
         ],
@@ -283,6 +293,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.drivers.ba },
                 'stateSet': function(val) { stateP.filters.drivers.ba = val }
             },
             {
@@ -293,6 +304,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.drivers.dd },
                 'stateSet': function(val) { stateP.filters.drivers.dd = val }
             },
             {
@@ -303,6 +315,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.drivers.est },
                 'stateSet': function(val) { stateP.filters.drivers.est = val }
             },
             {
@@ -313,6 +326,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.drivers.planar },
                 'stateSet': function(val) { stateP.filters.drivers.planar = val }
             },
         ],
@@ -331,6 +345,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.twopin },
                 'stateSet': function(val) { stateP.filters.connection.twopin = val }
             },
             {
@@ -341,6 +356,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.mmcx },
                 'stateSet': function(val) { stateP.filters.connection.mmcx = val }
             },
             {
@@ -351,10 +367,12 @@ let controls = [
                     false,
                 ],
                 'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.ipx },
                 'stateSet': function(val) { stateP.filters.connection.ipx = val }
             },
         ],
-    },];
+    }
+];
 
 // Construct filter controls
 function constructFiltersUi(controls) {
@@ -386,6 +404,9 @@ function constructFiltersUi(controls) {
                 toggleInput.addEventListener('change', function(e) {
                     toggle.stateSet(e.target.checked);
                 });
+                
+                toggle.uiElem = toggleInput;
+                toggle.uiElemMethod = 'checked';
             });
         }
         
@@ -409,6 +430,9 @@ function constructFiltersUi(controls) {
             dropdownContainer.addEventListener('change', function(e){
                 control.stateSet(e.target.value);
             });
+            
+            control.uiElem = dropdownContainer;
+            control.uiElemMethod = 'value';
         }
         
         // Create search
@@ -427,6 +451,9 @@ function constructFiltersUi(controls) {
                     control.stateSet(searchInput.value);
                 }, 500);
             });
+            
+            control.uiElem = searchInput;
+            control.uiElemMethod = 'value';
         }
         
         // Create range
@@ -449,6 +476,9 @@ function constructFiltersUi(controls) {
                         value.stateSet(valueInput.value);
                     }, 500);
                 });
+                
+                value.uiElem = valueInput;
+                value.uiElemMethod = 'value';
             });
         }
     });
@@ -464,11 +494,40 @@ constructFiltersUi(controls);
 
 // Apply state to the controls
 function applyStateControls() {
-    console.log(controls);
+    controls.forEach(function(control) {
+        if (control.type === 'toggle') {
+            control.toggles.forEach(function(toggle) {
+                let uiState = toggle.uiElem.checked,
+                    statesMatch = uiState === toggle.stateLoc ? true : false;
+                
+                if (!statesMatch) toggle.uiElem.checked = toggle.stateLoc;
+            });
+        }
+        
+        if (control.type === 'dropdown') {
+            let uiState = control.uiElem.value,
+                statesMatch = uiState === control.stateLoc ? true : false;
+
+            if (!statesMatch) control.uiElem.value = control.stateLoc;
+        }
+        
+        if (control.type === 'search') {
+            let uiState = control.uiElem.value,
+                statesMatch = uiState === control.stateLoc ? true : false;
+
+            if (!statesMatch) control.uiElem.value = control.stateLoc;
+        }
+        
+        if (control.type === 'range') {
+            control.values.forEach(function(value) {
+                let uiState = value.uiElem.value,
+                    statesMatch = uiState === value.stateLoc ? true : false;
+                
+                if (!statesMatch) value.uiElem.value = value.stateLoc;
+            });
+        }
+    });
 }
-applyStateControls();
-
-
 
 
 
@@ -556,6 +615,8 @@ function applyState(state) {
     
     // Filters overlay
     document.querySelector('body').setAttribute('filters-overlay', state.overlayFilters);
+    
+    applyStateControls();
 }
 
 
