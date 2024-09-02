@@ -101,10 +101,8 @@ let proxyHandler = {
         return typeof v == 'object' ? new Proxy(v, proxyHandler) : v;
     },
     set(obj, prop, value) {
-        //document.querySelector('body').setAttribute('list-change', 'true');
         obj[prop] = value;
         applyState(state);
-        //document.querySelector('body').setAttribute('list-change', 'false');
         console.log('State changed');
     }
 };
@@ -157,7 +155,7 @@ let controls = [
                     false
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.tableMode = val }
+                'stateLoc': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'unsorted'} else {stateP.sort = 'priceLowHigh'}; }
             }
         ]
     },
@@ -236,7 +234,7 @@ let controls = [
                     false,
                 ],
                 'defaultValue': false,
-                'stateLoc': function(val) { stateP.filters.availability.crinApprovedOnly = val }
+                'stateLoc': function(val) { stateP.filters.availability.crinApprovedOnly = val; if (val) {stateP.filters.availability.crinTestedOnly = val}; }
             },
             {
                 'name': 'crinTestedOnly',
@@ -473,17 +471,7 @@ let json = 'data.json',
 
 // Get data
 function getDataFresh (json) {
-    let dataArr = [],
-        dataMock = [
-            {
-                'name': 'Espana',
-                'color': 'red'
-            },
-            {
-                'name': 'Srb',
-                'color': 'blue'
-            }
-        ];
+    let dataArr = [];
     
     if (!state.jqueryLoaded) {
         function loadJquery() {
@@ -778,7 +766,6 @@ function createGroupContainer(groupIndex, data) {
     let observerCallback = (entries, observerOptions) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                console.log(groupIndex +' in view');
                 buildGroup(data, groupIndex);
             }
         })
