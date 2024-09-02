@@ -37,6 +37,23 @@ function numDisplay(num, style, currencyVar) {
     }
 }
 
+function loadScripts() {
+    let scripts = [
+        'appObjects.js',
+        'ui.js',
+        'content.js'
+    ];
+    
+    scripts.forEach(function(script) {
+        let elemScript = document.createElement('script');
+        
+        elemScript.setAttribute('type', 'text/javascript');
+        elemScript.setAttribute('src', script);
+        document.querySelector('footer').append(elemScript);
+    });
+};
+loadScripts();
+
 
 
 // Initialization
@@ -53,7 +70,7 @@ elemListManagerContainer.append(elemListManager);
 elemListContentsContainer.append(elemListManagerContainer);
 elemListContentsContainer.append(elemListContents);
 elemList.append(elemListContentsContainer);
-document.querySelector('body').append(elemList);
+document.querySelector('body').prepend(elemList);
 
 // Define state object for the list
 let state = {
@@ -544,8 +561,7 @@ function getDataFresh (json) {
     
     if (!state.jqueryLoaded) {
         function loadJquery() {
-            let body = document.querySelector('body'),
-                scriptJquery = document.createElement('script'),
+            let scriptJquery = document.createElement('script'),
                 hostedJquery = 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js';
 
             scriptJquery.setAttribute('type', 'text/javascript');
@@ -557,7 +573,7 @@ function getDataFresh (json) {
                 } catch {}
             });
 
-            body.append(scriptJquery);
+            document.querySelector('footer').append(scriptJquery);
         }
         loadJquery();
     } else {
