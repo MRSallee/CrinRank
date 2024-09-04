@@ -1,5 +1,7 @@
 
+//////////////////////////////////////////////////
 // Helper functions
+
 // Helper: Create element, add classes, add attributes, add content
 function newElem(type, classes, attributes, content) {
     let element = document.createElement(type);
@@ -37,25 +39,9 @@ function numDisplay(num, style, currencyVar) {
     }
 }
 
-function loadScripts() {
-    let scripts = [
-        'appObjects.js',
-        'ui.js',
-        'content.js'
-    ];
-    
-    scripts.forEach(function(script) {
-        let elemScript = document.createElement('script');
-        
-        elemScript.setAttribute('type', 'text/javascript');
-        elemScript.setAttribute('src', script);
-        document.querySelector('footer').append(elemScript);
-    });
-};
-loadScripts();
 
 
-
+//////////////////////////////////////////////////
 // Initialization
 let elemList = newElem('main', 'list'),
     elemListContentsContainer = newElem('section', 'list-contents-container'),
@@ -120,7 +106,6 @@ let proxyHandler = {
     set(obj, prop, value) {
         obj[prop] = value;
         applyState(state);
-        console.log('State changed');
     }
 };
 let stateP = new Proxy(state, proxyHandler);
@@ -136,7 +121,6 @@ let stateData = {
         
     ]
 };
-
 
 // Object for available controls
 let controls = [
@@ -391,7 +375,248 @@ let controls = [
     }
 ];
 
-// Construct filter controls
+
+
+//////////////////////////////////////////////////
+// State application
+
+// Apply the state to the app
+function applyState(state) {
+    // Filter data
+    let filteredData = dataFilter(freshData, state.filters);
+    
+    // Sort data
+    let sortedData = dataSort(filteredData, state.sort);
+    
+    // Build list items DOM
+    buildListItems(sortedData, state.tableMode);
+    
+    // Filters overlay
+    document.querySelector('body').setAttribute('filters-overlay', state.overlayFilters);
+    
+    applyStateControls();
+}
+
+// Apply state to the controls
+function applyStateControls() {
+    controls.forEach(function(control) {
+        if (control.type === 'toggle') {
+            control.toggles.forEach(function(toggle) {
+                let uiState = toggle.uiElem.checked,
+                    statesMatch = uiState === toggle.stateLoc ? true : false;
+                
+                if (!statesMatch) toggle.uiElem.checked = toggle.stateLoc;
+            });
+        }
+        
+        if (control.type === 'dropdown') {
+            let uiState = control.uiElem.value,
+                statesMatch = uiState === control.stateLoc ? true : false;
+
+            if (!statesMatch) control.uiElem.value = control.stateLoc;
+        }
+        
+        if (control.type === 'search') {
+            let uiState = control.uiElem.value,
+                statesMatch = uiState === control.stateLoc ? true : false;
+
+            if (!statesMatch) control.uiElem.value = control.stateLoc;
+        }
+        
+        if (control.type === 'range') {
+            control.values.forEach(function(value) {
+                let uiState = value.uiElem.value,
+                    statesMatch = uiState === value.stateLoc ? true : false;
+                
+                if (!statesMatch) value.uiElem.value = value.stateLoc;
+            });
+        }
+    });
+}
+
+
+
+//////////////////////////////////////////////////
+// Data handlng
+
+// Set data variables
+let json = 'data.json',
+    freshData = getDataFresh(json),
+    jqueryLoaded = false;
+
+// Get data
+function getDataFresh (json) {
+    let dataArr = [];
+    
+    if (!state.jqueryLoaded) {
+        function loadJquery() {
+            let scriptJquery = document.createElement('script'),
+                hostedJquery = 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js';
+
+            scriptJquery.setAttribute('type', 'text/javascript');
+            scriptJquery.setAttribute('src', hostedJquery);
+            scriptJquery.addEventListener('load', function() {
+                try {
+                    state.jqueryLoaded = true;
+                    getDataFromJson(json);
+                } catch {}
+            });
+
+            document.querySelector('footer').append(scriptJquery);
+        }
+        loadJquery();
+    } else {
+        getDataFromJson(json);
+    }
+       
+    function getDataFromJson(json) {
+        $.getJSON(json, function(data) {
+        })
+        .then(function(data) {
+            data.forEach(function(item) {
+                let itemObject = {
+                    'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
+                    'brand': item['Brand'],
+                    'connection': item['Connection'],
+                    'demoable': item['Available at Hangout for Demo'] === 'Yes' ? true : false,
+                    'drivers': item['Driver Configuration'],
+                    'linkStore': item['Hangout Store Link'],
+                    'linkShowcase': item['Showcase Link (YouTube)'],
+                    'linkMeasurement': item['Measurement Link'],
+                    'linkStore': item['Hangout Store Link'],
+                    'model': item['IEM Model'],
+                    'price': item['Price (MSRP, USD)'],
+                    'remarks': item['Remarks'],
+                    'signature': item['Sound Signature'],
+                    'status': item['Status'],
+                    'tested': item['Crinacle-tested'].toLowerCase(),
+                    '_end': ''
+                };
+                
+                dataArr.push(itemObject);
+            });
+        })
+        .then(function() {
+            applyState(state);
+        })
+    }
+    return dataArr;
+}
+
+
+
+// Filter functions
+function dataFilter(data, filters) {
+    var filteredData = data.filter(function (item) {
+        let fullName = item.brand + ' ' + item.model,
+            meetsDemoFilter = filters.availability.demoableOnly ? item.demoable : 1,
+            
+            // Price range filters
+            meetsMinPrice =  filters.price.priceMin > 0 ? item.price >= filters.price.priceMin : true,
+            meetsMaxPrice =  filters.price.priceMax > 0 ? item.price <= filters.price.priceMax : true,
+            
+            // Driver filters
+            isBa = item.drivers.toLowerCase().indexOf('ba') > -1 ? 1 : 0,
+            isDd = item.drivers.toLowerCase().indexOf('dd') > -1 ? 1 : 0,
+            isEst = item.drivers.toLowerCase().indexOf('est') > -1 ? 1 : 0,
+            isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
+            isHybrid = isBa + isDd + isEst + isPlanar >= 2 ? true : false,
+            isTribrid = isBa + isDd + isEst + isPlanar >= 3 ? true : false,
+            meetsDriverBaFilter = filters.drivers.ba ? true : !isBa,
+            meetsDriverDdFilter = filters.drivers.dd ? true : !isDd,
+            meetsDriverEstFilter = filters.drivers.est ? true : !isEst,
+            meetsDriverPlanarFilter = filters.drivers.planar ? true : !isPlanar,
+            
+            // Connection filters
+            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
+            meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
+            meetsConnectionIpxFilter = filters.connection.ipx ? true : item.connection.toLowerCase().indexOf('ipx') === -1,
+            
+            // Availability filters
+            meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
+            meetsTestedFilter = filters.availability.crinTestedOnly ? item.tested === 'yes' : true,
+            meetsApprovedFilter = filters.availability.crinApprovedOnly ? item.approved === 'yes' : true,
+            meetsDiscontinuedFilter = filters.availability.discontinued ? item.status.toLowerCase().indexOf('discontinued') < 0 : true;
+        
+        // Search filter
+        return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
+        
+        // Price filters
+        && meetsMinPrice
+        && meetsMaxPrice
+        
+        // Demo filter
+        && meetsDemoFilter
+        
+        // Driver filters
+        && meetsDriverBaFilter
+        && meetsDriverDdFilter
+        && meetsDriverEstFilter
+        && meetsDriverPlanarFilter
+        
+        // Connection filters
+        && meetsConnectionTwopinFilter
+        && meetsConnectionMmcxFilter
+        && meetsConnectionIpxFilter
+        
+        // Availability filters
+        && meetsBuyableFilter
+        && meetsTestedFilter
+        && meetsApprovedFilter
+        && meetsDiscontinuedFilter
+    });
+    
+    return filteredData;
+}
+
+
+
+// Sort functions
+function dataSort(data, sort) {
+    data.sort(function(a, b) {
+        let testedA = a.tested === 'yes' ? 1 : 0,
+            testedB = b.tested === 'yes' ? 1 : 0,
+            approvedA = a.approved === 'yes'  ? 5 : 0,
+            approvedB = b.approved === 'yes' ? 5 : 0,
+            buyableA = a.linkStore ? 10 : 0,
+            buyableB = b.linkStore ? 10 : 0,
+            discontinuedA = a.status.toLowerCase() === 'discontinued' ? -3 : 0,
+            discontinuedB = b.status.toLowerCase() === 'discontinued' ? -3 : 0,
+            sumA = testedA + approvedA + buyableA + discontinuedA,
+            sumB = testedB + approvedB + buyableB + discontinuedB;
+        
+        // Sort: Price low to high
+        if (sort === 'priceLowHigh') {
+            if (sumA > sumB) {
+                return -1
+            } else if (sumA === sumB && a.price > 0 && a.price < b.price) {
+                return -1
+            } else {
+                return 0
+            }
+        // Sort: Price high to low
+        } else if (sort === 'priceHighLow') {
+            if (sumA > sumB) {
+                return -1
+            } else if (sumA === sumB && a.price > b.price) {
+                return -1
+            } else {
+                return 0
+            }
+        } else if (sort === 'unsorted') {
+            return 0;
+        }
+    });
+    
+    return data;
+}
+
+
+
+//////////////////////////////////////////////////
+// Build DOM: Functions
+
+// Build DOM: Controls
 function constructFiltersUi(controls) {
     // elemListFilters
     controls.forEach(function(control) {
@@ -509,245 +734,7 @@ constructFiltersUi(controls);
 
 
 
-// Apply state to the controls
-function applyStateControls() {
-    controls.forEach(function(control) {
-        if (control.type === 'toggle') {
-            control.toggles.forEach(function(toggle) {
-                let uiState = toggle.uiElem.checked,
-                    statesMatch = uiState === toggle.stateLoc ? true : false;
-                
-                if (!statesMatch) toggle.uiElem.checked = toggle.stateLoc;
-            });
-        }
-        
-        if (control.type === 'dropdown') {
-            let uiState = control.uiElem.value,
-                statesMatch = uiState === control.stateLoc ? true : false;
-
-            if (!statesMatch) control.uiElem.value = control.stateLoc;
-        }
-        
-        if (control.type === 'search') {
-            let uiState = control.uiElem.value,
-                statesMatch = uiState === control.stateLoc ? true : false;
-
-            if (!statesMatch) control.uiElem.value = control.stateLoc;
-        }
-        
-        if (control.type === 'range') {
-            control.values.forEach(function(value) {
-                let uiState = value.uiElem.value,
-                    statesMatch = uiState === value.stateLoc ? true : false;
-                
-                if (!statesMatch) value.uiElem.value = value.stateLoc;
-            });
-        }
-    });
-}
-
-
-
-// Set data variables
-let json = 'data.json',
-    freshData = getDataFresh(json),
-    jqueryLoaded = false;
-
-
-
-// Get data
-function getDataFresh (json) {
-    let dataArr = [];
-    
-    if (!state.jqueryLoaded) {
-        function loadJquery() {
-            let scriptJquery = document.createElement('script'),
-                hostedJquery = 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js';
-
-            scriptJquery.setAttribute('type', 'text/javascript');
-            scriptJquery.setAttribute('src', hostedJquery);
-            scriptJquery.addEventListener('load', function() {
-                try {
-                    state.jqueryLoaded = true;
-                    getDataFromJson(json);
-                } catch {}
-            });
-
-            document.querySelector('footer').append(scriptJquery);
-        }
-        loadJquery();
-    } else {
-        getDataFromJson(json);
-    }
-       
-    function getDataFromJson(json) {
-        $.getJSON(json, function(data) {
-        })
-        .then(function(data) {
-            data.forEach(function(item) {
-                let itemObject = {
-                    'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
-                    'brand': item['Brand'],
-                    'connection': item['Connection'],
-                    'demoable': item['Available at Hangout for Demo'] === 'Yes' ? true : false,
-                    'drivers': item['Driver Configuration'],
-                    'linkStore': item['Hangout Store Link'],
-                    'linkShowcase': item['Showcase Link (YouTube)'],
-                    'linkMeasurement': item['Measurement Link'],
-                    'linkStore': item['Hangout Store Link'],
-                    'model': item['IEM Model'],
-                    'price': item['Price (MSRP, USD)'],
-                    'remarks': item['Remarks'],
-                    'signature': item['Sound Signature'],
-                    'status': item['Status'],
-                    'tested': item['Crinacle-tested'].toLowerCase(),
-                    '_end': ''
-                };
-                
-                dataArr.push(itemObject);
-            });
-        })
-        .then(function() {
-            applyState(state);
-        })
-    }
-    return dataArr;
-}
-
-
-
-// Apply the state to the app
-function applyState(state) {
-    console.log('Applying state');
-    console.log(state);
-    // Filter data
-    let filteredData = dataFilter(freshData, state.filters);
-    
-    // Sort data
-    let sortedData = dataSort(filteredData, state.sort);
-    
-    // Build list items DOM
-    buildListItems(sortedData, state.tableMode);
-    
-    // Filters overlay
-    document.querySelector('body').setAttribute('filters-overlay', state.overlayFilters);
-    
-    applyStateControls();
-}
-
-
-
-// Filter functions
-function dataFilter(data, filters) {
-    var filteredData = data.filter(function (item) {
-        let fullName = item.brand + ' ' + item.model,
-            meetsDemoFilter = filters.availability.demoableOnly ? item.demoable : 1,
-            
-            // Price range filters
-            meetsMinPrice =  filters.price.priceMin > 0 ? item.price >= filters.price.priceMin : true,
-            meetsMaxPrice =  filters.price.priceMax > 0 ? item.price <= filters.price.priceMax : true,
-            
-            // Driver filters
-            isBa = item.drivers.toLowerCase().indexOf('ba') > -1 ? 1 : 0,
-            isDd = item.drivers.toLowerCase().indexOf('dd') > -1 ? 1 : 0,
-            isEst = item.drivers.toLowerCase().indexOf('est') > -1 ? 1 : 0,
-            isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
-            isHybrid = isBa + isDd + isEst + isPlanar >= 2 ? true : false,
-            isTribrid = isBa + isDd + isEst + isPlanar >= 3 ? true : false,
-            meetsDriverBaFilter = filters.drivers.ba ? true : !isBa,
-            meetsDriverDdFilter = filters.drivers.dd ? true : !isDd,
-            meetsDriverEstFilter = filters.drivers.est ? true : !isEst,
-            meetsDriverPlanarFilter = filters.drivers.planar ? true : !isPlanar,
-            
-            // Connection filters
-            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
-            meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
-            meetsConnectionIpxFilter = filters.connection.ipx ? true : item.connection.toLowerCase().indexOf('ipx') === -1,
-            
-            // Availability filters
-            meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
-            meetsTestedFilter = filters.availability.crinTestedOnly ? item.tested === 'yes' : true,
-            meetsApprovedFilter = filters.availability.crinApprovedOnly ? item.approved === 'yes' : true,
-            meetsDiscontinuedFilter = filters.availability.discontinued ? item.status.toLowerCase().indexOf('discontinued') < 0 : true;
-        
-        // if (fullName.toLowerCase().indexOf('thie') > -1) console.log(fullName, isHybrid, isTribrid);
-
-        // Search filter
-        return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
-        
-        // Price filters
-        && meetsMinPrice
-        && meetsMaxPrice
-        
-        // Demo filter
-        && meetsDemoFilter
-        
-        // Driver filters
-        && meetsDriverBaFilter
-        && meetsDriverDdFilter
-        && meetsDriverEstFilter
-        && meetsDriverPlanarFilter
-        
-        // Connection filters
-        && meetsConnectionTwopinFilter
-        && meetsConnectionMmcxFilter
-        && meetsConnectionIpxFilter
-        
-        // Availability filters
-        && meetsBuyableFilter
-        && meetsTestedFilter
-        && meetsApprovedFilter
-        && meetsDiscontinuedFilter
-    });
-    
-    return filteredData;
-}
-
-
-
-// Sort functions
-function dataSort(data, sort) {
-    data.sort(function(a, b) {
-        let testedA = a.tested === 'yes' ? 1 : 0,
-            testedB = b.tested === 'yes' ? 1 : 0,
-            approvedA = a.approved === 'yes'  ? 5 : 0,
-            approvedB = b.approved === 'yes' ? 5 : 0,
-            buyableA = a.linkStore ? 10 : 0,
-            buyableB = b.linkStore ? 10 : 0,
-            discontinuedA = a.status.toLowerCase() === 'discontinued' ? -3 : 0,
-            discontinuedB = b.status.toLowerCase() === 'discontinued' ? -3 : 0,
-            sumA = testedA + approvedA + buyableA + discontinuedA,
-            sumB = testedB + approvedB + buyableB + discontinuedB;
-        
-        // Sort: Price low to high
-        if (sort === 'priceLowHigh') {
-            if (sumA > sumB) {
-                return -1
-            } else if (sumA === sumB && a.price > 0 && a.price < b.price) {
-                return -1
-            } else {
-                return 0
-            }
-        // Sort: Price high to low
-        } else if (sort === 'priceHighLow') {
-            if (sumA > sumB) {
-                return -1
-            } else if (sumA === sumB && a.price > b.price) {
-                return -1
-            } else {
-                return 0
-            }
-        } else if (sort === 'unsorted') {
-            return 0;
-        }
-    });
-    
-    return data;
-}
-
-
-
-// Build DOM functions
+// Build DOM: Content initialization
 function buildListItems(data, tableMode) {
     elemListContentsContainer.scrollTop = 0;
     elemListContents.innerHTML = '';
@@ -761,14 +748,6 @@ function buildListItems(data, tableMode) {
     stateData.countItems = data.length;
     stateData.countGroups = Math.ceil(stateData.countItems / dataGroupSize);
     stateData.countItemsLastGroup = stateData.countItems - ((stateData.countGroups -1 ) * dataGroupSize);
-    
-    console.log(stateData);
-    
-    if (tableMode) {
-        //buildTable(data)
-    } else {
-        //buildCards(data);
-    }
     
     buildGroup(data, 0);
     
@@ -784,6 +763,7 @@ function buildListItems(data, tableMode) {
     document.querySelector('#filter-result').textContent = resultCopy;
 }
 
+// For paginating data
 function buildGroup(data, groupIndex) {
     let groupA = groupIndex > 1 ? groupIndex - 1 : 0,
         groupB = groupIndex === 0 ? 1 : groupIndex,
@@ -802,8 +782,6 @@ function buildGroup(data, groupIndex) {
             let groupId = parseInt(groupContainer.getAttribute('group-index')),
                 groupValid = groupId <= stateData.countGroups ? true : false,
                 groupActive = groupsActive.includes(groupId);
-            
-            //console.log(groupId, groupValid, groupActive);
             
             if (!groupValid) {
                 groupContainer.remove();
@@ -839,7 +817,8 @@ function buildGroup(data, groupIndex) {
     }
     
 }
-    
+
+// Paginating data cont.
 function createGroupContainer(groupIndex, data) {
     let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
     
@@ -863,6 +842,9 @@ function createGroupContainer(groupIndex, data) {
     return groupContainer;
 }
 
+
+
+// Build DOM: Table
 function buildTableHeader(data, container) {
     let tableHeaderExists = document.querySelectorAll('section.list-table').length ? true : false;
     
@@ -900,9 +882,6 @@ function buildTableHeader(data, container) {
 }
 
 function buildTable(data, container) {
-    //let tableBody = newElem('section', 'list-table');
-    //container.append(tableBody);
-    
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
         let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
@@ -948,6 +927,9 @@ function buildTable(data, container) {
     });
 }
 
+
+
+// Build DOM: Cards
 function buildCards(data, container) {
     // Clear DOM & set mode
     elemListContents.setAttribute('list-mode', 'cards');
