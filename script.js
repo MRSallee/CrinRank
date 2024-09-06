@@ -254,7 +254,7 @@ let controls = [
                 ],
                 'defaultValue': false,
                 get stateLoc() { return stateP.filters.availability.crinTestedOnly },
-                'stateSet': function(val) { stateP.filters.availability.crinTestedOnly = val }
+                'stateSet': function(val) { stateP.filters.availability.crinTestedOnly = val; if (!val) {stateP.filters.availability.crinApprovedOnly = val} }
             },
             {
                 'name': 'demoableOnly',
