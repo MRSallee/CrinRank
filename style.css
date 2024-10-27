@@ -61,6 +61,7 @@ main.list {
     justify-content: flex-start;
     
     flex: 100% 1 1;
+    max-width: calc(75rem + 320rem);
 }
 
 section.list-filters-container {
@@ -78,12 +79,15 @@ section.list-contents-container {
 }
 
 div.list-contents[list-mode='cards'] {
-    max-width: 600px;
+    max-width: 320rem;
     padding-top: 4rem;
 }
 
 div.group-container {
     box-sizing: border-box;
+    max-width: 600px;
+    max-width: 200rem;
+    margin: auto;
 }
 
 article.card-container {
@@ -777,6 +781,7 @@ main[list-mode="table"] section.list-contents-container {
 div.list-contents[list-mode="table"] {
     box-sizing: border-box;
     width: 100%;
+    max-width: 320rem;
     height: calc(100vh - 16rem);
     max-height: -webkit-fill-available;
     padding: 0 4rem 4rem 0;
