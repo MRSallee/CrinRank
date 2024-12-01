@@ -787,6 +787,7 @@ function constructFiltersUi(controls) {
             controlContainer.append(searchInput);
             parentContainer.append(controlContainer);
             
+            searchInput.addEventListener('focus', () => searchInput.select());
             searchInput.addEventListener('input', function(e) {
                 try { clearTimeout(searchDelay); } catch {}
                 searchDelay = setTimeout(function() {
@@ -812,6 +813,7 @@ function constructFiltersUi(controls) {
                 let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}]);
                 priceForm.append(valueInput);
                 
+                valueInput.addEventListener('focus', () => valueInput.select());
                 valueInput.addEventListener('input', function(e) {
                     try { clearTimeout(searchDelay); } catch {}
                     searchDelay = setTimeout(function() {
