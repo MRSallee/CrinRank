@@ -249,7 +249,7 @@ let controls = [
             },
             {
                 'name': 'favoritesOnly',
-                'displayName': 'My favorites only',
+                'displayName': 'My faves only',
                 'values': [
                     true,
                     false,
