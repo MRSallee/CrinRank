@@ -443,32 +443,92 @@ function applyStateUrl() {
     // Core filters
     stateP.tableMode === stateDefaults.tableMode ? url.searchParams.delete('tableMode') : url.searchParams.set('tableMode', stateP.tableMode);
     stateP.sort === stateDefaults.sort ? url.searchParams.delete('sort') : url.searchParams.set('sort', stateP.sort);
+    stateP.filters.searchString === stateDefaults.filters.searchString ? url.searchParams.delete('searchString') : url.searchParams.set('searchString', stateP.filters.searchString);
     
     // Availability filters
-    stateP.filters.availability.buyableOnly === stateDefaults.filters.availability.buyableOnly ? url.searchParams.delete('buyableOnly') : url.searchParams.set('buyableOnly', state.filters.availability.buyableOnly);
-    stateP.filters.availability.crinApprovedOnly === stateDefaults.filters.availability.crinApprovedOnly ? url.searchParams.delete('crinApprovedOnly') : url.searchParams.set('crinApprovedOnly', state.filters.availability.crinApprovedOnly);
-    stateP.filters.availability.crinTestedOnly === stateDefaults.filters.availability.crinTestedOnly ? url.searchParams.delete('crinTestedOnly') : url.searchParams.set('crinTestedOnly', state.filters.availability.crinTestedOnly);
-    stateP.filters.availability.demoableOnly === stateDefaults.filters.availability.demoableOnly ? url.searchParams.delete('demoableOnly') : url.searchParams.set('demoableOnly', state.filters.availability.demoableOnly);
-    stateP.filters.availability.discontinued === stateDefaults.filters.availability.discontinued ? url.searchParams.delete('discontinued') : url.searchParams.set('discontinued', state.filters.availability.discontinued);
+    stateP.filters.availability.buyableOnly === stateDefaults.filters.availability.buyableOnly ? url.searchParams.delete('buyableOnly') : url.searchParams.set('buyableOnly', stateP.filters.availability.buyableOnly);
+    stateP.filters.availability.crinApprovedOnly === stateDefaults.filters.availability.crinApprovedOnly ? url.searchParams.delete('crinApprovedOnly') : url.searchParams.set('crinApprovedOnly', stateP.filters.availability.crinApprovedOnly);
+    stateP.filters.availability.crinTestedOnly === stateDefaults.filters.availability.crinTestedOnly ? url.searchParams.delete('crinTestedOnly') : url.searchParams.set('crinTestedOnly', stateP.filters.availability.crinTestedOnly);
+    stateP.filters.availability.demoableOnly === stateDefaults.filters.availability.demoableOnly ? url.searchParams.delete('demoableOnly') : url.searchParams.set('demoableOnly', stateP.filters.availability.demoableOnly);
+    stateP.filters.availability.discontinued === stateDefaults.filters.availability.discontinued ? url.searchParams.delete('discontinued') : url.searchParams.set('discontinued', stateP.filters.availability.discontinued);
     
     // Connection filters
-    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', state.filters.connection.ipx);
-    stateP.filters.connection.mmcx === stateDefaults.filters.connection.mmcx ? url.searchParams.delete('mmcx') : url.searchParams.set('mmcx', state.filters.connection.mmcx);
-    stateP.filters.connection.twopin === stateDefaults.filters.connection.twopin ? url.searchParams.delete('twopin') : url.searchParams.set('twopin', state.filters.connection.twopin);
+    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', stateP.filters.connection.ipx);
+    stateP.filters.connection.mmcx === stateDefaults.filters.connection.mmcx ? url.searchParams.delete('mmcx') : url.searchParams.set('mmcx', stateP.filters.connection.mmcx);
+    stateP.filters.connection.twopin === stateDefaults.filters.connection.twopin ? url.searchParams.delete('twopin') : url.searchParams.set('twopin', stateP.filters.connection.twopin);
     
     // Driver filters
-    stateP.filters.drivers.ba === stateDefaults.filters.drivers.ba ? url.searchParams.delete('ba') : url.searchParams.set('ba', state.filters.drivers.ba);
-    stateP.filters.drivers.dd === stateDefaults.filters.drivers.dd ? url.searchParams.delete('dd') : url.searchParams.set('dd', state.filters.drivers.dd);
-    stateP.filters.drivers.est === stateDefaults.filters.drivers.est ? url.searchParams.delete('est') : url.searchParams.set('est', state.filters.drivers.est);
-    stateP.filters.drivers.planar === stateDefaults.filters.drivers.planar ? url.searchParams.delete('planar') : url.searchParams.set('planar', state.filters.drivers.planar);
-    stateP.filters.drivers.hybrid === stateDefaults.filters.drivers.hybrid ? url.searchParams.delete('hybrid') : url.searchParams.set('hybrid', state.filters.drivers.hybrid);
-    stateP.filters.drivers.tribrid === stateDefaults.filters.drivers.tribrid ? url.searchParams.delete('tribrid') : url.searchParams.set('tribrid', state.filters.drivers.tribrid);
+    stateP.filters.drivers.ba === stateDefaults.filters.drivers.ba ? url.searchParams.delete('ba') : url.searchParams.set('ba', stateP.filters.drivers.ba);
+    stateP.filters.drivers.dd === stateDefaults.filters.drivers.dd ? url.searchParams.delete('dd') : url.searchParams.set('dd', stateP.filters.drivers.dd);
+    stateP.filters.drivers.est === stateDefaults.filters.drivers.est ? url.searchParams.delete('est') : url.searchParams.set('est', stateP.filters.drivers.est);
+    stateP.filters.drivers.planar === stateDefaults.filters.drivers.planar ? url.searchParams.delete('planar') : url.searchParams.set('planar', stateP.filters.drivers.planar);
+    stateP.filters.drivers.hybrid === stateDefaults.filters.drivers.hybrid ? url.searchParams.delete('hybrid') : url.searchParams.set('hybrid', stateP.filters.drivers.hybrid);
+    stateP.filters.drivers.tribrid === stateDefaults.filters.drivers.tribrid ? url.searchParams.delete('tribrid') : url.searchParams.set('tribrid', stateP.filters.drivers.tribrid);
     
     // Price filters
-    stateP.filters.price.priceMax === stateDefaults.filters.price.priceMax ? url.searchParams.delete('priceMax') : url.searchParams.set('priceMax', state.filters.price.priceMax);
-    stateP.filters.price.priceMin === stateDefaults.filters.price.priceMin ? url.searchParams.delete('priceMin') : url.searchParams.set('priceMin', state.filters.price.priceMin);
-        
+    stateP.filters.price.priceMin === stateDefaults.filters.price.priceMin ? url.searchParams.delete('priceMin') : url.searchParams.set('priceMin', stateP.filters.price.priceMin);
+    stateP.filters.price.priceMax === stateDefaults.filters.price.priceMax ? url.searchParams.delete('priceMax') : url.searchParams.set('priceMax', stateP.filters.price.priceMax);
+    
     history.pushState(null, '', url);
+}
+
+// Apply the URL to the state
+function applyUrlToState() {
+    let urlQueryString = window.location.search,
+        urlQueryParams = new URLSearchParams(urlQueryString),
+        
+        tableMode = urlQueryParams.get('tableMode'),
+        sort = urlQueryParams.get('sort'),
+        searchString = urlQueryParams.get('searchString'),
+        
+        buyableOnly = urlQueryParams.get('buyableOnly') === 'true' ? true : urlQueryParams.get('buyableOnly') === 'false' ? false : null,
+        crinApprovedOnly = urlQueryParams.get('crinApprovedOnly') === 'true' ? true : urlQueryParams.get('crinApprovedOnly') === 'false' ? false : null,
+        crinTestedOnly = urlQueryParams.get('crinTestedOnly') === 'true' ? true : urlQueryParams.get('crinTestedOnly') === 'false' ? false : null,
+        demoableOnly = urlQueryParams.get('demoableOnly') === 'true' ? true : urlQueryParams.get('demoableOnly') === 'false' ? false : null,
+        discontinued = urlQueryParams.get('discontinued') === 'true' ? true : urlQueryParams.get('discontinued') === 'false' ? false : null,
+        
+        ipx = urlQueryParams.get('ipx') === 'true' ? true : urlQueryParams.get('ipx') === 'false' ? false : null,
+        mmcx = urlQueryParams.get('mmcx') === 'true' ? true : urlQueryParams.get('mmcx') === 'false' ? false : null,
+        twopin = urlQueryParams.get('twopin') === 'true' ? true : urlQueryParams.get('twopin') === 'false' ? false : null,
+        
+        ba = urlQueryParams.get('ba') === 'true' ? true : urlQueryParams.get('ba') === 'false' ? false : null,
+        dd = urlQueryParams.get('dd') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
+        est = urlQueryParams.get('est') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
+        planar = urlQueryParams.get('planar') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
+        hybrid = urlQueryParams.get('hybrid') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
+        tribrid = urlQueryParams.get('tribrid') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
+
+        priceMin = urlQueryParams.get('priceMin'),
+        priceMax = urlQueryParams.get('priceMax');
+    
+    // Core filters
+    tableMode != null ? stateP.tableMode = tableMode : '';
+    sort != null ? stateP.sort = sort : '';
+    searchString != null ? stateP.filters.searchString = searchString : '';
+
+    // Availability filters
+    buyableOnly != null ? stateP.filters.availability.buyableOnly = buyableOnly : '';
+    crinApprovedOnly != null ? stateP.filters.availability.crinApprovedOnly = crinApprovedOnly : '';
+    crinTestedOnly != null ? stateP.filters.availability.crinTestedOnly = crinTestedOnly : '';
+    demoableOnly != null ? stateP.filters.availability.demoableOnly = demoableOnly : '';
+    discontinued != null ? stateP.filters.availability.discontinued = discontinued : '';
+    
+    // Connection filters
+    ipx != null ? stateP.filters.connection.ipx = ipx : '';
+    mmcx != null ? stateP.filters.connection.mmcx = mmcx : '';
+    twopin != null ? stateP.filters.connection.twopin = twopin : '';
+    
+    // Driver filters
+    ba != null ? stateP.filters.drivers.ba = ba : '';
+    dd != null ? stateP.filters.drivers.dd = dd : '';
+    est != null ? stateP.filters.drivers.est = est : '';
+    planar != null ? stateP.filters.drivers.planar = planar : '';
+    hybrid != null ? stateP.filters.drivers.hybrid = hybrid : '';
+    tribrid != null ? stateP.filters.drivers.tribrid = tribrid : '';
+    
+    // Price filters
+    priceMin != null ? stateP.filters.price.priceMin = priceMin : '';
+    priceMax != null ? stateP.filters.price.priceMax = priceMax : '';
 }
 
 
@@ -480,6 +540,8 @@ function applyStateUrl() {
 let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
+
+
 
 // Get data
 function getDataFresh (json) {
@@ -534,6 +596,7 @@ function getDataFresh (json) {
             });
         })
         .then(function() {
+            applyUrlToState();
             applyState(state);
         })
     }
