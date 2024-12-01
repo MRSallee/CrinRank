@@ -95,7 +95,8 @@ let state = {
             'u-shaped': true,
             },
         }
-    };
+    },
+    stateDefaults = structuredClone(state);
 
 // Set proxy for state object
 let proxyHandler = {
@@ -437,38 +438,36 @@ function applyStateControls() {
 
 // Apply state to the URL
 function applyStateUrl() {
-    console.log('Updating URL...');
-    console.log(state);
-    
     let url = new URL(window.location.href);
     
-    url.searchParams.set('tableMode', state.tableMode);
-    url.searchParams.set('sort', state.sort);
+    // Core filters
+    stateP.tableMode === stateDefaults.tableMode ? url.searchParams.delete('tableMode') : url.searchParams.set('tableMode', stateP.tableMode);
+    stateP.sort === stateDefaults.sort ? url.searchParams.delete('sort') : url.searchParams.set('sort', stateP.sort);
     
     // Availability filters
-    url.searchParams.set('buyableOnly', state.filters.availability.buyableOnly);
-    url.searchParams.set('crinApprovedOnly', state.filters.availability.crinApprovedOnly);
-    url.searchParams.set('crinTestedOnly', state.filters.availability.crinTestedOnly);
-    url.searchParams.set('demoableOnly', state.filters.availability.demoableOnly);
-    url.searchParams.set('discontinued', state.filters.availability.discontinued);
+    stateP.filters.availability.buyableOnly === stateDefaults.filters.availability.buyableOnly ? url.searchParams.delete('buyableOnly') : url.searchParams.set('buyableOnly', state.filters.availability.buyableOnly);
+    stateP.filters.availability.crinApprovedOnly === stateDefaults.filters.availability.crinApprovedOnly ? url.searchParams.delete('crinApprovedOnly') : url.searchParams.set('crinApprovedOnly', state.filters.availability.crinApprovedOnly);
+    stateP.filters.availability.crinTestedOnly === stateDefaults.filters.availability.crinTestedOnly ? url.searchParams.delete('crinTestedOnly') : url.searchParams.set('crinTestedOnly', state.filters.availability.crinTestedOnly);
+    stateP.filters.availability.demoableOnly === stateDefaults.filters.availability.demoableOnly ? url.searchParams.delete('demoableOnly') : url.searchParams.set('demoableOnly', state.filters.availability.demoableOnly);
+    stateP.filters.availability.discontinued === stateDefaults.filters.availability.discontinued ? url.searchParams.delete('discontinued') : url.searchParams.set('discontinued', state.filters.availability.discontinued);
     
     // Connection filters
-    url.searchParams.set('ipx', state.filters.connection.ipx);
-    url.searchParams.set('mmcx', state.filters.connection.mmcx);
-    url.searchParams.set('twopin', state.filters.connection.twopin);
+    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', state.filters.connection.ipx);
+    stateP.filters.connection.mmcx === stateDefaults.filters.connection.mmcx ? url.searchParams.delete('mmcx') : url.searchParams.set('mmcx', state.filters.connection.mmcx);
+    stateP.filters.connection.twopin === stateDefaults.filters.connection.twopin ? url.searchParams.delete('twopin') : url.searchParams.set('twopin', state.filters.connection.twopin);
     
     // Driver filters
-    url.searchParams.set('ba', state.filters.drivers.ba);
-    url.searchParams.set('dd', state.filters.drivers.dd);
-    url.searchParams.set('est', state.filters.drivers.est);
-    url.searchParams.set('planar', state.filters.drivers.planar);
-    url.searchParams.set('hybrid', state.filters.drivers.hybrid);
-    url.searchParams.set('tribrid', state.filters.drivers.tribrid);
+    stateP.filters.drivers.ba === stateDefaults.filters.drivers.ba ? url.searchParams.delete('ba') : url.searchParams.set('ba', state.filters.drivers.ba);
+    stateP.filters.drivers.dd === stateDefaults.filters.drivers.dd ? url.searchParams.delete('dd') : url.searchParams.set('dd', state.filters.drivers.dd);
+    stateP.filters.drivers.est === stateDefaults.filters.drivers.est ? url.searchParams.delete('est') : url.searchParams.set('est', state.filters.drivers.est);
+    stateP.filters.drivers.planar === stateDefaults.filters.drivers.planar ? url.searchParams.delete('planar') : url.searchParams.set('planar', state.filters.drivers.planar);
+    stateP.filters.drivers.hybrid === stateDefaults.filters.drivers.hybrid ? url.searchParams.delete('hybrid') : url.searchParams.set('hybrid', state.filters.drivers.hybrid);
+    stateP.filters.drivers.tribrid === stateDefaults.filters.drivers.tribrid ? url.searchParams.delete('tribrid') : url.searchParams.set('tribrid', state.filters.drivers.tribrid);
     
     // Price filters
-    url.searchParams.set('priceMax', state.filters.price.priceMax);
-    url.searchParams.set('priceMin', state.filters.price.priceMin);
-    
+    stateP.filters.price.priceMax === stateDefaults.filters.price.priceMax ? url.searchParams.delete('priceMax') : url.searchParams.set('priceMax', state.filters.price.priceMax);
+    stateP.filters.price.priceMin === stateDefaults.filters.price.priceMin ? url.searchParams.delete('priceMin') : url.searchParams.set('priceMin', state.filters.price.priceMin);
+        
     history.pushState(null, '', url);
 }
 
