@@ -395,6 +395,7 @@ function applyState(state) {
     document.querySelector('body').setAttribute('filters-overlay', state.overlayFilters);
     
     applyStateControls();
+    applyStateUrl();
 }
 
 // Apply state to the controls
@@ -432,6 +433,43 @@ function applyStateControls() {
             });
         }
     });
+}
+
+// Apply state to the URL
+function applyStateUrl() {
+    console.log('Updating URL...');
+    console.log(state);
+    
+    let url = new URL(window.location.href);
+    
+    url.searchParams.set('tableMode', state.tableMode);
+    url.searchParams.set('sort', state.sort);
+    
+    // Availability filters
+    url.searchParams.set('buyableOnly', state.filters.availability.buyableOnly);
+    url.searchParams.set('crinApprovedOnly', state.filters.availability.crinApprovedOnly);
+    url.searchParams.set('crinTestedOnly', state.filters.availability.crinTestedOnly);
+    url.searchParams.set('demoableOnly', state.filters.availability.demoableOnly);
+    url.searchParams.set('discontinued', state.filters.availability.discontinued);
+    
+    // Connection filters
+    url.searchParams.set('ipx', state.filters.connection.ipx);
+    url.searchParams.set('mmcx', state.filters.connection.mmcx);
+    url.searchParams.set('twopin', state.filters.connection.twopin);
+    
+    // Driver filters
+    url.searchParams.set('ba', state.filters.drivers.ba);
+    url.searchParams.set('dd', state.filters.drivers.dd);
+    url.searchParams.set('est', state.filters.drivers.est);
+    url.searchParams.set('planar', state.filters.drivers.planar);
+    url.searchParams.set('hybrid', state.filters.drivers.hybrid);
+    url.searchParams.set('tribrid', state.filters.drivers.tribrid);
+    
+    // Price filters
+    url.searchParams.set('priceMax', state.filters.price.priceMax);
+    url.searchParams.set('priceMin', state.filters.price.priceMin);
+    
+    history.pushState(null, '', url);
 }
 
 
