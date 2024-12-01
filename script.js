@@ -87,8 +87,8 @@ let state = {
             'tribrid': true,
             },
         'price': {
-            'priceMin': 0,
-            'priceMax': 0,
+            'priceMin': '',
+            'priceMax': '',
             },
         'searchString': '',
         'soundSig': {
