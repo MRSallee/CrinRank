@@ -66,10 +66,13 @@ let state = {
     'sort': 'priceLowHigh',
     'overlayFilters': false,
     'filters': {
-        'availability': {
-            'buyableOnly': false,
+        'featured': {
             'crinApprovedOnly': false,
             'crinTestedOnly': false,
+            'userFavesOnly': false,
+        },
+        'availability': {
+            'buyableOnly': false,
             'demoableOnly': false,
             'discontinued': false,
             },
@@ -99,17 +102,17 @@ let state = {
     stateDefaults = structuredClone(state);
 
 // Set proxy for state object
-let proxyHandler = {
+let proxyHandlerState = {
     get(target, name) {
         let v = target[name];
-        return typeof v == 'object' ? new Proxy(v, proxyHandler) : v;
+        return typeof v == 'object' ? new Proxy(v, proxyHandlerState) : v;
     },
     set(obj, prop, value) {
         obj[prop] = value;
         applyState(state);
     }
 };
-let stateP = new Proxy(state, proxyHandler);
+let stateP = new Proxy(state, proxyHandlerState);
 
 let stateData = {
     'groupSize': 100,
@@ -118,9 +121,7 @@ let stateData = {
     'countGroups': 0,
     'countItemsLastGroup': 0,
     'groupLastSeen': 0,
-    'groupContainers': [
-        
-    ]
+    'groupContainers': []
 };
 
 // Object for available controls
@@ -219,6 +220,47 @@ let controls = [
         ],
     },
     {
+        'name': 'featured',
+        'displayName': '',
+        'type': 'toggle',
+        'location': 'listFilters',
+        'toggles': [
+            {
+                'name': 'crinApprovedOnly',
+                'displayName': 'Crin-approved only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.featured.crinApprovedOnly },
+                'stateSet': function(val) { stateP.filters.featured.crinApprovedOnly = val; if (val) {stateP.filters.featured.crinTestedOnly = val}; }
+            },
+            {
+                'name': 'crinTestedOnly',
+                'displayName': 'Crin-tested only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.featured.crinTestedOnly },
+                'stateSet': function(val) { stateP.filters.featured.crinTestedOnly = val; if (!val) {stateP.filters.featured.crinApprovedOnly = val} }
+            },
+            {
+                'name': 'favoritesOnly',
+                'displayName': 'My favorites only',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.featured.userFavesOnly },
+                'stateSet': function(val) { stateP.filters.featured.userFavesOnly = val; if (!val) {stateP.filters.featured.userFavesOnly = val} }
+            },
+        ],
+    },
+    {
         'name': 'availability',
         'displayName': 'Availability',
         'type': 'toggle',
@@ -234,28 +276,6 @@ let controls = [
                 'defaultValue': false,
                 get stateLoc() { return stateP.filters.availability.buyableOnly },
                 'stateSet': function(val) { stateP.filters.availability.buyableOnly = val }
-            },
-            {
-                'name': 'crinApprovedOnly',
-                'displayName': 'Crin-approved only',
-                'values': [
-                    true,
-                    false,
-                ],
-                'defaultValue': false,
-                get stateLoc() { return stateP.filters.availability.crinApprovedOnly },
-                'stateSet': function(val) { stateP.filters.availability.crinApprovedOnly = val; if (val) {stateP.filters.availability.crinTestedOnly = val}; }
-            },
-            {
-                'name': 'crinTestedOnly',
-                'displayName': 'Crin-tested only',
-                'values': [
-                    true,
-                    false,
-                ],
-                'defaultValue': false,
-                get stateLoc() { return stateP.filters.availability.crinTestedOnly },
-                'stateSet': function(val) { stateP.filters.availability.crinTestedOnly = val; if (!val) {stateP.filters.availability.crinApprovedOnly = val} }
             },
             {
                 'name': 'demoableOnly',
@@ -382,7 +402,7 @@ let controls = [
 // State application
 
 // Apply the state to the app
-function applyState(state) {
+function applyState(state, saveScroll) {
     // Filter data
     let filteredData = dataFilter(freshData, state.filters);
     
@@ -390,7 +410,7 @@ function applyState(state) {
     let sortedData = dataSort(filteredData, state.sort);
     
     // Build list items DOM
-    buildListItems(sortedData, state.tableMode);
+    buildListItems(sortedData, state.tableMode, saveScroll);
     
     // Filters overlay
     document.querySelector('body').setAttribute('filters-overlay', state.overlayFilters);
@@ -445,10 +465,13 @@ function applyStateUrl() {
     stateP.sort === stateDefaults.sort ? url.searchParams.delete('sort') : url.searchParams.set('sort', stateP.sort);
     stateP.filters.searchString === stateDefaults.filters.searchString ? url.searchParams.delete('searchString') : url.searchParams.set('searchString', stateP.filters.searchString);
     
+    // Featured filters
+    stateP.filters.featured.crinApprovedOnly === stateDefaults.filters.featured.crinApprovedOnly ? url.searchParams.delete('crinApprovedOnly') : url.searchParams.set('crinApprovedOnly', stateP.filters.featured.crinApprovedOnly);
+    stateP.filters.featured.crinTestedOnly === stateDefaults.filters.featured.crinTestedOnly ? url.searchParams.delete('crinTestedOnly') : url.searchParams.set('crinTestedOnly', stateP.filters.featured.crinTestedOnly);
+    stateP.filters.featured.userFavesOnly === stateDefaults.filters.featured.userFavesOnly ? url.searchParams.delete('userFavesOnly') : url.searchParams.set('userFavesOnly', stateP.filters.featured.userFavesOnly);
+    
     // Availability filters
     stateP.filters.availability.buyableOnly === stateDefaults.filters.availability.buyableOnly ? url.searchParams.delete('buyableOnly') : url.searchParams.set('buyableOnly', stateP.filters.availability.buyableOnly);
-    stateP.filters.availability.crinApprovedOnly === stateDefaults.filters.availability.crinApprovedOnly ? url.searchParams.delete('crinApprovedOnly') : url.searchParams.set('crinApprovedOnly', stateP.filters.availability.crinApprovedOnly);
-    stateP.filters.availability.crinTestedOnly === stateDefaults.filters.availability.crinTestedOnly ? url.searchParams.delete('crinTestedOnly') : url.searchParams.set('crinTestedOnly', stateP.filters.availability.crinTestedOnly);
     stateP.filters.availability.demoableOnly === stateDefaults.filters.availability.demoableOnly ? url.searchParams.delete('demoableOnly') : url.searchParams.set('demoableOnly', stateP.filters.availability.demoableOnly);
     stateP.filters.availability.discontinued === stateDefaults.filters.availability.discontinued ? url.searchParams.delete('discontinued') : url.searchParams.set('discontinued', stateP.filters.availability.discontinued);
     
@@ -481,9 +504,11 @@ function applyUrlToState() {
         sort = urlQueryParams.get('sort'),
         searchString = urlQueryParams.get('searchString'),
         
-        buyableOnly = urlQueryParams.get('buyableOnly') === 'true' ? true : urlQueryParams.get('buyableOnly') === 'false' ? false : null,
         crinApprovedOnly = urlQueryParams.get('crinApprovedOnly') === 'true' ? true : urlQueryParams.get('crinApprovedOnly') === 'false' ? false : null,
         crinTestedOnly = urlQueryParams.get('crinTestedOnly') === 'true' ? true : urlQueryParams.get('crinTestedOnly') === 'false' ? false : null,
+        userFavesOnly = urlQueryParams.get('userFavesOnly') === 'true' ? true : urlQueryParams.get('userFavesOnly') === 'false' ? false : null,
+        
+        buyableOnly = urlQueryParams.get('buyableOnly') === 'true' ? true : urlQueryParams.get('buyableOnly') === 'false' ? false : null,
         demoableOnly = urlQueryParams.get('demoableOnly') === 'true' ? true : urlQueryParams.get('demoableOnly') === 'false' ? false : null,
         discontinued = urlQueryParams.get('discontinued') === 'true' ? true : urlQueryParams.get('discontinued') === 'false' ? false : null,
         
@@ -506,10 +531,13 @@ function applyUrlToState() {
     sort != null ? stateP.sort = sort : '';
     searchString != null ? stateP.filters.searchString = searchString : '';
 
+    // Featured filters
+    crinApprovedOnly != null ? stateP.filters.featured.crinApprovedOnly = crinApprovedOnly : '';
+    crinTestedOnly != null ? stateP.filters.featured.crinTestedOnly = crinTestedOnly : '';
+    userFavesOnly != null ? stateP.filters.featured.userFavesOnly = userFavesOnly : '';
+    
     // Availability filters
     buyableOnly != null ? stateP.filters.availability.buyableOnly = buyableOnly : '';
-    crinApprovedOnly != null ? stateP.filters.availability.crinApprovedOnly = crinApprovedOnly : '';
-    crinTestedOnly != null ? stateP.filters.availability.crinTestedOnly = crinTestedOnly : '';
     demoableOnly != null ? stateP.filters.availability.demoableOnly = demoableOnly : '';
     discontinued != null ? stateP.filters.availability.discontinued = discontinued : '';
     
@@ -574,6 +602,7 @@ function getDataFresh (json) {
         .then(function(data) {
             data.forEach(function(item) {
                 let itemObject = {
+                    'itemId': item['Brand'].toString().toLowerCase().replaceAll(' ', '') + item['IEM Model'].toString().toLowerCase().replaceAll(' ', ''),
                     'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
                     'brand': item['Brand'],
                     'connection': item['Connection'],
@@ -589,6 +618,7 @@ function getDataFresh (json) {
                     'signature': item['Sound Signature'],
                     'status': item['Status'],
                     'tested': item['Crinacle-tested'].toLowerCase(),
+                    'userFave': false,
                     '_end': ''
                 };
                 
@@ -596,11 +626,49 @@ function getDataFresh (json) {
             });
         })
         .then(function() {
+            readUserFaves(freshData);
             applyUrlToState();
             applyState(state);
         })
     }
+    
     return dataArr;
+}
+
+// User favorites functions
+function toggleUserFave(item) {
+    let startingFaveState = item.userFave,
+        newFaveState = startingFaveState ? false : true,
+        saveScroll = true;
+    
+    item.userFave = newFaveState;
+    applyState(state, saveScroll);
+    
+    saveUserFaves(item, newFaveState);
+}
+
+function saveUserFaves(item, newFaveState) {
+    let faveObj = localStorage.getItem('userFaves') ? JSON.parse(localStorage.getItem('userFaves')) : [],
+        indexOfitem = faveObj.indexOf(item.itemId);
+    
+    if (newFaveState) {
+        indexOfitem > -1 ? '' : faveObj.push(item.itemId);
+    } else {
+        indexOfitem > -1 ? faveObj.splice(indexOfitem, 1) : '';
+    }
+        
+    localStorage.setItem('userFaves', JSON.stringify(faveObj));
+}
+
+function readUserFaves(data) {
+    let faveObj = localStorage.getItem('userFaves') ? JSON.parse(localStorage.getItem('userFaves')) : [];
+    
+    faveObj.forEach(function(favorite) {
+        let faveInData = data.find(item => item.itemId === favorite);
+        
+        faveInData ? faveInData.userFave = true : '';
+    });
+    
 }
 
 
@@ -634,9 +702,12 @@ function dataFilter(data, filters) {
             
             // Availability filters
             meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
-            meetsTestedFilter = filters.availability.crinTestedOnly ? item.tested === 'yes' : true,
-            meetsApprovedFilter = filters.availability.crinApprovedOnly ? item.approved === 'yes' : true,
-            meetsDiscontinuedFilter = filters.availability.discontinued ? item.status.toLowerCase().indexOf('discontinued') < 0 : true;
+            meetsDiscontinuedFilter = filters.availability.discontinued ? item.status.toLowerCase().indexOf('discontinued') < 0 : true,
+        
+            // Featured filters
+            meetsTestedFilter = filters.featured.crinTestedOnly ? item.tested === 'yes' : true,
+            meetsApprovedFilter = filters.featured.crinApprovedOnly ? item.approved === 'yes' : true,
+            meetsUserFaveFilter = filters.featured.userFavesOnly ? item.userFave : true;
         
         // Search filter
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
@@ -661,9 +732,12 @@ function dataFilter(data, filters) {
         
         // Availability filters
         && meetsBuyableFilter
+        && meetsDiscontinuedFilter
+        
+        // Featured filters
         && meetsTestedFilter
         && meetsApprovedFilter
-        && meetsDiscontinuedFilter
+        && meetsUserFaveFilter
     });
     
     return filteredData;
@@ -837,8 +911,8 @@ constructFiltersUi(controls);
 
 
 // Build DOM: Content initialization
-function buildListItems(data, tableMode) {
-    elemListContentsContainer.scrollTop = 0;
+function buildListItems(data, tableMode, saveScroll) {
+    saveScroll ? '' : elemListContentsContainer.scrollTop = 0;
     elemListContents.innerHTML = '';
     
     // Set stateData values
@@ -960,6 +1034,7 @@ function buildTableHeader(data, container) {
             tableHead = newElem('article', 'table-head'),
             headName = newElem('div', 'table-head-name', null, 'Name'),
             headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
+            headFave = newElem('div', 'table-head-fave', null, 'My fave'),
             headBuy = newElem('div', 'table-head-buy', null, 'Price'),
             headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
             headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
@@ -969,6 +1044,7 @@ function buildTableHeader(data, container) {
             headConnection = newElem('div', 'table-head-connection', null, 'Connection');
         tableHead.append(headName);
         tableHead.append(headTested);
+        tableHead.append(headFave);
         tableHead.append(headBuy);
         tableHead.append(headDemoable);
         tableHead.append(headShowcase);
@@ -988,9 +1064,12 @@ function buildTable(data, container) {
     data.forEach(function(item) {
         let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
             phoneName = newElem('div', 'table-phone-name', null, item.brand + ' ' + item.model),
-            phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]);
+            phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]),
+            phoneFave = newElem('div', 'table-phone-fave', [{'key': 'is-user-fave', 'val': item.userFave}]);
         phoneContainer.append(phoneName);
         phoneContainer.append(phoneTested);
+        phoneContainer.append(phoneFave);
+        phoneFave.addEventListener('click', () => toggleUserFave(item));
         
         let phoneBuy = newElem('div', 'table-phone-buy'),
             phoneBuyLink = item.linkStore
@@ -1087,6 +1166,7 @@ function buildCards(data, container) {
         
         // Card body: Links
         let bodyLinks = newElem('div', 'phone-links'),
+            linkFave = newElem('a', 'phone-link phone-link-fave', [{'key': 'is-user-fave', 'val': item.userFave}], 'My fave'),
             linkShowcase = item.linkShowcase
                             ? newElem('a', 'phone-link phone-link-showcase', [{'key': 'href', 'val': item.linkShowcase}], 'Showcase')
                             : '',
@@ -1099,7 +1179,10 @@ function buildCards(data, container) {
             displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
             storePrice = newElem('span', 'phone-store-price', null, displayPrice);
         
+        linkFave.addEventListener('click', () => toggleUserFave(item));
+        
         elemCardBody.append(bodyLinks);
+        bodyLinks.append(linkFave);
         bodyLinks.append(linkShowcase);
         bodyLinks.append(linkMeasurement);
         bodyLinks.append(linkStore);
