@@ -198,28 +198,6 @@ let controls = [
         'stateSet': function(val) { stateP.filters.searchString = val }
     },
     {
-        'name': 'priceRange',
-        'displayName': 'Price range',
-        'type': 'range',
-        'location': 'listFilters',
-        'values': [
-            {
-                'displayName': 'Min',
-                'name': 'min',
-                'value': '',
-                get stateLoc() { return stateP.filters.price.priceMin },
-                'stateSet': function(val) { stateP.filters.price.priceMin = val }
-            },
-            {
-                'displayName': 'Max',
-                'name': 'max',
-                'value': '',
-                get stateLoc() { return stateP.filters.price.priceMax },
-                'stateSet': function(val) { stateP.filters.price.priceMax = val }
-            },
-        ],
-    },
-    {
         'name': 'featured',
         'displayName': '',
         'type': 'toggle',
@@ -257,6 +235,28 @@ let controls = [
                 'defaultValue': false,
                 get stateLoc() { return stateP.filters.featured.userFavesOnly },
                 'stateSet': function(val) { stateP.filters.featured.userFavesOnly = val; if (!val) {stateP.filters.featured.userFavesOnly = val} }
+            },
+        ],
+    },
+    {
+        'name': 'priceRange',
+        'displayName': '',
+        'type': 'range',
+        'location': 'listFilters',
+        'values': [
+            {
+                'displayName': 'Min price',
+                'name': 'min',
+                'value': '',
+                get stateLoc() { return stateP.filters.price.priceMin },
+                'stateSet': function(val) { stateP.filters.price.priceMin = val }
+            },
+            {
+                'displayName': 'Max price',
+                'name': 'max',
+                'value': '',
+                get stateLoc() { return stateP.filters.price.priceMax },
+                'stateSet': function(val) { stateP.filters.price.priceMax = val }
             },
         ],
     },

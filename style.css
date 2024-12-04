@@ -290,13 +290,14 @@ input.search-input {
 }
 
 form.price {
-    
+    display: flex;
+    justify-content: space-between;
 }
 
 input.max,
 input.min {
     display: block;
-    width: 50%;
+    width: calc(50% - 1rem);
 }
 
 input.min {
