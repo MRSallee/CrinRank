@@ -79,7 +79,7 @@ section.list-contents-container {
     
     height: 100vh;
     max-height: -webkit-fill-available;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 div.list-contents[list-mode='cards'] {
@@ -122,7 +122,7 @@ div.list-filters {
     max-height: -webkit-fill-available;
     padding: 0 4rem 4rem 4rem;
     
-    overflow: scroll;
+    overflow-y: scroll;
     overscroll-behavior: contain;
     
     border-right: 1px dotted var(--color-orange);
@@ -1262,7 +1262,7 @@ Mobile styles */
         
         height: 100vh;
         max-height: -webkit-fill-available;
-        overflow: scroll;
+        overflow-y: scroll;
     }
     
     section.list-filters-container {
@@ -1274,7 +1274,7 @@ Mobile styles */
         flex: auto 1 1;
         
         background-color: var(--color-cream);
-        overflow: scroll;
+        overflow-y: scroll;
     }
     
     div.list-filters {
