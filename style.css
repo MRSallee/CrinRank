@@ -801,6 +801,8 @@ Table styles */
 main[list-mode="table"] section.list-contents-container {
     max-width: calc(100vw - 75rem);
     padding: 0 0 0 4rem;
+    
+    overflow: hidden;
 }
 
 div.list-contents[list-mode="table"] {
