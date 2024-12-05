@@ -678,7 +678,7 @@ function getDataFresh (json) {
                     'linkMeasurement': item['Measurement Link'] ? item['Measurement Link'] : '',
                     'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
                     'model': item['IEM Model'] ? item['IEM Model'] : '',
-                    'price': item['Price (MSRP, USD)'] ? item['Price (MSRP, USD)'] : '',
+                    'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : '',
                     'remarks': item['Remarks'] ? item['Remarks'] : '',
                     'signature': item['Sound Signature'] ? item['Sound Signature'] : '',
                     'status': item['Status'] ? item['Status'] : '',
@@ -943,6 +943,7 @@ function constructFiltersUi(controls) {
             dropdownContainer.addEventListener('change', function(e){
                 let selectedOption = e.target.querySelectorAll('option')[e.target.selectedIndex],
                     minVal = selectedOption.getAttribute('min-value');
+                control.stateSet(minVal, e.target.value);
             });
             
             control.uiElem = dropdownContainer;
