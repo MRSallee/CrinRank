@@ -240,7 +240,7 @@ let controls = [
     },
     {
         'name': 'priceBrackets',
-        'displayName': '',
+        'displayName': 'Price bracket',
         'type': 'dropdown-range',
         'location': 'listFilters',
         'values': [
@@ -416,6 +416,28 @@ let controls = [
                 get stateLoc() { return stateP.filters.drivers.planar },
                 'stateSet': function(val) { stateP.filters.drivers.planar = val }
             },
+            {
+                'name': 'hybrid',
+                'displayName': 'Hybrid',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.drivers.hybrid },
+                'stateSet': function(val) { stateP.filters.drivers.hybrid = val }
+            },
+            {
+                'name': 'tribrid',
+                'displayName': 'Tribrid',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.drivers.tribrid },
+                'stateSet': function(val) { stateP.filters.drivers.tribrid = val }
+            },
         ],
     },
     {
@@ -584,9 +606,9 @@ function applyUrlToState() {
         ba = urlQueryParams.get('ba') === 'true' ? true : urlQueryParams.get('ba') === 'false' ? false : null,
         dd = urlQueryParams.get('dd') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
         est = urlQueryParams.get('est') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
-        planar = urlQueryParams.get('planar') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
-        hybrid = urlQueryParams.get('hybrid') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
-        tribrid = urlQueryParams.get('tribrid') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
+        planar = urlQueryParams.get('planar') === 'true' ? true : urlQueryParams.get('planar') === 'false' ? false : null,
+        hybrid = urlQueryParams.get('hybrid') === 'true' ? true : urlQueryParams.get('hybrid') === 'false' ? false : null,
+        tribrid = urlQueryParams.get('tribrid') === 'true' ? true : urlQueryParams.get('tribrid') === 'false' ? false : null,
 
         priceMin = urlQueryParams.get('priceMin'),
         priceMax = urlQueryParams.get('priceMax');
@@ -759,6 +781,8 @@ function dataFilter(data, filters) {
             meetsDriverDdFilter = filters.drivers.dd ? true : !isDd,
             meetsDriverEstFilter = filters.drivers.est ? true : !isEst,
             meetsDriverPlanarFilter = filters.drivers.planar ? true : !isPlanar,
+            meetsDriverHybridFilter = filters.drivers.hybrid ? true : !isHybrid,
+            meetsDriverTribridFilter = filters.drivers.tribrid ? true : !isTribrid,
             
             // Connection filters
             meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
@@ -789,6 +813,8 @@ function dataFilter(data, filters) {
         && meetsDriverDdFilter
         && meetsDriverEstFilter
         && meetsDriverPlanarFilter
+        && meetsDriverHybridFilter
+        && meetsDriverTribridFilter
         
         // Connection filters
         && meetsConnectionTwopinFilter
