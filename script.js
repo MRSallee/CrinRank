@@ -239,28 +239,6 @@ let controls = [
         ],
     },
     {
-        'name': 'priceRange',
-        'displayName': '',
-        'type': 'range',
-        'location': 'listFilters',
-        'values': [
-            {
-                'displayName': 'Min price',
-                'name': 'min',
-                'value': '',
-                get stateLoc() { return stateP.filters.price.priceMin },
-                'stateSet': function(val) { stateP.filters.price.priceMin = val }
-            },
-            {
-                'displayName': 'Max price',
-                'name': 'max',
-                'value': '',
-                get stateLoc() { return stateP.filters.price.priceMax },
-                'stateSet': function(val) { stateP.filters.price.priceMax = val }
-            },
-        ],
-    },
-    {
         'name': 'priceBrackets',
         'displayName': '',
         'type': 'dropdown-range',
@@ -321,9 +299,31 @@ let controls = [
                 
             },
         ],
-        'defaultValue': 'priceLowHigh',
+        'defaultValue': '',
         get stateLoc() { return stateP.filters.price.priceBracket },
-        'stateSet': function(val) { stateP.filters.price.priceMin = valA; stateP.filters.price.priceMax = valB }
+        'stateSet': function(valA, valB) { stateP.filters.price.priceMin = valA; stateP.filters.price.priceMax = valB }
+    },
+    {
+        'name': 'priceRange',
+        'displayName': '',
+        'type': 'range',
+        'location': 'listFilters',
+        'values': [
+            {
+                'displayName': 'Min price',
+                'name': 'min',
+                'value': '',
+                get stateLoc() { return stateP.filters.price.priceMin },
+                'stateSet': function(val) { stateP.filters.price.priceMin = val }
+            },
+            {
+                'displayName': 'Max price',
+                'name': 'max',
+                'value': '',
+                get stateLoc() { return stateP.filters.price.priceMax },
+                'stateSet': function(val) { stateP.filters.price.priceMax = val }
+            },
+        ],
     },
     {
         'name': 'availability',
@@ -857,6 +857,7 @@ function dataSort(data, sort) {
 
 // Build DOM: Controls
 function constructFiltersUi(controls) {
+    console.log(controls);
     // elemListFilters
     controls.forEach(function(control) {
         // Create toggles
@@ -910,6 +911,41 @@ function constructFiltersUi(controls) {
             
             dropdownContainer.addEventListener('change', function(e){
                 control.stateSet(e.target.value);
+            });
+            
+            control.uiElem = dropdownContainer;
+            control.uiElemMethod = 'value';
+        }
+        
+        // Create dropdowns
+        if (control.type === 'dropdown-range') {
+            console.log(control);
+            
+            let controlContainer = newElem('section', 'control-dropdown'),
+                controlHeading = newElem('h3', 'control-heading', null, control.displayName),
+                dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]),
+                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters,
+                previousVal = 0;
+            controlContainer.append(controlHeading);
+            controlContainer.append(dropdownContainer);
+            parentContainer.append(controlContainer);
+            
+            // Create dropdown UIs
+            control.values.forEach(function(value) {
+                console.log('Current val: ' + value.value + '\nPrevious val: ' + previousVal);
+                let valA = value.value,
+                    valB = previousVal,
+                    option = newElem('option', null, [{'key': 'value', 'val': value.value}], value.displayName);
+                option.setAttribute('data-val-a', valA);
+                option.setAttribute('data-val-b', valB);
+                dropdownContainer.append(option);
+                
+                previousVal = parseInt(valA) + 1;
+            });
+            dropdownContainer.value = control.defaultValue;
+            
+            dropdownContainer.addEventListener('change', function(e){
+                control.stateSet(e.target.value, e.target.value);
             });
             
             control.uiElem = dropdownContainer;
