@@ -857,7 +857,6 @@ function dataSort(data, sort) {
 
 // Build DOM: Controls
 function constructFiltersUi(controls) {
-    console.log(controls);
     // elemListFilters
     controls.forEach(function(control) {
         // Create toggles
@@ -917,35 +916,33 @@ function constructFiltersUi(controls) {
             control.uiElemMethod = 'value';
         }
         
-        // Create dropdowns
+        // Create dropdown range
         if (control.type === 'dropdown-range') {
-            console.log(control);
-            
             let controlContainer = newElem('section', 'control-dropdown'),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
                 dropdownContainer = newElem('select', 'controls-dropdown', [{'key': 'name', 'val': control.name}]),
                 parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters,
-                previousVal = 0;
+                previousVal = '';
             controlContainer.append(controlHeading);
             controlContainer.append(dropdownContainer);
             parentContainer.append(controlContainer);
             
             // Create dropdown UIs
             control.values.forEach(function(value) {
-                console.log('Current val: ' + value.value + '\nPrevious val: ' + previousVal);
-                let valA = value.value,
-                    valB = previousVal,
+                let minVal = previousVal,
+                    maxVal = value.value,
                     option = newElem('option', null, [{'key': 'value', 'val': value.value}], value.displayName);
-                option.setAttribute('data-val-a', valA);
-                option.setAttribute('data-val-b', valB);
+                
+                option.setAttribute('min-value', minVal);
                 dropdownContainer.append(option);
                 
-                previousVal = parseInt(valA) + 1;
+                previousVal = parseInt(maxVal) ? parseInt(maxVal) + 1 : '';
             });
             dropdownContainer.value = control.defaultValue;
             
             dropdownContainer.addEventListener('change', function(e){
-                control.stateSet(e.target.value, e.target.value);
+                let selectedOption = e.target.querySelectorAll('option')[e.target.selectedIndex],
+                    minVal = selectedOption.getAttribute('min-value');
             });
             
             control.uiElem = dropdownContainer;
