@@ -261,6 +261,71 @@ let controls = [
         ],
     },
     {
+        'name': 'priceBrackets',
+        'displayName': '',
+        'type': 'dropdown-range',
+        'location': 'listFilters',
+        'values': [
+            {
+                'displayName': '(all)',
+                'value': '',
+            },
+            {
+                'displayName': '$25',
+                'value': '25',
+                
+            },
+            {
+                'displayName': '$50',
+                'value': '50',
+                
+            },
+            {
+                'displayName': '$100',
+                'value': '100',
+                
+            },
+            {
+                'displayName': '$150',
+                'value': '150',
+                
+            },
+            {
+                'displayName': '$200',
+                'value': '200',
+                
+            },
+            {
+                'displayName': '$300',
+                'value': '300',
+                
+            },
+            {
+                'displayName': '$500',
+                'value': '500',
+                
+            },
+            {
+                'displayName': '$1,000',
+                'value': '1000',
+                
+            },
+            {
+                'displayName': '$2,000',
+                'value': '2000',
+                
+            },
+            {
+                'displayName': '$2,000+',
+                'value': '1000000',
+                
+            },
+        ],
+        'defaultValue': 'priceLowHigh',
+        get stateLoc() { return stateP.filters.price.priceBracket },
+        'stateSet': function(val) { stateP.filters.price.priceMin = valA; stateP.filters.price.priceMax = valB }
+    },
+    {
         'name': 'availability',
         'displayName': 'Availability',
         'type': 'toggle',
