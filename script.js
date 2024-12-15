@@ -172,7 +172,7 @@ let controls = [
         'location': 'listManager',
         'values': [
             {
-                'displayName': 'Unsorted',
+                'displayName': 'Alphabetical',
                 'value': 'unsorted',
             },
             {
