@@ -173,7 +173,7 @@ let controls = [
         'location': 'listManager',
         'values': [
             {
-                'displayName': 'Alphabetical',
+                'displayName': 'Unsorted',
                 'value': 'unsorted',
             },
             {
@@ -184,15 +184,6 @@ let controls = [
             {
                 'displayName': 'Price: Lowest first',
                 'value': 'priceLowHigh',
-            },
-            {
-                'displayName': 'Price: Highest first + Best',
-                'value': 'priceHighLowBest',
-                
-            },
-            {
-                'displayName': 'Price: Lowest first + Best',
-                'value': 'priceLowHighBest',
             },
         ],
         'defaultValue': 'priceLowHigh',
@@ -515,8 +506,6 @@ function establishPriceBrackets() {
         if (priceInt > previousMax) previousMax = priceInt;
         if (priceInt) priceBrackets.push(priceBracket);
     });
-    
-    console.log(priceBrackets);
 }
 establishPriceBrackets();
 
@@ -1349,10 +1338,10 @@ function buildCards(data, container) {
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
-        console.log(item);
-        
         // Price bracket divider
-        if (true) {
+        let addPriceBracketDividers = stateP.sort.includes('price') ? true : false;
+        
+        if (addPriceBracketDividers) {
             let newPriceBracket = parseInt(item.priceBracket) === parseInt(lastPriceBracket) ? false : true;
             
             if (newPriceBracket) {
@@ -1361,10 +1350,6 @@ function buildCards(data, container) {
                 container.append(priceBracketHeading);
                 lastPriceBracket = item.priceBracket;
             }
-            
-            console.log(lastPriceBracket);
-            console.log(item.priceBracket);
-            console.log(newPriceBracket);
         }
         
         // Core card structure
