@@ -1021,6 +1021,15 @@ function constructFiltersUi(controls) {
                 }, 500);
             });
             
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.keyCode === 13) {
+                    try { clearTimeout(searchDelay); } catch {}
+                    control.stateSet(searchInput.value);
+                    
+                    searchInput.blur();
+                }
+            });
+            
             control.uiElem = searchInput;
             control.uiElemMethod = 'value';
         }
