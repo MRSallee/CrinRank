@@ -1036,7 +1036,7 @@ function constructFiltersUi(controls) {
             parentContainer.append(controlContainer);
             
             control.values.forEach(function(value) {
-                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}]);
+                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}, {'key': 'inputmode', 'val': 'numeric'}]);
                 priceForm.append(valueInput);
                 
                 valueInput.addEventListener('focus', () => valueInput.select());
