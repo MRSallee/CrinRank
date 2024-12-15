@@ -896,6 +896,8 @@ function dataSort(data, sort) {
     data.sort(function(a, b) {
         let testedA = a.tested === 'yes' ? 1 : 0,
             testedB = b.tested === 'yes' ? 1 : 0,
+            priceA = parseInt(a.price),
+            priceB = parseInt(b.price),
             approvedA = a.approved === 'yes'  ? 5 : 0,
             approvedB = b.approved === 'yes' ? 5 : 0,
             buyableA = a.linkStore ? 10 : 0,
@@ -917,6 +919,7 @@ function dataSort(data, sort) {
         // Sort: Price high to low w/ Bias
         } else if (sort === 'priceHighLowBest') {
             if (sumA > sumB) {
+                console.log('zoop!');
                 return -1
             } else if (sumA === sumB && a.price > b.price) {
                 return -1
@@ -926,15 +929,19 @@ function dataSort(data, sort) {
             
         // Sort: Price low to high
         } else if (sort === 'priceLowHigh') {
-            if (a.price > 0 && a.price < b.price) {
+            if (priceA > 0 && priceA < priceB) {
                 return -1
+            } else if (priceA > 0 && priceA > priceB) {
+                return 1;
             } else {
                 return 0
             }
         // Sort: Price high to low
         } else if (sort === 'priceHighLow') {
-            if (a.price > b.price) {
-                return -1
+            if (priceA > 0 && priceA > priceB) {
+                return -1;
+            } else if (priceA > 0 && priceA < priceB) {
+                return 1;
             } else {
                 return 0
             }
