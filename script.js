@@ -172,7 +172,7 @@ let controls = [
         'location': 'listManager',
         'values': [
             {
-                'displayName': '(unsorted)',
+                'displayName': 'Unsorted',
                 'value': 'unsorted',
             },
             {
@@ -246,7 +246,7 @@ let controls = [
         'location': 'listFilters',
         'values': [
             {
-                'displayName': '(all)',
+                'displayName': 'All prices',
                 'value': '',
             },
             {
@@ -535,7 +535,10 @@ function applyStateControls() {
             let uiState = control.uiElem.value,
                 statesMatch = uiState === control.stateLoc ? true : false;
 
-            if (!statesMatch) control.uiElem.value = control.stateLoc;
+            if (!statesMatch) {
+                control.uiElem.value = control.stateLoc;
+                control.uiContainer.setAttribute('active-bracket', control.stateLoc);
+            }
         }
         
         
@@ -900,7 +903,6 @@ function dataSort(data, sort) {
 
 // Build DOM: Controls
 function constructFiltersUi(controls) {
-    // elemListFilters
     controls.forEach(function(control) {
         // Create toggles
         if (control.type === 'toggle') {
@@ -970,6 +972,9 @@ function constructFiltersUi(controls) {
             controlContainer.append(dropdownContainer);
             parentContainer.append(controlContainer);
             
+            console.log(control);
+            controlContainer.setAttribute('active-bracket', control.defaultValue);
+            
             // Create dropdown UIs
             control.values.forEach(function(value) {
                 let minVal = value.value === 'custom' ? '' : previousVal,
@@ -989,8 +994,11 @@ function constructFiltersUi(controls) {
                     minVal = selectedOption.getAttribute('min-value'),
                     maxVal = selectedOption.getAttribute('max-value');
                 control.stateSet(e.target.value, minVal, maxVal);
+                
+                controlContainer.setAttribute('active-bracket', e.target.value);
             });
             
+            control.uiContainer = controlContainer;
             control.uiElem = dropdownContainer;
             control.uiElemMethod = 'value';
         }

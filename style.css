@@ -301,6 +301,10 @@ input.search-input {
     width: 100%;
 }
 
+section.control-dropdown:not([active-bracket="custom"]) + section.control-price {
+    display: none;
+}
+
 section.control-price h3 {
     margin-top: 0;
 }
@@ -469,6 +473,8 @@ div.list-manager section.control-toggle {
 
 div.list-manager section.control-dropdown {
     flex: auto 0 0;
+    
+    margin: 0 0 0 auto;
 }
 
 section.list-manager-container h3 {
