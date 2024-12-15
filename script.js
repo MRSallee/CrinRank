@@ -307,7 +307,7 @@ let controls = [
         ],
         'defaultValue': '',
         get stateLoc() { return stateP.filters.price.priceBracket },
-        'stateSet': function(valA, valB) { stateP.filters.price.priceMin = valA; stateP.filters.price.priceMax = valB }
+        'stateSet': function(valA, valB, valC) { stateP.filters.price.priceBracket = valA; stateP.filters.price.priceMin = valB; stateP.filters.price.priceMax = valC }
     },
     {
         'name': 'priceRange',
@@ -981,7 +981,7 @@ function constructFiltersUi(controls) {
                 let selectedOption = e.target.querySelectorAll('option')[e.target.selectedIndex],
                     minVal = selectedOption.getAttribute('min-value'),
                     maxVal = selectedOption.getAttribute('max-value');
-                control.stateSet(minVal, maxVal);
+                control.stateSet(e.target.value, minVal, maxVal);
             });
             
             control.uiElem = dropdownContainer;
