@@ -1356,7 +1356,7 @@ function buildCards(data, container) {
             let newPriceBracket = parseInt(item.priceBracket) === parseInt(lastPriceBracket) ? false : true;
             
             if (newPriceBracket) {
-                let priceBracketHeadingText = 'Up to ' + numDisplay(item.priceBracket, 'currency', 'usd', 0),
+                let priceBracketHeadingText = item.priceBracket < 1000000 ? 'Up to ' + numDisplay(item.priceBracket, 'currency', 'usd', 0) : 'Price no limit',
                     priceBracketHeading = newElem('h2', 'price-bracket-heading', null, priceBracketHeadingText);
                 container.append(priceBracketHeading);
                 lastPriceBracket = item.priceBracket;
