@@ -867,8 +867,12 @@ function dataSort(data, sort) {
             buyableB = b.linkStore ? 10 : 0,
             discontinuedA = a.status.toLowerCase() === 'discontinued' ? -3 : 0,
             discontinuedB = b.status.toLowerCase() === 'discontinued' ? -3 : 0,
-            sumA = testedA + approvedA + buyableA + discontinuedA,
-            sumB = testedB + approvedB + buyableB + discontinuedB;
+            // Sorting w/ bias
+//            sumA = testedA + approvedA + buyableA + discontinuedA,
+//            sumB = testedB + approvedB + buyableB + discontinuedB;
+            // Sorting without bias
+            sumA = 0,
+            sumB = 0;
         
         // Sort: Price low to high
         if (sort === 'priceLowHigh') {
