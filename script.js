@@ -1007,7 +1007,7 @@ function constructFiltersUi(controls) {
         if (control.type === 'search') {
             let controlContainer = newElem('section', 'control-search'),
                 searchHeading = newElem('h3', 'search-heading', null, control.displayName),
-                searchInput = newElem('input', 'search-input', [{'key': 'placeholder', 'val': 'Search'}]),
+                searchInput = newElem('input', 'search-input', [{'key': 'placeholder', 'val': 'Search'}, {'key': 'enterkeyhint', 'val': 'search'}]),
                 parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
             controlContainer.append(searchHeading);
             controlContainer.append(searchInput);
@@ -1045,7 +1045,7 @@ function constructFiltersUi(controls) {
             parentContainer.append(controlContainer);
             
             control.values.forEach(function(value) {
-                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}, {'key': 'inputmode', 'val': 'numeric'}]);
+                let valueInput = newElem('input', value.name, [{'key': 'placeholder', 'val': value.displayName}, {'key': 'type', 'val': 'number'}, {'key': 'inputmode', 'val': 'numeric'}, {'key': 'enterkeyhint', 'val': 'go'}]);
                 priceForm.append(valueInput);
                 
                 valueInput.addEventListener('focus', () => valueInput.select());
