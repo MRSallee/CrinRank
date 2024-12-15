@@ -184,6 +184,15 @@ let controls = [
                 'displayName': 'Price: Lowest first',
                 'value': 'priceLowHigh',
             },
+            {
+                'displayName': 'Price: Highest first + Best',
+                'value': 'priceHighLowBest',
+                
+            },
+            {
+                'displayName': 'Price: Lowest first + Best',
+                'value': 'priceLowHighBest',
+            },
         ],
         'defaultValue': 'priceLowHigh',
         get stateLoc() { return stateP.sort },
@@ -867,15 +876,11 @@ function dataSort(data, sort) {
             buyableB = b.linkStore ? 10 : 0,
             discontinuedA = a.status.toLowerCase() === 'discontinued' ? -3 : 0,
             discontinuedB = b.status.toLowerCase() === 'discontinued' ? -3 : 0,
-            // Sorting w/ bias
-//            sumA = testedA + approvedA + buyableA + discontinuedA,
-//            sumB = testedB + approvedB + buyableB + discontinuedB;
-            // Sorting without bias
-            sumA = 0,
-            sumB = 0;
+            sumA = testedA + approvedA + buyableA + discontinuedA,
+            sumB = testedB + approvedB + buyableB + discontinuedB;
         
-        // Sort: Price low to high
-        if (sort === 'priceLowHigh') {
+        // Sort: Price low to high w/ Bias
+        if (sort === 'priceLowHighBest') {
             if (sumA > sumB) {
                 return -1
             } else if (sumA === sumB && a.price > 0 && a.price < b.price) {
@@ -883,11 +888,26 @@ function dataSort(data, sort) {
             } else {
                 return 0
             }
-        // Sort: Price high to low
-        } else if (sort === 'priceHighLow') {
+        // Sort: Price high to low w/ Bias
+        } else if (sort === 'priceHighLowBest') {
             if (sumA > sumB) {
                 return -1
             } else if (sumA === sumB && a.price > b.price) {
+                return -1
+            } else {
+                return 0
+            }
+            
+        // Sort: Price low to high
+        } else if (sort === 'priceLowHigh') {
+            if (a.price > 0 && a.price < b.price) {
+                return -1
+            } else {
+                return 0
+            }
+        // Sort: Price high to low
+        } else if (sort === 'priceHighLow') {
+            if (a.price > b.price) {
                 return -1
             } else {
                 return 0
