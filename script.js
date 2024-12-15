@@ -1331,7 +1331,6 @@ function buildTable(data, container) {
 
 // Build DOM: Cards
 function buildCards(data, container) {
-    console.log(data);
     // Clear DOM & set mode
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
