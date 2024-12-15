@@ -1021,13 +1021,13 @@ function constructFiltersUi(controls) {
                 }, 500);
             });
             
+            // Handle return key
             searchInput.addEventListener('keyup', function(e) {
-                if (e.keyCode === 13) {
-                    try { clearTimeout(searchDelay); } catch {}
-                    control.stateSet(searchInput.value);
-                    
-                    searchInput.blur();
-                }
+                if (e.keyCode === 13) searchInput.blur();
+            });
+            searchInput.addEventListener('blur', function() {
+                try { clearTimeout(searchDelay); } catch {}
+                control.stateSet(searchInput.value);
             });
             
             control.uiElem = searchInput;
@@ -1054,6 +1054,15 @@ function constructFiltersUi(controls) {
                     searchDelay = setTimeout(function() {
                         value.stateSet(valueInput.value);
                     }, 500);
+                });
+                
+                // Handle return key
+                valueInput.addEventListener('keyup', function(e) {
+                    if (e.keyCode === 13) valueInput.blur();
+                });
+                valueInput.addEventListener('blur', function() {
+                    try { clearTimeout(searchDelay); } catch {}
+                    value.stateSet(valueInput.value);
                 });
                 
                 value.uiElem = valueInput;
