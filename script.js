@@ -510,7 +510,6 @@ function applyState(state, saveScroll) {
     
     applyStateControls();
     applyStateUrl();
-    console.log(state);
 }
 
 // Apply state to the controls
@@ -525,12 +524,20 @@ function applyStateControls() {
             });
         }
         
-        if (control.type === 'dropdown' || control.type === 'dropdown-range') {
+        if (control.type === 'dropdown') {
             let uiState = control.uiElem.value,
                 statesMatch = uiState === control.stateLoc ? true : false;
 
             if (!statesMatch) control.uiElem.value = control.stateLoc;
         }
+        
+        if (control.type === 'dropdown-range') {
+            let uiState = control.uiElem.value,
+                statesMatch = uiState === control.stateLoc ? true : false;
+
+            if (!statesMatch) control.uiElem.value = control.stateLoc;
+        }
+        
         
         if (control.type === 'search') {
             let uiState = control.uiElem.value,
