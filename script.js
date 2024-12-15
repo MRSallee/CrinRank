@@ -498,6 +498,27 @@ let controls = [
     }
 ];
 
+// Establish price brackets
+let priceBrackets = [];
+function establishPriceBrackets() {
+    let priceValues = controls.find(control => control.name === 'priceBrackets').values,
+        previousMax = 0;
+
+    priceValues.forEach(function(value) {
+        let priceInt = parseInt(value.value),
+            priceBracket = {
+            'max': priceInt,
+            'min': previousMax + 1
+        }
+
+        if (priceInt > previousMax) previousMax = priceInt;
+        if (priceInt) priceBrackets.push(priceBracket);
+    });
+    
+    console.log(priceBrackets);
+}
+establishPriceBrackets();
+
 
 
 //////////////////////////////////////////////////
@@ -711,7 +732,21 @@ function getDataFresh (json) {
     } else {
         getDataFromJson(json);
     }
-       
+    
+    function getPriceBracket(price) {
+        let itemPrice = parseInt(price),
+            itemPriceBracket = '';
+
+        priceBrackets.forEach(function(bracket) {
+            if (itemPrice > bracket.min && itemPrice < bracket.max) {
+                itemPriceBracket = bracket.max;
+            }
+
+        });
+        
+        return itemPriceBracket;
+    }
+        
     function getDataFromJson(json) {
         $.getJSON(json, function(data) {
         })
@@ -730,6 +765,7 @@ function getDataFresh (json) {
                     'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
                     'model': item['IEM Model'] ? item['IEM Model'] : '',
                     'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : '',
+                    'priceBracket': getPriceBracket(item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : ''),
                     'remarks': item['Remarks'] ? item['Remarks'] : '',
                     'signature': item['Sound Signature'] ? item['Sound Signature'] : '',
                     'status': item['Status'] ? item['Status'] : '',
@@ -996,7 +1032,6 @@ function constructFiltersUi(controls) {
             controlContainer.append(dropdownContainer);
             parentContainer.append(controlContainer);
             
-            console.log(control);
             controlContainer.setAttribute('active-bracket', control.defaultValue);
             
             // Create dropdown UIs
@@ -1310,53 +1345,9 @@ function buildCards(data, container) {
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
     
-    // Establish price brackets
-    let priceValues = controls.find(control => control.name === 'priceBrackets').values,
-        priceBrackets = [],
-        previousPriceBracket = '';
-    
-        let previousVal = '';
-        priceValues.forEach(function(value) {
-            let priceInt = parseInt(value.value),
-                priceBracket = {
-                'max': priceInt,
-                'min': previousVal
-            }
-
-            if (priceInt > previousVal) previousVal = priceInt + 1;
-            if (priceInt) priceBrackets.push(priceBracket);
-        });
-    
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
         console.log(item);
-        
-        // Price bracketing
-        function getPriceBracket() {
-            let itemPrice = parseInt(item.price),
-                itemPriceBracket = '';
-            
-            console.log('Previous price bracket: ' + previousPriceBracket);
-            console.log('Item price: ' + item.price);
-            console.log(priceBrackets);
-            
-            priceBrackets.forEach(function(bracket) {
-                if (itemPrice > bracket.min && itemPrice < bracket.max) {
-                    itemPriceBracket = bracket.max;
-                }
-                
-            });
-            return itemPriceBracket;
-        }
-        let itemPriceBracket = getPriceBracket();
-        
-        console.log('itemPriceBracket: ' + itemPriceBracket);
-        
-        
-        
-        
-        
-        
         
         // Core card structure
         let elemCardContainer = newElem('article', 'card-container'),
