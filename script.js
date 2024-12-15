@@ -1310,8 +1310,54 @@ function buildCards(data, container) {
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
     
+    // Establish price brackets
+    let priceValues = controls.find(control => control.name === 'priceBrackets').values,
+        priceBrackets = [],
+        previousPriceBracket = '';
+    
+        let previousVal = '';
+        priceValues.forEach(function(value) {
+            let priceInt = parseInt(value.value),
+                priceBracket = {
+                'max': priceInt,
+                'min': previousVal
+            }
+
+            if (priceInt > previousVal) previousVal = priceInt + 1;
+            if (priceInt) priceBrackets.push(priceBracket);
+        });
+    
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
+        console.log(item);
+        
+        // Price bracketing
+        function getPriceBracket() {
+            let itemPrice = parseInt(item.price),
+                itemPriceBracket = '';
+            
+            console.log('Previous price bracket: ' + previousPriceBracket);
+            console.log('Item price: ' + item.price);
+            console.log(priceBrackets);
+            
+            priceBrackets.forEach(function(bracket) {
+                if (itemPrice > bracket.min && itemPrice < bracket.max) {
+                    itemPriceBracket = bracket.max;
+                }
+                
+            });
+            return itemPriceBracket;
+        }
+        let itemPriceBracket = getPriceBracket();
+        
+        console.log('itemPriceBracket: ' + itemPriceBracket);
+        
+        
+        
+        
+        
+        
+        
         // Core card structure
         let elemCardContainer = newElem('article', 'card-container'),
             elemCardHeader = newElem('section', 'card-header'),
