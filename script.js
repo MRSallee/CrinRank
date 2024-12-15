@@ -90,6 +90,7 @@ let state = {
             'tribrid': true,
             },
         'price': {
+            'priceBracket': '',
             'priceMin': '',
             'priceMax': '',
             },
@@ -298,6 +299,11 @@ let controls = [
                 'value': '1000000',
                 
             },
+            {
+                'displayName': 'Custom',
+                'value': 'custom',
+                
+            },
         ],
         'defaultValue': '',
         get stateLoc() { return stateP.filters.price.priceBracket },
@@ -504,6 +510,7 @@ function applyState(state, saveScroll) {
     
     applyStateControls();
     applyStateUrl();
+    console.log(state);
 }
 
 // Apply state to the controls
@@ -518,7 +525,7 @@ function applyStateControls() {
             });
         }
         
-        if (control.type === 'dropdown') {
+        if (control.type === 'dropdown' || control.type === 'dropdown-range') {
             let uiState = control.uiElem.value,
                 statesMatch = uiState === control.stateLoc ? true : false;
 
@@ -576,6 +583,7 @@ function applyStateUrl() {
     stateP.filters.drivers.tribrid === stateDefaults.filters.drivers.tribrid ? url.searchParams.delete('tribrid') : url.searchParams.set('tribrid', stateP.filters.drivers.tribrid);
     
     // Price filters
+    stateP.filters.price.priceBracket === stateDefaults.filters.price.priceBracket ? url.searchParams.delete('priceBracket') : url.searchParams.set('priceBracket', stateP.filters.price.priceBracket);
     stateP.filters.price.priceMin === stateDefaults.filters.price.priceMin ? url.searchParams.delete('priceMin') : url.searchParams.set('priceMin', stateP.filters.price.priceMin);
     stateP.filters.price.priceMax === stateDefaults.filters.price.priceMax ? url.searchParams.delete('priceMax') : url.searchParams.set('priceMax', stateP.filters.price.priceMax);
     
@@ -610,6 +618,7 @@ function applyUrlToState() {
         hybrid = urlQueryParams.get('hybrid') === 'true' ? true : urlQueryParams.get('hybrid') === 'false' ? false : null,
         tribrid = urlQueryParams.get('tribrid') === 'true' ? true : urlQueryParams.get('tribrid') === 'false' ? false : null,
 
+        priceBracket = urlQueryParams.get('priceBracket'),
         priceMin = urlQueryParams.get('priceMin'),
         priceMax = urlQueryParams.get('priceMax');
     
@@ -642,6 +651,7 @@ function applyUrlToState() {
     tribrid != null ? stateP.filters.drivers.tribrid = tribrid : '';
     
     // Price filters
+    priceBracket != null ? stateP.filters.price.priceBracket = priceBracket : '';
     priceMin != null ? stateP.filters.price.priceMin = priceMin : '';
     priceMax != null ? stateP.filters.price.priceMax = priceMax : '';
 }
@@ -955,11 +965,12 @@ function constructFiltersUi(controls) {
             
             // Create dropdown UIs
             control.values.forEach(function(value) {
-                let minVal = previousVal,
-                    maxVal = value.value,
+                let minVal = value.value === 'custom' ? '' : previousVal,
+                    maxVal = value.value === 'custom' ? '' : value.value,
                     option = newElem('option', null, [{'key': 'value', 'val': value.value}], value.displayName);
                 
                 option.setAttribute('min-value', minVal);
+                option.setAttribute('max-value', maxVal);
                 dropdownContainer.append(option);
                 
                 previousVal = parseInt(maxVal) ? parseInt(maxVal) + 1 : '';
@@ -968,8 +979,9 @@ function constructFiltersUi(controls) {
             
             dropdownContainer.addEventListener('change', function(e){
                 let selectedOption = e.target.querySelectorAll('option')[e.target.selectedIndex],
-                    minVal = selectedOption.getAttribute('min-value');
-                control.stateSet(minVal, e.target.value);
+                    minVal = selectedOption.getAttribute('min-value'),
+                    maxVal = selectedOption.getAttribute('max-value');
+                control.stateSet(minVal, maxVal);
             });
             
             control.uiElem = dropdownContainer;
