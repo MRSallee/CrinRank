@@ -484,6 +484,27 @@ section.list-manager-container h3 {
 /* -----
 Card header */
 
+h2.price-bracket-heading {
+    position: sticky;
+    top: calc(16rem + 1px);
+    z-index: 1;
+    
+    padding: 12rem 0 4rem 0;
+    margin: 0 0 4rem 0;
+    
+    background-color: var(--color-cream);
+    border-bottom: 1px solid var(--color-orange);
+    
+    color: var(--color-orange);
+    font-size: 6rem;
+    line-height: 1em;
+    text-align: right;
+}
+
+h2.price-bracket-heading:first-child {
+    margin-top: -4rem;
+}
+
 section.card-header {
     display: flex;
     align-items: center;

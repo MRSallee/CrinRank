@@ -22,11 +22,12 @@ function newElem(type, classes, attributes, content) {
 
 // Helper: Convert value to display price
 //function priceDisplay(price) {
-function numDisplay(num, style, currencyVar) {
+function numDisplay(num, style, currencyVar, fractionDigits) {
     if (currencyVar) {
         let formatter = new Intl.NumberFormat('en-uS', {
             style: style,
             currency: currencyVar,
+            maximumFractionDigits: fractionDigits,
         });
 
         return(formatter.format(num));
@@ -738,7 +739,7 @@ function getDataFresh (json) {
             itemPriceBracket = '';
 
         priceBrackets.forEach(function(bracket) {
-            if (itemPrice > bracket.min && itemPrice < bracket.max) {
+            if (itemPrice > bracket.min && itemPrice <= bracket.max) {
                 itemPriceBracket = bracket.max;
             }
 
@@ -1344,10 +1345,27 @@ function buildCards(data, container) {
     // Clear DOM & set mode
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
+    let lastPriceBracket = '0';
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
         console.log(item);
+        
+        // Price bracket divider
+        if (true) {
+            let newPriceBracket = parseInt(item.priceBracket) === parseInt(lastPriceBracket) ? false : true;
+            
+            if (newPriceBracket) {
+                let priceBracketHeadingText = 'Up to ' + numDisplay(item.priceBracket, 'currency', 'usd', 0),
+                    priceBracketHeading = newElem('h2', 'price-bracket-heading', null, priceBracketHeadingText);
+                container.append(priceBracketHeading);
+                lastPriceBracket = item.priceBracket;
+            }
+            
+            console.log(lastPriceBracket);
+            console.log(item.priceBracket);
+            console.log(newPriceBracket);
+        }
         
         // Core card structure
         let elemCardContainer = newElem('article', 'card-container'),
