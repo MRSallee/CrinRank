@@ -92,6 +92,7 @@ div.group-container {
     max-width: 600px;
     max-width: 200rem;
     margin: auto;
+    padding: 0 0 4rem 0;
 }
 
 article.card-container {
@@ -448,7 +449,7 @@ List manager */
 section.list-manager-container {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
     
     display: flex;
     padding: 4rem 0;
