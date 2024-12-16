@@ -1284,7 +1284,7 @@ function buildTable(data, container) {
             phoneBuyLink = item.linkStore
                 ? newElem('a', 'table-phone-buy-link', [{'key': 'href', 'val': item.linkStore}])
                 : newElem('a', 'table-phone-buy-link'),
-            displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
+            displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$--',
             phonePrice = newElem('span', 'table-phone-price', null, displayPrice),
             phoneDemoable = newElem('div', 'table-phone-demoable', [{'key': 'data-demoable', 'val': item.demoable}]);
         phoneBuyLink.append(phonePrice);
