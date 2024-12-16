@@ -729,7 +729,7 @@ function getDataFresh (json) {
             itemPriceBracket = '';
 
         priceBrackets.forEach(function(bracket) {
-            if (!noPrice && itemPrice > bracket.min && itemPrice <= bracket.max) {
+            if (!noPrice && itemPrice >= bracket.min && itemPrice <= bracket.max) {
                 itemPriceBracket = bracket.max;
             } else if (noPrice) {
                 itemPriceBracket = 0;
