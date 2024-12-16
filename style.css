@@ -53,7 +53,7 @@ body {
     
     background-color: var(--color-cream);
     
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 
@@ -66,22 +66,32 @@ main.list {
     display: flex;
     justify-content: flex-start;
     
-    flex: 100% 1 1;
+    flex: 100% 0 0;
     max-width: calc(75rem + 340rem);
 }
 
 section.list-filters-container {
+    position: sticky;
+    top: 0;
+    left: 0;
+    
     flex: 75rem 0 0;
+    height: 100vh;
+    max-height: -webkit-fill-available;
+    
+    overflow-y: scroll;
+    overscroll-behavior: contain;
 }
 
 section.list-contents-container {
-    box-sizing: border-box;
     flex: auto 1 1;
+    box-sizing: border-box;
     padding: 0 4rem 4rem 4rem;
     
-    height: 100vh;
-    max-height: -webkit-fill-available;
-    overflow-y: scroll;
+    height: auto;
+}
+
+div.list-contents {
 }
 
 div.list-contents[list-mode='cards'] {
@@ -117,16 +127,8 @@ article.card-container + article.card-container {
 Filters */
 
 div.list-filters {
-    position: sticky;
-    top: 0;
-    
     box-sizing: border-box;
-    height: 100vh;
-    max-height: -webkit-fill-available;
     padding: 0 4rem 4rem 4rem;
-    
-    overflow-y: scroll;
-    overscroll-behavior: contain;
     
     border-right: 1px dotted var(--color-orange);
 }
@@ -846,21 +848,16 @@ article[data-discontinued="true"] a.phone-link:not(.phone-link-store):before {
 Table styles */
 
 main[list-mode="table"] section.list-contents-container {
-    max-width: calc(100vw - 79rem);
-    padding: 0 0 0 4rem;
-    
-    overflow: hidden;
+    max-width: calc(100vw - 75rem);
 }
 
 div.list-contents[list-mode="table"] {
     box-sizing: border-box;
-    width: calc(100%);
+    width: 100%;
     max-width: 340rem;
-    height: calc(100vh - 16rem);
-    max-height: -webkit-fill-available;
     padding: 0 0rem 4rem 0;
     
-    overflow: scroll;
+    overflow-x: scroll;
 }
 
 section.list-table {
@@ -891,7 +888,6 @@ div.list-contents[list-mode="table"] div.group-container {
 Table column widths */
 
 section.list-table {
-    width: 340rem;
 }
 
 div.table-head-name,
@@ -943,7 +939,7 @@ div.table-phone-signature {
     box-sizing: border-box;
     display: table-cell;
     width: 50rem;
-6}
+}
 
 div.table-head-drivers,
 div.table-phone-drivers {
@@ -965,7 +961,7 @@ Table header */
 
 section.list-table.table-header {
     position: sticky;
-    top: 0;
+    top: calc(16rem + 1px);
     z-index: 2;
     
 }
