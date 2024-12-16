@@ -1208,11 +1208,12 @@ function createGroupContainer(groupIndex, data) {
     let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
     
     let observerOptions = {
-            root: document.querySelector('body'),
-            //root: elemListContentsContainer,
-            //rootMargin: "-200px",
-            rootMargin: "0px",
-            threshold: 0.000001
+        root: null,
+        //root: document.querySelector('body'),
+        //root: elemListContentsContainer,
+        //rootMargin: "-200px",
+        rootMargin: "0px",
+        threshold: 0.000001
     };
     let observerCallback = (entries, observerOptions) => {
         entries.forEach(entry => {
