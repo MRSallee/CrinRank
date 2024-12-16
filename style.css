@@ -962,7 +962,8 @@ Table header */
 section.list-table.table-header {
     position: sticky;
     top: calc(16rem + 1px);
-    z-index: 2;
+    top: 0;
+    z-index: 1;
     
 }
 
