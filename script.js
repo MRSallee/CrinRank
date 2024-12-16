@@ -1062,7 +1062,10 @@ function constructFiltersUi(controls) {
             
             // Handle return key
             searchInput.addEventListener('keyup', function(e) {
-                if (e.keyCode === 13) searchInput.blur();
+                if (e.keyCode === 13) {
+                    searchInput.blur();
+                    stateP.overlayFilters = false;
+                }
             });
             searchInput.addEventListener('blur', function() {
                 try { clearTimeout(searchDelay); } catch {}
