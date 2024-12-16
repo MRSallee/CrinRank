@@ -508,7 +508,6 @@ function establishPriceBrackets() {
     });
 }
 establishPriceBrackets();
-console.log(priceBrackets);
 
 
 
@@ -901,35 +900,36 @@ function dataSort(data, sort) {
         let modelA = a.model,
             modelB = b.model,
             priceA = parseInt(a.price),
-            priceB = parseInt(b.price);
-        
-        console.log('A: ' + modelA, priceA);
-        console.log('B: ' + modelB, priceB);
-        
-        // Sort: Price low to high
-        if (sort === 'priceLowHigh') {
-            if (priceA > 0 && priceA < priceB) {
-                return -1
-            } else if (priceA > 0 && priceA >= priceB) {
-                return 1;
-            } else if (priceA === 0) {
-                return 1;
-            } else {
-                return 0
+            priceB = parseInt(b.price),
+            priceSortable = priceA > 0 && priceB > 0 ? true : false;
+                
+        if (priceSortable) {
+            // Sort: Price low to high
+            if (sort === 'priceLowHigh') {
+                if (priceA > priceB) {
+                    return 1;
+                } else if (priceA < priceB) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            } else if (sort === 'priceHighLow') {
+                if (priceA > priceB) {
+                    return -1;
+                } else if (priceA < priceB) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
-        // Sort: Price high to low
-        } else if (sort === 'priceHighLow') {
-            if (priceA > 0 && priceA > priceB) {
+        } else {
+            if (priceA > 0) {
                 return -1;
-            } else if (priceA > 0 && priceA <= priceB) {
-                return 1;
-            } else if (priceA === 0) {
+            } else if (priceB) {
                 return 1;
             } else {
-                return 0
+                return 0;
             }
-        } else if (sort === 'unsorted') {
-            return 0;
         }
     });
     
