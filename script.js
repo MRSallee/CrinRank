@@ -494,7 +494,7 @@ let controls = [
 let priceBrackets = [];
 function establishPriceBrackets() {
     let priceValues = controls.find(control => control.name === 'priceBrackets').values,
-        previousMax = 0;
+        previousMax = -1;
 
     priceValues.forEach(function(value) {
         let priceInt = parseInt(value.value),
@@ -508,6 +508,7 @@ function establishPriceBrackets() {
     });
 }
 establishPriceBrackets();
+console.log(priceBrackets);
 
 
 
@@ -725,11 +726,14 @@ function getDataFresh (json) {
     
     function getPriceBracket(price) {
         let itemPrice = parseInt(price),
+            noPrice = isNaN(itemPrice),
             itemPriceBracket = '';
 
         priceBrackets.forEach(function(bracket) {
-            if (itemPrice > bracket.min && itemPrice <= bracket.max) {
+            if (!noPrice && itemPrice > bracket.min && itemPrice <= bracket.max) {
                 itemPriceBracket = bracket.max;
+            } else if (noPrice) {
+                itemPriceBracket = 0;
             }
 
         });
@@ -754,7 +758,7 @@ function getDataFresh (json) {
                     'linkMeasurement': item['Measurement Link'] ? item['Measurement Link'] : '',
                     'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
                     'model': item['IEM Model'] ? item['IEM Model'] : '',
-                    'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : '',
+                    'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : 0,
                     'priceBracket': getPriceBracket(item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : ''),
                     'remarks': item['Remarks'] ? item['Remarks'] : '',
                     'signature': item['Sound Signature'] ? item['Sound Signature'] : '',
@@ -894,44 +898,21 @@ function dataFilter(data, filters) {
 // Sort functions
 function dataSort(data, sort) {
     data.sort(function(a, b) {
-        let testedA = a.tested === 'yes' ? 1 : 0,
-            testedB = b.tested === 'yes' ? 1 : 0,
+        let modelA = a.model,
+            modelB = b.model,
             priceA = parseInt(a.price),
-            priceB = parseInt(b.price),
-            approvedA = a.approved === 'yes'  ? 5 : 0,
-            approvedB = b.approved === 'yes' ? 5 : 0,
-            buyableA = a.linkStore ? 10 : 0,
-            buyableB = b.linkStore ? 10 : 0,
-            discontinuedA = a.status.toLowerCase() === 'discontinued' ? -3 : 0,
-            discontinuedB = b.status.toLowerCase() === 'discontinued' ? -3 : 0,
-            sumA = testedA + approvedA + buyableA + discontinuedA,
-            sumB = testedB + approvedB + buyableB + discontinuedB;
+            priceB = parseInt(b.price);
         
-        // Sort: Price low to high w/ Bias
-        if (sort === 'priceLowHighBest') {
-            if (sumA > sumB) {
-                return -1
-            } else if (sumA === sumB && a.price > 0 && a.price < b.price) {
-                return -1
-            } else {
-                return 0
-            }
-        // Sort: Price high to low w/ Bias
-        } else if (sort === 'priceHighLowBest') {
-            if (sumA > sumB) {
-                console.log('zoop!');
-                return -1
-            } else if (sumA === sumB && a.price > b.price) {
-                return -1
-            } else {
-                return 0
-            }
-            
+        console.log('A: ' + modelA, priceA);
+        console.log('B: ' + modelB, priceB);
+        
         // Sort: Price low to high
-        } else if (sort === 'priceLowHigh') {
+        if (sort === 'priceLowHigh') {
             if (priceA > 0 && priceA < priceB) {
                 return -1
-            } else if (priceA > 0 && priceA > priceB) {
+            } else if (priceA > 0 && priceA >= priceB) {
+                return 1;
+            } else if (priceA === 0) {
                 return 1;
             } else {
                 return 0
@@ -940,7 +921,9 @@ function dataSort(data, sort) {
         } else if (sort === 'priceHighLow') {
             if (priceA > 0 && priceA > priceB) {
                 return -1;
-            } else if (priceA > 0 && priceA < priceB) {
+            } else if (priceA > 0 && priceA <= priceB) {
+                return 1;
+            } else if (priceA === 0) {
                 return 1;
             } else {
                 return 0
@@ -1193,7 +1176,7 @@ function buildGroup(data, groupIndex) {
             }
         });
     }
-    clearInactive()
+    clearInactive();
     
     // Populate group containers
     if (groupA) next(groupA);
@@ -1341,7 +1324,7 @@ function buildCards(data, container) {
     // Clear DOM & set mode
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
-    let lastPriceBracket = '0';
+    let lastPriceBracket = '-1';
     
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
@@ -1352,7 +1335,7 @@ function buildCards(data, container) {
             let newPriceBracket = parseInt(item.priceBracket) === parseInt(lastPriceBracket) ? false : true;
             
             if (newPriceBracket) {
-                let priceBracketHeadingText = item.priceBracket < 1000000 ? 'Up to ' + numDisplay(item.priceBracket, 'currency', 'usd', 0) : 'Price no limit',
+                let priceBracketHeadingText = item.priceBracket === 0 ? 'Price unknown' : item.priceBracket < 1000000 ? 'Up to ' + numDisplay(item.priceBracket, 'currency', 'usd', 0) : 'Price no limit',
                     priceBracketHeading = newElem('h2', 'price-bracket-heading', null, priceBracketHeadingText);
                 container.append(priceBracketHeading);
                 lastPriceBracket = item.priceBracket;
@@ -1417,7 +1400,8 @@ function buildCards(data, container) {
             linkStore = item.linkStore
                             ? newElem('a', 'phone-link phone-link-store', [{'key': 'href', 'val': item.linkStore}], 'Buy')
                             : newElem('a', 'phone-link phone-link-store', null, ''),
-            displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
+//            displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
+            displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$ --',
             storePrice = newElem('span', 'phone-store-price', null, displayPrice);
         
         linkFave.addEventListener('click', () => toggleUserFave(item));
