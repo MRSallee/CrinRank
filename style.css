@@ -52,6 +52,8 @@ body {
     letter-spacing: -0.02em;
     
     background-color: var(--color-cream);
+    
+    overflow: hidden;
 }
 
 
@@ -459,7 +461,7 @@ section.list-manager-container {
 }
 
 main.list[list-mode="table"] section.list-manager-container {
-    padding: 4rem 4rem 4rem 0;
+    padding: 4rem 0 4rem 0;
 }
 
 div.list-manager {
@@ -844,7 +846,7 @@ article[data-discontinued="true"] a.phone-link:not(.phone-link-store):before {
 Table styles */
 
 main[list-mode="table"] section.list-contents-container {
-    max-width: calc(100vw - 75rem);
+    max-width: calc(100vw - 79rem);
     padding: 0 0 0 4rem;
     
     overflow: hidden;
@@ -852,11 +854,11 @@ main[list-mode="table"] section.list-contents-container {
 
 div.list-contents[list-mode="table"] {
     box-sizing: border-box;
-    width: 100%;
+    width: calc(100%);
     max-width: 340rem;
     height: calc(100vh - 16rem);
     max-height: -webkit-fill-available;
-    padding: 0 4rem 4rem 0;
+    padding: 0 0rem 4rem 0;
     
     overflow: scroll;
 }
