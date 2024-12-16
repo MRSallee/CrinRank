@@ -1305,22 +1305,24 @@ Mobile styles */
     
     main.list {
         flex-direction: column;
-        
-        height: 100vh;
-        max-height: -webkit-fill-available;
-        overflow-y: scroll;
     }
     
     section.list-filters-container {
+        position: static;
+        
         order: 1;
         
         display: none;
         box-sizing: border-box;
         width: 100%;
         flex: auto 1 1;
+        height: auto;
         
         background-color: var(--color-cream);
-        overflow-y: scroll;
+    }
+    
+    section.filter-result-container {
+        position: static;
     }
     
     div.list-filters {
@@ -1335,6 +1337,10 @@ Mobile styles */
     }
     
     section.list-contents-container {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        
         order: 0;
         
         flex: auto 0 0;
