@@ -1,3 +1,8 @@
+html {
+    scrollbar-color: var(--color-cream) var(--color-white);
+    scrollbar-color: var(--color-shade-light) var(--color-cream);
+    scroll-behavior: smooth;
+}
 
 :root {
     --color-white: #fff;
@@ -8,6 +13,7 @@
     --color-brown: #845831;
     --color-orange: #F7931D;
     --color-red: #d21625;
+    --color-shade-light: rgba(0,0,0, 0.03);
     
     --font-primary: 'Twentieth Century', 'Poppins', sans-serif;
     
@@ -63,11 +69,12 @@ body {
 Cards basics */
 
 main.list {
+    box-sizing: border-box;
     display: flex;
     justify-content: flex-start;
     
-    flex: 100% 0 0;
-    max-width: calc(75rem + 340rem);
+    flex: calc(75rem + 340rem) 0 1;
+    max-width: 100%;
 }
 
 section.list-filters-container {
@@ -75,16 +82,20 @@ section.list-filters-container {
     top: 0;
     left: 0;
     
+    box-sizing: border-box;
     flex: 75rem 0 0;
     height: 100vh;
     max-height: -webkit-fill-available;
+    
+    border-right: 1px dotted var(--color-orange);
+
     
     overflow-y: scroll;
     overscroll-behavior: contain;
 }
 
 section.list-contents-container {
-    flex: auto 1 1;
+    flex: 340rem 1 1;
     box-sizing: border-box;
     padding: 0 4rem 4rem 4rem;
     
@@ -129,8 +140,6 @@ Filters */
 div.list-filters {
     box-sizing: border-box;
     padding: 0 4rem 4rem 4rem;
-    
-    border-right: 1px dotted var(--color-orange);
 }
 
 h3 {
@@ -463,7 +472,7 @@ section.list-manager-container {
 }
 
 main.list[list-mode="table"] section.list-manager-container {
-    padding: 4rem 0 4rem 0;
+/*    padding: 4rem 0 4rem 0;*/
 }
 
 div.list-manager {
@@ -848,16 +857,16 @@ article[data-discontinued="true"] a.phone-link:not(.phone-link-store):before {
 Table styles */
 
 main[list-mode="table"] section.list-contents-container {
-    max-width: calc(100vw - 75rem);
+    max-width: calc(100% - 75rem);
 }
 
 div.list-contents[list-mode="table"] {
     box-sizing: border-box;
-    width: 100%;
     max-width: 340rem;
     padding: 0 0rem 4rem 0;
     
     overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 section.list-table {
