@@ -971,12 +971,14 @@ Table header */
 section.list-table.table-header {
     position: sticky;
     top: calc(16rem + 1px);
-    top: 0;
-    z-index: 1;
+    z-index: 10;
+    
+    width: 100%;
     
 }
 
 article.table-head {
+    width: 340rem;
     background-color: var(--color-white);
 }
 
@@ -992,6 +994,7 @@ article.table-head div {
 
 article.table-head div.table-head-name {
     position: sticky;
+    top: 0;
     left: 0;
     z-index: 2;
     
@@ -1326,9 +1329,9 @@ Mobile styles */
         width: 100%;
         flex: auto 1 1;
         height: auto;
-        max-height: -webkit-fill-available;
 
         background-color: var(--color-cream);
+        overflow: clip;
     }
     
     section.filter-result-container {
