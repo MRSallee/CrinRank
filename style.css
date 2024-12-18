@@ -1363,10 +1363,13 @@ Mobile styles */
     
     body[filters-overlay="true"] section.list-filters-container {
         display: inherit;
+        
+        position: fixed;
+        top: 61px;
+        z-index: 10;
     }
     
     body[filters-overlay="true"] div.list-contents {
-        display: none;
     }
 
     div.list-contents {
