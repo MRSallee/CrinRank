@@ -1326,7 +1326,8 @@ Mobile styles */
         width: 100%;
         flex: auto 1 1;
         height: auto;
-        
+        max-height: -webkit-fill-available;
+
         background-color: var(--color-cream);
     }
     
