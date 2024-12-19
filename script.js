@@ -44,6 +44,10 @@ function numDisplay(num, style, currencyVar, fractionDigits) {
 
 //////////////////////////////////////////////////
 // Initialization
+function siteHeader() {
+    let 
+}
+
 let elemList = newElem('main', 'list'),
     elemListContentsContainer = newElem('section', 'list-contents-container'),
     elemListContents = newElem('div', 'list-contents'),
@@ -68,8 +72,8 @@ let state = {
     'overlayFilters': false,
     'filters': {
         'featured': {
-            'crinApprovedOnly': false,
-            'crinTestedOnly': false,
+            'crinApprovedOnly': true,
+            'crinTestedOnly': true,
             'userFavesOnly': false,
         },
         'availability': {
@@ -216,7 +220,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': false,
+                'defaultValue': true,
                 get stateLoc() { return stateP.filters.featured.crinApprovedOnly },
                 'stateSet': function(val) { stateP.filters.featured.crinApprovedOnly = val; if (val) {stateP.filters.featured.crinTestedOnly = val}; }
             },
@@ -227,7 +231,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': false,
+                'defaultValue': true,
                 get stateLoc() { return stateP.filters.featured.crinTestedOnly },
                 'stateSet': function(val) { stateP.filters.featured.crinTestedOnly = val; if (!val) {stateP.filters.featured.crinApprovedOnly = val} }
             },
