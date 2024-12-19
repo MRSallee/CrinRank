@@ -868,6 +868,7 @@ div.list-contents[list-mode="table"] {
     
     overflow-x: scroll;
     overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 section.list-table {
