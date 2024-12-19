@@ -1322,6 +1322,18 @@ function buildTable(data, container) {
     });
 }
 
+function scrollTableHeader() {
+    elemListContents.addEventListener('scroll', function() {
+        let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false,
+            scrollPosListContents = elemListContents.scrollLeft;
+        
+        //if (tableHeaderExists) document.querySelector('section.list-table.table-header').scrollLeft = scrollPosListContents;
+        if (tableHeaderExists) document.querySelector('article.table-head').setAttribute('style', 'margin-left: -' + scrollPosListContents + 'px;');
+        
+        console.log('scrollin: ' + scrollPosListContents);
+    });
+}
+scrollTableHeader();
 
 
 // Build DOM: Cards
