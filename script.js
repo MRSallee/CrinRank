@@ -1321,19 +1321,20 @@ function buildTable(data, container) {
         container.append(phoneContainer);
     });
 }
-
+// Scroll table header with table
 function scrollTableHeader() {
     elemListContents.addEventListener('scroll', function() {
-        let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false,
-            scrollPosListContents = elemListContents.scrollLeft;
-        
-        //if (tableHeaderExists) document.querySelector('section.list-table.table-header').scrollLeft = scrollPosListContents;
-        if (tableHeaderExists) document.querySelector('article.table-head').setAttribute('style', 'margin-left: -' + scrollPosListContents + 'px;');
-        
-        console.log('scrollin: ' + scrollPosListContents);
+        try { clearTimeout(scrollDelay); } catch {}
+        scrollDelay = setTimeout(function() {
+            let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false,
+                scrollPosListContents = elemListContents.scrollLeft;
+            
+            if (tableHeaderExists) document.querySelector('article.table-head').setAttribute('style', 'margin-left: -' + scrollPosListContents + 'px; transition: margin-left 0.05s ease;');
+        }, 10);
     });
 }
 scrollTableHeader();
+
 
 
 // Build DOM: Cards
