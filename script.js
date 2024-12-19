@@ -48,6 +48,7 @@ function initSiteHeader() {
     let siteHeaderContainer = newElem('header', 'site-header'),
         siteHeaderLogo = newElem('div', 'site-header-logo'),
         siteHeaderLinks = newElem('ul', 'site-header-links'),
+        siteHeaderToggle = newElem('button', 'site-header-toggle'),
         siteHeaderData = {
             'logo': {
                 'imageUrl': 'https://graph.hangout.audio/hangout-logo-white-text.svg',
@@ -76,10 +77,22 @@ function initSiteHeader() {
                 },
             ]
         };
+    siteHeaderContainer.append(siteHeaderToggle);
     siteHeaderContainer.append(siteHeaderLogo);
     siteHeaderContainer.append(siteHeaderLinks);
     
-    console.log(siteHeaderData);
+    siteHeaderToggle.addEventListener('click', function() {
+        let docBody = document.querySelector('body'),
+            siteHeaderLinksState = docBody.getAttribute('data-site-header-links'),
+            siteHeaderLinksExpanded = siteHeaderLinksState ? siteHeaderLinksState.includes('expanded') ? 1 : 0 : 0;
+        
+        if (siteHeaderLinksExpanded) {
+            docBody.setAttribute('data-site-header-links', 'collapsed');
+        } else {
+            docBody.setAttribute('data-site-header-links', 'expanded');
+            window.scrollTo(0, 0);
+        }
+    });
     
     // Create site header logo
     let logoLink = newElem('a', 'site-header-logo-link', [{'key': 'href', 'val': siteHeaderData.logo.linkUrl}]),
@@ -90,7 +103,6 @@ function initSiteHeader() {
     
     // Create site header links
     siteHeaderData.links.forEach(function(link) {
-        console.log(link);
         let linkContainer = newElem('li', 'site-header-link-container'),
             linkLink = newElem('a', 'site-header-link', [{'key': 'href', 'val': link.linkUrl}], link.label);
         
