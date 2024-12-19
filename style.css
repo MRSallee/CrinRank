@@ -8,6 +8,9 @@
     --color-orange: #F7931D;
     --color-red: #d21625;
     --color-shade-light: rgba(0,0,0, 0.03);
+    --color-shade-dark: rgba(0,0,0, 0.1);
+    
+    --border-faint: 1px solid var(--color-shade-dark);
     
     --font-primary: 'Twentieth Century', 'Poppins', sans-serif;
     
@@ -24,6 +27,7 @@
     --icon-table: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-table'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z' /%3E%3Cpath d='M3 10h18' /%3E%3Cpath d='M10 3v18' /%3E%3C/svg%3E");
     --icon-sliders: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-adjustments-horizontal'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 6l8 0' /%3E%3Cpath d='M16 6l4 0' /%3E%3Cpath d='M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 12l2 0' /%3E%3Cpath d='M10 12l10 0' /%3E%3Cpath d='M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 18l11 0' /%3E%3Cpath d='M19 18l1 0' /%3E%3C/svg%3E");
     --icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-x'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M18 6l-12 12' /%3E%3Cpath d='M6 6l12 12' /%3E%3C/svg%3E");
+    --icon-hamburger: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 25.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 120 120' style='enable-background:new 0 0 120 120;' xml:space='preserve'%3E%3Cpath class='st0' d='M105,65H15c-2.76,0-5-2.24-5-5v0c0-2.76,2.24-5,5-5h90c2.76,0,5,2.24,5,5v0C110,62.76,107.76,65,105,65z'/%3E%3Cpath class='st0' d='M105,20H15c-2.76,0-5-2.24-5-5v0c0-2.76,2.24-5,5-5h90c2.76,0,5,2.24,5,5v0C110,17.76,107.76,20,105,20z'/%3E%3Cpath class='st0' d='M105,110H15c-2.76,0-5-2.24-5-5v0c0-2.76,2.24-5,5-5h90c2.76,0,5,2.24,5,5v0C110,107.76,107.76,110,105,110z'/%3E%3C/svg%3E%0A");
     
     --icon-fave-empty: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-heart'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572' /%3E%3C/svg%3E");
     --icon-fave-full: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='currentColor' class='icon icon-tabler icons-tabler-filled icon-tabler-heart'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z' /%3E%3C/svg%3E");
@@ -124,6 +128,10 @@ a.site-header-link {
     text-decoration: none;
 }
 
+@media (max-width: 1470px) {
+    
+}
+
 
 
 /* -----
@@ -148,8 +156,7 @@ section.list-filters-container {
     height: 100vh;
     max-height: -webkit-fill-available;
     
-    border-right: 1px dotted var(--color-orange);
-
+    border-right: var(--border-faint);
     
     overflow-y: scroll;
     overscroll-behavior: contain;
@@ -223,9 +230,9 @@ section.filter-result-container {
     margin: 0 0 4rem 0;
     
     background-color: var(--color-cream);
-    border-bottom: 1px dotted var(--color-orange);
+    border-bottom: var(--border-faint);
     
-    color: var(--color-orange);
+    color: var(--color-brown);
     font-size: 3rem;
     line-height: 4rem;
     text-align: center;
@@ -297,9 +304,10 @@ label.toggle-label input + span.toggle-slider {
     
     flex: 16rem 0 0;
     height: 100%;
-    background-color: var(--color-gray-light);
-    border: 1px solid var(--color-gray-dark);
+    background-color: var(--color-shade-light);
+    border: 1px solid var(--color-shade-dark);
     border-radius: 4rem;
+    box-shadow: inset 0 1rem 1rem rgba(0,0,0, 0.05);
     
     transition: justify-content 0.4s ease;
 }
@@ -307,28 +315,31 @@ label.toggle-label input + span.toggle-slider {
 label.toggle-label input + span.toggle-slider:before {
     position: absolute;
     top: 0;
-    left: -1px;
+    left: 0;
     
     content: '';
     box-sizing: border-box;
     width: calc(8rem - 2px);
     height: calc(8rem - 2px);
     
-    border: 1px solid var(--color-gray-dark);
-    background-color: var(--color-gray-light);
-    border-radius: 8rem
+    border: 1px solid var(--color-shade-dark);
+    background-color: var(--color-shade-light);
+    border-radius: 8rem;
+    
+    transition: left 0.1s ease;
 }
 
 label.toggle-label input:checked + span.toggle-slider {
     background-color: var(--color-cream);
-    border: 1px solid var(--color-orange);
+    border: 1px solid var(--color-shade-dark);
 }
 
 label.toggle-label input:checked + span.toggle-slider:before {
     left: auto;
-    right: -1px;
+/*    right: -1px;*/
+    left: calc(8rem);
     
-    background-color: var(--color-white);
+    background-color: var(--color-cream);
     border: 1px solid var(--color-orange);
 }
 
@@ -350,10 +361,11 @@ input.min {
     
     border-radius: 4rem;
     
-    background-color: var(--color-gray-light);
-    border: 1px solid var(--color-gray-dark);
+    background-color: var(--color-shade-light);
+    border: 1px solid var(--color-shade-dark);
+    box-shadow: inset 0 1rem 1rem rgba(0,0,0, 0.05);
     
-    color: var(--color-orange);
+    color: var(--color-black);
     font-family: var(--font-primary);
     font-size: 3rem;
     line-height: 4rem;
@@ -368,7 +380,7 @@ input.min::placeholder {
 input.search-input:not(:placeholder-shown),
 input.max:not(:placeholder-shown),
 input.min:not(:placeholder-shown) {
-    background-color: var(--color-white);
+    background-color: var(--color-cream);
     border: 1px solid var(--color-orange);
 }
 
@@ -438,12 +450,12 @@ select.controls-dropdown {
     height: 8rem;
     padding: 0 3rem;
     
-    background-color: var(--color-white);
+    background-color: var(--color-cream);
     border: 1px solid var(--color-orange);
     border-radius: 8rem;
     outline: none;
     
-    color: var(--color-orange);
+    color: var(--color-black);
     font-family: var(--font-primary);
     font-size: 3rem;
     line-height: 4rem;
@@ -467,7 +479,7 @@ section[control-id="filtersOverlay"] {
     padding: 0 4rem 0 0;
     margin: 0 4rem 0 0;
     
-    border-right: 1px dotted var(--color-orange);
+    border-right: var(--border-faint);
 }
 
 section[control-id="filtersOverlay"] label.toggle-label {
@@ -529,7 +541,7 @@ section.list-manager-container {
     padding: 4rem 0;
     
     background-color: var(--color-cream);
-    border-bottom: 1px dotted var(--color-orange);
+    border-bottom: var(--border-faint);
 }
 
 main.list[list-mode="table"] section.list-manager-container {
@@ -568,9 +580,9 @@ h2.price-bracket-heading {
     margin: 0 0 4rem 0;
     
     background-color: var(--color-cream);
-    border-bottom: 1px solid var(--color-orange);
+    border-bottom: var(--border-faint);
     
-    color: var(--color-orange);
+    color: var(--color-brown);
     font-size: 6rem;
     line-height: 1em;
     text-align: right;
@@ -655,7 +667,7 @@ div.phone-detail-item {
 div.phone-detail-item + div.phone-detail-item {
     margin-top: 1rem;
     
-    border-top: 1px dotted var(--color-orange);
+    border-top: var(--border-faint);
 }
 
 div.phone-links {
@@ -892,7 +904,7 @@ article[data-discontinued="true"] a.phone-link {
 
 article[data-discontinued="true"] a.phone-link-store:not([href]) {
     background-color: var(--color-gray-light);
-    border: 1px dotted var(--color-gray-dark);
+    border: 1px var(--border-faint);
     
     color: var(--color-gray-dark);
 }
@@ -1053,7 +1065,7 @@ article.table-head div {
     box-sizing: border-box;
     padding: 4rem 2rem;
     
-    border-bottom: 1px dotted var(--color-orange);
+    border-bottom: var(--border-faint);
 }
 
 article.table-head div.table-head-name {
@@ -1106,9 +1118,7 @@ article.table-phone-container {
 article.table-phone-container div {
     vertical-align: middle;
     
-    border-bottom: 1px solid var(--color-gray-light);
-    border-bottom: 1px dotted var(--color-orange);
-    
+    border-bottom: var(--border-faint);
 }
 
 div.list-contents[list-mode="table"] article.table-phone-container div + div {
