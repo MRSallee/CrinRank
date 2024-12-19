@@ -222,8 +222,9 @@ section.list-filters-container {
     
     box-sizing: border-box;
     flex: 75rem 0 0;
-    height: calc(100vh - 48px);
+    height: 100vh;
     max-height: -webkit-fill-available;
+    padding-bottom: 48px;
     
     border-right: var(--border-faint);
     
