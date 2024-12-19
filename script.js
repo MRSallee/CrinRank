@@ -218,6 +218,25 @@ let controls = [
         ]
     },
     {
+        'name': 'filtersOverlayClose',
+        'displayName': 'Filters overlay',
+        'type': 'toggle',
+        'location': 'resultContainer',
+        'toggles': [
+            {
+                'name': 'filtersOverlayClose',
+                'displayName': 'Overlay filters',
+                'values': [
+                    true,
+                    false
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.overlayFilters },
+                'stateSet': function(val) { stateP.overlayFilters = val }
+            }
+        ]
+    },
+    {
         'name': 'listMode',
         'displayName': 'List mode',
         'type': 'toggle',
@@ -1030,13 +1049,19 @@ function dataSort(data, sort) {
 
 // Build DOM: Controls
 function constructFiltersUi(controls) {
+    let filtersResultContainer = newElem('section', 'filter-result-container', [{'key': 'phones-hiddem', 'val': "false"}]),
+        filtersResult = newElem('span', 'filter-result', [{'key': 'id', 'val': 'filter-result'}]);
+    
+    filtersResultContainer.append(filtersResult);
+    elemListFilters.prepend(filtersResultContainer);
+    
     controls.forEach(function(control) {
         // Create toggles
         if (control.type === 'toggle') {
             // Create section container for control
             let controlContainer = newElem('section', 'control-toggle', [{'key': 'control-id', 'val': control.name}]),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
-                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
+                parentContainer = control.location === 'listManager' ? elemListManager : control.location === 'resultContainer' ? filtersResultContainer : elemListFilters;
             controlContainer.append(controlHeading);
             parentContainer.append(controlContainer);
             
@@ -1199,11 +1224,6 @@ function constructFiltersUi(controls) {
             });
         }
     });
-    
-    let filtersResultContainer = newElem('section', 'filter-result-container', [{'key': 'phones-hiddem', 'val': "false"}]),
-        filtersResult = newElem('span', 'filter-result', [{'key': 'id', 'val': 'filter-result'}]);
-    filtersResultContainer.append(filtersResult);
-    elemListFilters.prepend(filtersResultContainer);
 }
 constructFiltersUi(controls);
 
