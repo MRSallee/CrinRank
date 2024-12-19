@@ -880,7 +880,7 @@ section.list-table {
 
 article.table-head,
 article.table-phone-container {
-    display: table-row;
+    display: block;
 }
 
 section.list-table div {
@@ -971,11 +971,13 @@ Table header */
 
 section.list-table.table-header {
     position: sticky;
-/*    top: calc(16rem + 1px);*/
-/*    z-index: 10;*/
+    top: calc(16rem + 1px);
+    z-index: 2;
     
+    display: block;
     width: 100%;
-    width: 340rem;
+    
+    overflow: hidden;
 }
 
 article.table-head {

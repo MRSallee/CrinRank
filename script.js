@@ -1266,8 +1266,8 @@ function buildTableHeader(data, container) {
         tableHead.append(headDrivers);
         tableHead.append(headConnection);
         tableBody.append(tableHead);
-        elemListContents.prepend(tableBody);
-//        elemListContents.insertAdjacentElement('beforebegin', tableBody)
+//        elemListContents.prepend(tableBody);
+        elemListContents.insertAdjacentElement('beforebegin', tableBody)
     }
     
     buildTable(data, container);
