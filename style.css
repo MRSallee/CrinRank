@@ -129,7 +129,35 @@ a.site-header-link {
 }
 
 @media (max-width: 1470px) {
+    ul.site-header-links {
+        position: fixed;
+        top: 48px;
+        left: 0;
+        z-index: 20;
+        
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        
+        box-sizing: border-box;
+        width: 100%;
+        height: calc(100vh - 48px);
+        
+        background-color: var(--color-cream);
+        
+        transform: translateX(-100vw);
+        transition: transform 0.2s ease;
+    }
     
+    li.site-header-link-container {
+        margin: 48px 0 0 0;
+    }
+    
+    a.site-header-link {
+        padding: 16px;
+        
+        color: var(--color-black);
+    }
 }
 
 
