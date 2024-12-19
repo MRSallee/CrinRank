@@ -1327,6 +1327,10 @@ function buildTable(data, container) {
 // Build DOM: Cards
 function buildCards(data, container) {
     // Clear DOM & set mode
+    let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false;
+    
+    if (tableHeaderExists) document.querySelector('section.list-table.table-header').remove();
+    
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
     let lastPriceBracket = '-1';
