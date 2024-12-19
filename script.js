@@ -44,9 +44,63 @@ function numDisplay(num, style, currencyVar, fractionDigits) {
 
 //////////////////////////////////////////////////
 // Initialization
-function siteHeader() {
-    let 
+function initSiteHeader() {
+    let siteHeaderContainer = newElem('header', 'site-header'),
+        siteHeaderLogo = newElem('div', 'site-header-logo'),
+        siteHeaderLinks = newElem('ul', 'site-header-links'),
+        siteHeaderData = {
+            'logo': {
+                'imageUrl': 'https://graph.hangout.audio/hangout-logo-white-text.svg',
+                'linkUrl': 'https://hangout.audio/',
+            },
+            'links': [
+                {
+                    'label': 'IEMs (B&K Type 5128)',
+                    'linkUrl': 'https://graph.hangout.audio/iem/5128'
+                },
+                {
+                    'label': 'IEMs (711)',
+                    'linkUrl': 'https://graph.hangout.audio/iem/711'
+                },
+                {
+                    'label': 'Headphones (GRAS 43AG-7)',
+                    'linkUrl': 'https://graph.hangout.audio/headphones'
+                },
+                {
+                    'label': 'The List',
+                    'linkUrl': ''
+                },
+                {
+                    'label': '+Create Squiglink',
+                    'linkUrl': 'https://squig.link/create/'
+                },
+            ]
+        };
+    siteHeaderContainer.append(siteHeaderLogo);
+    siteHeaderContainer.append(siteHeaderLinks);
+    
+    console.log(siteHeaderData);
+    
+    // Create site header logo
+    let logoLink = newElem('a', 'site-header-logo-link', [{'key': 'href', 'val': siteHeaderData.logo.linkUrl}]),
+        logoImage = newElem('img', 'site-header-logo-image', [{'key': 'src', 'val': siteHeaderData.logo.imageUrl}]);
+    
+    logoLink.append(logoImage);
+    siteHeaderLogo.append(logoLink);
+    
+    // Create site header links
+    siteHeaderData.links.forEach(function(link) {
+        console.log(link);
+        let linkContainer = newElem('li', 'site-header-link-container'),
+            linkLink = newElem('a', 'site-header-link', [{'key': 'href', 'val': link.linkUrl}], link.label);
+        
+        linkContainer.append(linkLink);
+        siteHeaderLinks.append(linkContainer);
+    })
+    
+    document.querySelector('body').prepend(siteHeaderContainer);
 }
+initSiteHeader();
 
 let elemList = newElem('main', 'list'),
     elemListContentsContainer = newElem('section', 'list-contents-container'),
@@ -61,7 +115,7 @@ elemListManagerContainer.append(elemListManager);
 elemListContentsContainer.append(elemListManagerContainer);
 elemListContentsContainer.append(elemListContents);
 elemList.append(elemListContentsContainer);
-document.querySelector('body').prepend(elemList);
+document.querySelector('body').append(elemList);
 
 // Define state object for the list
 let state = {
@@ -103,7 +157,7 @@ let state = {
         'soundSig': {
             'u-shaped': true,
             },
-        }
+        },
     },
     stateDefaults = structuredClone(state);
 

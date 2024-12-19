@@ -35,6 +35,8 @@ html {
     
     font-family: var(--font-primary);
     font-size: 4px;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: none;
     
     scrollbar-color: var(--color-cream) var(--color-white);
     scrollbar-color: var(--color-shade-light) var(--color-cream);
@@ -49,6 +51,7 @@ html {
 
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     
     margin: 0;
@@ -63,6 +66,63 @@ body {
     overflow-x: hidden;
 }
 
+/* -----
+Site header */
+
+header.site-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    flex: 48px 0 0;
+    
+    background-color: var(--color-brown);
+    
+    overflow: hidden;
+}
+
+div.site-header-logo {
+    box-sizing: border-box;
+    flex: 75rem 0 0;
+    height: 48px;
+    padding: 12px 0;
+}
+
+a.site-header-logo-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+img.site-header-logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+ul.site-header-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0 32px;
+    
+    flex: 100% 0 1;
+    margin: 0;
+    padding: 0 16px;
+}
+
+li.site-header-link-container {
+    list-style: none;
+    text-align: center;
+}
+
+a.site-header-link {
+    color: var(--color-white);
+    
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 1em;
+    text-decoration: none;
+}
 
 
 
