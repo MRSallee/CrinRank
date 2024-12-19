@@ -1379,6 +1379,7 @@ Mobile styles */
         display: inherit;
     }
     
+    body[filters-overlay="true"] section.table-header,
     body[filters-overlay="true"] div.list-contents {
         display: none;
     }
