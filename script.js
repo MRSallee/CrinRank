@@ -173,8 +173,12 @@ let controls = [
         'location': 'listManager',
         'values': [
             {
-                'displayName': 'Alphabetical',
+                'displayName': 'Alphabetical: A - Z',
                 'value': 'alpha',
+            },
+            {
+                'displayName': 'Alphabetical: Z - A',
+                'value': 'alpha-reverse',
             },
             {
                 'displayName': 'Price: Highest first',
@@ -939,6 +943,8 @@ function dataSort(data, sort) {
             }
         } else if (sort === 'alpha') {
             return alphaSort;
+        } else if (sort === 'alpha-reverse') {
+            return -(alphaSort);
         } else {
             return 0;
         }
