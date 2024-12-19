@@ -971,11 +971,11 @@ Table header */
 
 section.list-table.table-header {
     position: sticky;
-    top: calc(16rem + 1px);
-    z-index: 10;
+/*    top: calc(16rem + 1px);*/
+/*    z-index: 10;*/
     
     width: 100%;
-    
+    width: 340rem;
 }
 
 article.table-head {
