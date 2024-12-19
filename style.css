@@ -240,6 +240,10 @@ section.list-contents-container {
     height: auto;
 }
 
+main.list[list-mode='table'] section.list-contents-container {
+    padding-bottom: 0;
+}
+
 div.list-contents {
 }
 
