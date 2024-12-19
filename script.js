@@ -162,7 +162,7 @@ let controls = [
                 ],
                 'defaultValue': false,
                 get stateLoc() { return stateP.tableMode },
-                'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'unsorted'} else {stateP.sort = 'priceLowHigh'}; }
+                'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'alpha'} else {stateP.sort = 'priceLowHigh'}; }
             }
         ]
     },
@@ -173,8 +173,8 @@ let controls = [
         'location': 'listManager',
         'values': [
             {
-                'displayName': 'Unsorted',
-                'value': 'unsorted',
+                'displayName': 'Alphabetical',
+                'value': 'alpha',
             },
             {
                 'displayName': 'Price: Highest first',
@@ -897,39 +897,50 @@ function dataFilter(data, filters) {
 // Sort functions
 function dataSort(data, sort) {
     data.sort(function(a, b) {
-        let modelA = a.model,
+        let brandA = a.brand,
+            brandB = b.brand,
+            modelA = a.model,
             modelB = b.model,
+            brandComparison = brandA > brandB ? 1 : brandB > brandA ? -1 : 0,
+            modelComparison = modelA > modelB ? 1:  modelB > modelA ? -1 : 0,
+            alphaSort = brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
             priceA = parseInt(a.price),
             priceB = parseInt(b.price),
             priceSortable = priceA > 0 && priceB > 0 ? true : false;
-                
-        if (priceSortable) {
-            // Sort: Price low to high
-            if (sort === 'priceLowHigh') {
-                if (priceA > priceB) {
-                    return 1;
-                } else if (priceA < priceB) {
-                    return -1;
-                } else {
-                    return 0;
+        
+        if (sort === 'priceLowHigh' | sort === 'priceHighLow') {
+            if (priceSortable) {
+                // Sort: Price low to high
+                if (sort === 'priceLowHigh') {
+                    if (priceA > priceB) {
+                        return 1;
+                    } else if (priceA < priceB) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } else if (sort === 'priceHighLow') {
+                    if (priceA > priceB) {
+                        return -1;
+                    } else if (priceA < priceB) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }
-            } else if (sort === 'priceHighLow') {
-                if (priceA > priceB) {
-                    return -1;
-                } else if (priceA < priceB) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        } else {
-            if (priceA > 0) {
-                return -1;
-            } else if (priceB) {
-                return 1;
             } else {
-                return 0;
+                if (priceA > 0) {
+                    return -1;
+                } else if (priceB) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
+        } else if (sort === 'alpha') {
+            return alphaSort;
+        } else {
+            return 0;
         }
     });
     
