@@ -1522,8 +1522,9 @@ Mobile styles */
         background-color: var(--color-cream);
         overflow-y: scroll;
         
-        transform: translateY(-150vh);
-        transition: transform 0.2s ease;
+        transform: translateY(-100dvh);
+        opacity: 0.0;
+        transition: transform 0.2s ease, opacity 0.2s ease;
     }
     
     section.filter-result-container {
@@ -1559,6 +1560,7 @@ Mobile styles */
     
     body[filters-overlay="true"] section.list-filters-container {
         transform: translateY(0);
+        opacity: 1.0;
     }
     
     body[filters-overlay="true"] section.table-header,
