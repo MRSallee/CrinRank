@@ -58,6 +58,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     
     margin: 0;
     
@@ -85,6 +86,7 @@ header.site-header {
     align-items: center;
     
     flex: 48px 0 0;
+    width: 100%;
     
     background-color: var(--color-brown);
     
@@ -215,7 +217,7 @@ main.list {
     display: flex;
     justify-content: flex-start;
     
-    flex: calc(75rem + 330rem) 0 1;
+    width: calc(75rem + 330rem);
     max-width: 100%;
 }
 
@@ -235,7 +237,7 @@ section.list-filters-container {
 }
 
 section.list-contents-container {
-    flex: 330rem 1 1;
+    flex: 330rem 0 1;
     box-sizing: border-box;
     padding: 0 4rem 4rem 4rem;
     
