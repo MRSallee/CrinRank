@@ -1091,10 +1091,10 @@ function dataFilter(data, filters) {
 // Sort functions
 function dataSort(data, sort) {
     data.sort(function(a, b) {
-        let brandA = a.brand,
-            brandB = b.brand,
-            modelA = a.model,
-            modelB = b.model,
+        let brandA = a.brand.toLowerCase(),
+            brandB = b.brand.toLowerCase(),
+            modelA = a.model.toLowerCase(),
+            modelB = b.model.toLowerCase(),
             brandComparison = brandA > brandB ? 1 : brandB > brandA ? -1 : 0,
             modelComparison = modelA > modelB ? 1:  modelB > modelA ? -1 : 0,
             alphaSort = brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
