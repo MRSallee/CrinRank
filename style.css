@@ -217,7 +217,8 @@ main.list {
     display: flex;
     justify-content: flex-start;
     
-    width: calc(75rem + 330rem);
+    /* Left column + table + center column padding */
+    width: calc(75rem + 330rem + 8rem);
     max-width: 100%;
 }
 
@@ -660,7 +661,6 @@ section.list-manager-container {
 }
 
 main.list[list-mode="table"] section.list-manager-container {
-/*    padding: 4rem 0 4rem 0;*/
 }
 
 div.list-manager {
