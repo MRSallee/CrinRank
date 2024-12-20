@@ -1552,7 +1552,7 @@ Mobile styles */
     }
     
     body[filters-overlay="true"] {
-        overflow: clip;
+/*        overflow: clip;*/
     }
     
     body[filters-overlay="true"] main.list {
