@@ -1522,7 +1522,7 @@ Mobile styles */
         background-color: var(--color-cream);
         overflow-y: scroll;
         
-        transform: translateY(-120dvh);
+        transform: translateY(-150vh);
         transition: transform 0.2s ease;
     }
     
