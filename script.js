@@ -148,9 +148,15 @@ let state = {
             'discontinued': false,
             },
         'connection': {
-            'twopin': true,
-            'ipx': true,
             'mmcx': true,
+            'twopin': true,
+            'twopinExtruded': true,
+            'ipx': true,
+            'pentaconn': true,
+            'proprietary': true,
+            'fixedCable': true,
+            'wirelessTws': true,
+            'wirelessCabled': true,
             },
         'drivers': {
             'ba': true,
@@ -547,17 +553,6 @@ let controls = [
         'location': 'listFilters',
         'toggles': [
             {
-                'name': 'twopin',
-                'displayName': '2-pin',
-                'values': [
-                    true,
-                    false,
-                ],
-                'defaultValue': true,
-                get stateLoc() { return stateP.filters.connection.twopin },
-                'stateSet': function(val) { stateP.filters.connection.twopin = val }
-            },
-            {
                 'name': 'mmcx',
                 'displayName': 'MMCX',
                 'values': [
@@ -569,6 +564,28 @@ let controls = [
                 'stateSet': function(val) { stateP.filters.connection.mmcx = val }
             },
             {
+                'name': 'twopin',
+                'displayName': '2-pin',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.twopin },
+                'stateSet': function(val) { stateP.filters.connection.twopin = val }
+            },
+            {
+                'name': 'twopinExtruded',
+                'displayName': '2-pin: Extruded',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.twopinExtruded },
+                'stateSet': function(val) { stateP.filters.connection.twopinExtruded = val }
+            },
+            {
                 'name': 'ipx',
                 'displayName': 'IPX',
                 'values': [
@@ -578,6 +595,61 @@ let controls = [
                 'defaultValue': true,
                 get stateLoc() { return stateP.filters.connection.ipx },
                 'stateSet': function(val) { stateP.filters.connection.ipx = val }
+            },
+            {
+                'name': 'pentaconn',
+                'displayName': 'Pentaconn',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.pentaconn },
+                'stateSet': function(val) { stateP.filters.connection.pentaconn = val }
+            },
+            {
+                'name': 'proprietary',
+                'displayName': 'Proprietary',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.proprietary },
+                'stateSet': function(val) { stateP.filters.connection.proprietary = val }
+            },
+            {
+                'name': 'fixedCable',
+                'displayName': 'Fixed cable',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.fixedCable },
+                'stateSet': function(val) { stateP.filters.connection.fixedCable = val }
+            },
+            {
+                'name': 'wirelessTws',
+                'displayName': 'Wireless: TWS',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.wirelessTws },
+                'stateSet': function(val) { stateP.filters.connection.wirelessTws = val }
+            },
+            {
+                'name': 'wirelessCabled',
+                'displayName': 'Wireless: Cabled',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': true,
+                get stateLoc() { return stateP.filters.connection.wirelessCabled },
+                'stateSet': function(val) { stateP.filters.connection.wirelessCabled = val }
             },
         ],
     }
@@ -693,9 +765,15 @@ function applyStateUrl() {
     stateP.filters.availability.discontinued === stateDefaults.filters.availability.discontinued ? url.searchParams.delete('discontinued') : url.searchParams.set('discontinued', stateP.filters.availability.discontinued);
     
     // Connection filters
-    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', stateP.filters.connection.ipx);
     stateP.filters.connection.mmcx === stateDefaults.filters.connection.mmcx ? url.searchParams.delete('mmcx') : url.searchParams.set('mmcx', stateP.filters.connection.mmcx);
     stateP.filters.connection.twopin === stateDefaults.filters.connection.twopin ? url.searchParams.delete('twopin') : url.searchParams.set('twopin', stateP.filters.connection.twopin);
+    stateP.filters.connection.twopinExtruded === stateDefaults.filters.connection.twopinExtruded ? url.searchParams.delete('twopinExtruded') : url.searchParams.set('twopinExtruded', stateP.filters.connection.twopinExtruded);
+    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', stateP.filters.connection.ipx);
+    stateP.filters.connection.pentaconn === stateDefaults.filters.connection.pentaconn ? url.searchParams.delete('pentaconn') : url.searchParams.set('pentaconn', stateP.filters.connection.pentaconn);
+    stateP.filters.connection.proprietary === stateDefaults.filters.connection.proprietary ? url.searchParams.delete('proprietary') : url.searchParams.set('proprietary', stateP.filters.connection.proprietary);
+    stateP.filters.connection.fixedCable === stateDefaults.filters.connection.fixedCable ? url.searchParams.delete('fixedCable') : url.searchParams.set('fixedCable', stateP.filters.connection.fixedCable);
+    stateP.filters.connection.wirelessTws === stateDefaults.filters.connection.wirelessTws ? url.searchParams.delete('wirelessTws') : url.searchParams.set('wirelessTws', stateP.filters.connection.wirelessTws);
+    stateP.filters.connection.wirelessCabled === stateDefaults.filters.connection.wirelessCabled ? url.searchParams.delete('wirelessCabled') : url.searchParams.set('wirelessCabled', stateP.filters.connection.wirelessCabled);
     
     // Driver filters
     stateP.filters.drivers.ba === stateDefaults.filters.drivers.ba ? url.searchParams.delete('ba') : url.searchParams.set('ba', stateP.filters.drivers.ba);
@@ -730,9 +808,15 @@ function applyUrlToState() {
         demoableOnly = urlQueryParams.get('demoableOnly') === 'true' ? true : urlQueryParams.get('demoableOnly') === 'false' ? false : null,
         discontinued = urlQueryParams.get('discontinued') === 'true' ? true : urlQueryParams.get('discontinued') === 'false' ? false : null,
         
-        ipx = urlQueryParams.get('ipx') === 'true' ? true : urlQueryParams.get('ipx') === 'false' ? false : null,
         mmcx = urlQueryParams.get('mmcx') === 'true' ? true : urlQueryParams.get('mmcx') === 'false' ? false : null,
         twopin = urlQueryParams.get('twopin') === 'true' ? true : urlQueryParams.get('twopin') === 'false' ? false : null,
+        twopinExtruded = urlQueryParams.get('twopinExtruded') === 'true' ? true : urlQueryParams.get('twopinExtruded') === 'false' ? false : null,
+        ipx = urlQueryParams.get('ipx') === 'true' ? true : urlQueryParams.get('ipx') === 'false' ? false : null,
+        pentaconn = urlQueryParams.get('pentaconn') === 'true' ? true : urlQueryParams.get('pentaconn') === 'false' ? false : null,
+        proprietary = urlQueryParams.get('proprietary') === 'true' ? true : urlQueryParams.get('proprietary') === 'false' ? false : null,
+        fixedCable = urlQueryParams.get('fixedCable') === 'true' ? true : urlQueryParams.get('fixedCable') === 'false' ? false : null,
+        wirelessTws = urlQueryParams.get('wirelessTws') === 'true' ? true : urlQueryParams.get('wirelessTws') === 'false' ? false : null,
+        wirelessCabled = urlQueryParams.get('wirelessCabled') === 'true' ? true : urlQueryParams.get('wirelessCabled') === 'false' ? false : null,
         
         ba = urlQueryParams.get('ba') === 'true' ? true : urlQueryParams.get('ba') === 'false' ? false : null,
         dd = urlQueryParams.get('dd') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
@@ -761,9 +845,15 @@ function applyUrlToState() {
     discontinued != null ? stateP.filters.availability.discontinued = discontinued : '';
     
     // Connection filters
-    ipx != null ? stateP.filters.connection.ipx = ipx : '';
     mmcx != null ? stateP.filters.connection.mmcx = mmcx : '';
     twopin != null ? stateP.filters.connection.twopin = twopin : '';
+    twopinExtruded != null ? stateP.filters.connection.twopinExtruded = twopinExtruded : '';
+    ipx != null ? stateP.filters.connection.ipx = ipx : '';
+    pentaconn != null ? stateP.filters.connection.pentaconn = pentaconn : '';
+    proprietary != null ? stateP.filters.connection.proprietary = proprietary : '';
+    fixedCable != null ? stateP.filters.connection.fixedCable = fixedCable : '';
+    wirelessTws != null ? stateP.filters.connection.wirelessTws = wirelessTws : '';
+    wirelessCabled != null ? stateP.filters.connection.wirelessCabled = wirelessCabled : '';
     
     // Driver filters
     ba != null ? stateP.filters.drivers.ba = ba : '';
@@ -936,9 +1026,15 @@ function dataFilter(data, filters) {
             meetsDriverTribridFilter = filters.drivers.tribrid ? true : !isTribrid,
             
             // Connection filters
-            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
             meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
+            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
+            meetsConnectionTwopinExtrudedFilter = filters.connection.twopinExtruded ? true : item.connection.toLowerCase().indexOf('extruded 2-pin') === -1,
             meetsConnectionIpxFilter = filters.connection.ipx ? true : item.connection.toLowerCase().indexOf('ipx') === -1,
+            meetsConnectionPentaconnFilter = filters.connection.pentaconn ? true : item.connection.toLowerCase().indexOf('pentaconn') === -1,
+            meetsConnectionProprietaryFilter = filters.connection.proprietary ? true : item.connection.toLowerCase().indexOf('proprietary') === -1,
+            meetsConnectionFixedCableFilter = filters.connection.fixedCable ? true : item.connection.toLowerCase().indexOf('fixed cable') === -1,
+            meetsConnectionWirelessTwsFilter = filters.connection.wirelessTws ? true : item.connection.toLowerCase().indexOf('true wireless') === -1,
+            meetsConnectionWirelessCabledFilter = filters.connection.wirelessCabled ? true : item.connection.toLowerCase().indexOf('cabled wireless') === -1,
             
             // Availability filters
             meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
@@ -968,9 +1064,15 @@ function dataFilter(data, filters) {
         && meetsDriverTribridFilter
         
         // Connection filters
-        && meetsConnectionTwopinFilter
         && meetsConnectionMmcxFilter
+        && meetsConnectionTwopinFilter
+        && meetsConnectionTwopinExtrudedFilter
         && meetsConnectionIpxFilter
+        && meetsConnectionPentaconnFilter
+        && meetsConnectionProprietaryFilter
+        && meetsConnectionFixedCableFilter
+        && meetsConnectionWirelessTwsFilter
+        && meetsConnectionWirelessCabledFilter
         
         // Availability filters
         && meetsBuyableFilter
