@@ -90,7 +90,6 @@ function initSiteHeader() {
             docBody.setAttribute('data-site-header-links', 'collapsed');
         } else {
             docBody.setAttribute('data-site-header-links', 'expanded');
-            window.scrollTo(0, 0);
         }
     });
     

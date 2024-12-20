@@ -76,6 +76,10 @@ body {
 Site header */
 
 header.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -217,13 +221,12 @@ main.list {
 
 section.list-filters-container {
     position: sticky;
-    top: 0;
+    top: 48px;
     left: 0;
     
     box-sizing: border-box;
     flex: 75rem 0 0;
-    height: 100dvh;
-    padding-bottom: 48px;
+    height: calc(100dvh - 48px);
     
     border-right: var(--border-faint);
     
@@ -644,7 +647,7 @@ List manager */
 
 section.list-manager-container {
     position: sticky;
-    top: 0;
+    top: 48px;
     z-index: 2;
     
     display: flex;
@@ -683,7 +686,7 @@ Card header */
 
 h2.price-bracket-heading {
     position: sticky;
-    top: calc(16rem + 1px);
+    top: calc(16rem + 1px + 48px);
     z-index: 1;
     
     padding: 12rem 0 4rem 0;
@@ -1154,7 +1157,7 @@ Table header */
 
 section.list-table.table-header {
     position: sticky;
-    top: calc(16rem + 1px);
+    top: calc(16rem + 1px + 48px);
     z-index: 2;
     
     display: block;
@@ -1507,7 +1510,7 @@ Mobile styles */
     
     section.list-filters-container {
         position: fixed;
-        top: 0;
+        top: 48px;
         left: 0;
         z-index: 2;
         
@@ -1516,7 +1519,7 @@ Mobile styles */
         display: block;
         box-sizing: border-box;
         width: 100%;
-        height: 100dvh;
+        height: calc(100dvh - 48px);
         padding-bottom: 0;
 
         background-color: var(--color-cream);
