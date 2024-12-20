@@ -446,6 +446,10 @@ section.list-filters-container article.toggle-container {
 /* -----
 Inputs */
 
+section.control-search {
+    margin-top: 6rem;
+}
+
 section.control-search h3 {
     display: none;
 }
