@@ -1558,7 +1558,6 @@ Mobile styles */
     body[filters-overlay="true"] main.list {
         flex: auto 1 1;
         max-height: -webkit-fill-available;
-        overflow: clip;
     }
     
     body[filters-overlay="true"] section.list-filters-container {
