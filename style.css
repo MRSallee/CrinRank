@@ -1525,7 +1525,7 @@ Mobile styles */
         width: 100%;
         height: calc(100dvh - 48px);
         padding-bottom: 0;
-
+      
         background-color: var(--color-cream);
         overflow-y: scroll;
         
