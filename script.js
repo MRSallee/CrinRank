@@ -44,6 +44,75 @@ function numDisplay(num, style, currencyVar, fractionDigits) {
 
 //////////////////////////////////////////////////
 // Initialization
+function initSiteHeader() {
+    let siteHeaderContainer = newElem('header', 'site-header'),
+        siteHeaderLogo = newElem('div', 'site-header-logo'),
+        siteHeaderLinks = newElem('ul', 'site-header-links'),
+        siteHeaderToggle = newElem('button', 'site-header-toggle'),
+        siteHeaderData = {
+            'logo': {
+                'imageUrl': 'https://graph.hangout.audio/hangout-logo-white-text.svg',
+                'linkUrl': 'https://hangout.audio/',
+            },
+            'links': [
+                {
+                    'label': 'IEMs (B&K Type 5128)',
+                    'linkUrl': 'https://graph.hangout.audio/iem/5128'
+                },
+                {
+                    'label': 'IEMs (711)',
+                    'linkUrl': 'https://graph.hangout.audio/iem/711'
+                },
+                {
+                    'label': 'Headphones (GRAS 43AG-7)',
+                    'linkUrl': 'https://graph.hangout.audio/headphones'
+                },
+                {
+                    'label': 'The List',
+                    'linkUrl': ''
+                },
+                {
+                    'label': '+Create Squiglink',
+                    'linkUrl': 'https://squig.link/create/'
+                },
+            ]
+        };
+    siteHeaderContainer.append(siteHeaderToggle);
+    siteHeaderContainer.append(siteHeaderLogo);
+    siteHeaderContainer.append(siteHeaderLinks);
+    
+    siteHeaderToggle.addEventListener('click', function() {
+        let docBody = document.querySelector('body'),
+            siteHeaderLinksState = docBody.getAttribute('data-site-header-links'),
+            siteHeaderLinksExpanded = siteHeaderLinksState ? siteHeaderLinksState.includes('expanded') ? 1 : 0 : 0;
+        
+        if (siteHeaderLinksExpanded) {
+            docBody.setAttribute('data-site-header-links', 'collapsed');
+        } else {
+            docBody.setAttribute('data-site-header-links', 'expanded');
+        }
+    });
+    
+    // Create site header logo
+    let logoLink = newElem('a', 'site-header-logo-link', [{'key': 'href', 'val': siteHeaderData.logo.linkUrl}]),
+        logoImage = newElem('img', 'site-header-logo-image', [{'key': 'src', 'val': siteHeaderData.logo.imageUrl}]);
+    
+    logoLink.append(logoImage);
+    siteHeaderLogo.append(logoLink);
+    
+    // Create site header links
+    siteHeaderData.links.forEach(function(link) {
+        let linkContainer = newElem('li', 'site-header-link-container'),
+            linkLink = newElem('a', 'site-header-link', [{'key': 'href', 'val': link.linkUrl}], link.label);
+        
+        linkContainer.append(linkLink);
+        siteHeaderLinks.append(linkContainer);
+    })
+    
+    document.querySelector('body').prepend(siteHeaderContainer);
+}
+initSiteHeader();
+
 let elemList = newElem('main', 'list'),
     elemListContentsContainer = newElem('section', 'list-contents-container'),
     elemListContents = newElem('div', 'list-contents'),
@@ -57,7 +126,7 @@ elemListManagerContainer.append(elemListManager);
 elemListContentsContainer.append(elemListManagerContainer);
 elemListContentsContainer.append(elemListContents);
 elemList.append(elemListContentsContainer);
-document.querySelector('body').prepend(elemList);
+document.querySelector('body').append(elemList);
 
 // Define state object for the list
 let state = {
@@ -68,8 +137,8 @@ let state = {
     'overlayFilters': false,
     'filters': {
         'featured': {
-            'crinApprovedOnly': false,
-            'crinTestedOnly': false,
+            'crinApprovedOnly': true,
+            'crinTestedOnly': true,
             'userFavesOnly': false,
         },
         'availability': {
@@ -78,17 +147,24 @@ let state = {
             'discontinued': false,
             },
         'connection': {
-            'twopin': true,
-            'ipx': true,
-            'mmcx': true,
+            'mmcx': false,
+            'twopin': false,
+            'twopinExtruded': false,
+            'ipx': false,
+            'pentaconn': false,
+            'proprietary': false,
+            'fixedCable': false,
+            'wirelessTws': false,
+            'wirelessCabled': false,
             },
         'drivers': {
-            'ba': true,
-            'dd': true,
-            'est': true,
-            'planar': true,
-            'hybrid': true,
-            'tribrid': true,
+            'ba': false,
+            'dd': false,
+            'est': false,
+            'planar': false,
+            'pzt': false,
+            'hybrid': false,
+            'notHybrid': false,
             },
         'price': {
             'priceBracket': '',
@@ -99,7 +175,7 @@ let state = {
         'soundSig': {
             'u-shaped': true,
             },
-        }
+        },
     },
     stateDefaults = structuredClone(state);
 
@@ -148,6 +224,25 @@ let controls = [
         ]
     },
     {
+        'name': 'filtersOverlayClose',
+        'displayName': 'Filters overlay',
+        'type': 'toggle',
+        'location': 'resultContainer',
+        'toggles': [
+            {
+                'name': 'filtersOverlayClose',
+                'displayName': 'Overlay filters',
+                'values': [
+                    true,
+                    false
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.overlayFilters },
+                'stateSet': function(val) { stateP.overlayFilters = val }
+            }
+        ]
+    },
+    {
         'name': 'listMode',
         'displayName': 'List mode',
         'type': 'toggle',
@@ -162,7 +257,7 @@ let controls = [
                 ],
                 'defaultValue': false,
                 get stateLoc() { return stateP.tableMode },
-                'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'unsorted'} else {stateP.sort = 'priceLowHigh'}; }
+                'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'alpha'} else {stateP.sort = 'priceLowHigh'}; }
             }
         ]
     },
@@ -173,8 +268,12 @@ let controls = [
         'location': 'listManager',
         'values': [
             {
-                'displayName': 'Unsorted',
-                'value': 'unsorted',
+                'displayName': 'Alphabetical: A - Z',
+                'value': 'alpha',
+            },
+            {
+                'displayName': 'Alphabetical: Z - A',
+                'value': 'alpha-reverse',
             },
             {
                 'displayName': 'Price: Highest first',
@@ -207,29 +306,29 @@ let controls = [
         'toggles': [
             {
                 'name': 'crinApprovedOnly',
-                'displayName': 'Crin-approved only',
+                'displayName': 'Crin-approved',
                 'values': [
                     true,
                     false,
                 ],
-                'defaultValue': false,
+                'defaultValue': true,
                 get stateLoc() { return stateP.filters.featured.crinApprovedOnly },
                 'stateSet': function(val) { stateP.filters.featured.crinApprovedOnly = val; if (val) {stateP.filters.featured.crinTestedOnly = val}; }
             },
             {
                 'name': 'crinTestedOnly',
-                'displayName': 'Crin-tested only',
+                'displayName': 'Crin-tested',
                 'values': [
                     true,
                     false,
                 ],
-                'defaultValue': false,
+                'defaultValue': true,
                 get stateLoc() { return stateP.filters.featured.crinTestedOnly },
                 'stateSet': function(val) { stateP.filters.featured.crinTestedOnly = val; if (!val) {stateP.filters.featured.crinApprovedOnly = val} }
             },
             {
                 'name': 'favoritesOnly',
-                'displayName': 'My faves only',
+                'displayName': 'My faves',
                 'values': [
                     true,
                     false,
@@ -340,7 +439,7 @@ let controls = [
         'toggles': [
             {
                 'name': 'buyableOnly',
-                'displayName': 'Buyable only',
+                'displayName': 'Buyable',
                 'values': [
                     true,
                     false,
@@ -351,7 +450,7 @@ let controls = [
             },
             {
                 'name': 'demoableOnly',
-                'displayName': 'Demoable only',
+                'displayName': 'Demoable',
                 'values': [
                     true,
                     false,
@@ -375,7 +474,7 @@ let controls = [
     },
     {
         'name': 'driver',
-        'displayName': 'Driver configurations',
+        'displayName': 'Driver configuration',
         'type': 'toggle',
         'location': 'listFilters',
         'toggles': [
@@ -386,7 +485,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.ba },
                 'stateSet': function(val) { stateP.filters.drivers.ba = val }
             },
@@ -397,7 +496,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.dd },
                 'stateSet': function(val) { stateP.filters.drivers.dd = val }
             },
@@ -408,7 +507,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.est },
                 'stateSet': function(val) { stateP.filters.drivers.est = val }
             },
@@ -419,31 +518,42 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.planar },
                 'stateSet': function(val) { stateP.filters.drivers.planar = val }
             },
             {
-                'name': 'hybrid',
-                'displayName': 'Hybrid',
+                'name': 'pzt',
+                'displayName': 'Piezoelectric',
                 'values': [
                     true,
                     false,
                 ],
-                'defaultValue': true,
-                get stateLoc() { return stateP.filters.drivers.hybrid },
-                'stateSet': function(val) { stateP.filters.drivers.hybrid = val }
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.drivers.pzt },
+                'stateSet': function(val) { stateP.filters.drivers.pzt = val }
             },
             {
-                'name': 'tribrid',
-                'displayName': 'Tribrid',
+                'name': 'hybrid',
+                'displayName': 'Hybrid, tribrid, etc.',
                 'values': [
                     true,
                     false,
                 ],
-                'defaultValue': true,
-                get stateLoc() { return stateP.filters.drivers.tribrid },
-                'stateSet': function(val) { stateP.filters.drivers.tribrid = val }
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.drivers.hybrid },
+                'stateSet': function(val) { stateP.filters.drivers.hybrid = val; if (val) stateP.filters.drivers.notHybrid = false }
+            },
+            {
+                'name': 'notHybrid',
+                'displayName': 'Not hybrid',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.drivers.notHybrid },
+                'stateSet': function(val) { stateP.filters.drivers.notHybrid = val; if (val) stateP.filters.drivers.hybrid = false }
             },
         ],
     },
@@ -454,26 +564,37 @@ let controls = [
         'location': 'listFilters',
         'toggles': [
             {
-                'name': 'twopin',
-                'displayName': '2-pin',
-                'values': [
-                    true,
-                    false,
-                ],
-                'defaultValue': true,
-                get stateLoc() { return stateP.filters.connection.twopin },
-                'stateSet': function(val) { stateP.filters.connection.twopin = val }
-            },
-            {
                 'name': 'mmcx',
                 'displayName': 'MMCX',
                 'values': [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.mmcx },
                 'stateSet': function(val) { stateP.filters.connection.mmcx = val }
+            },
+            {
+                'name': 'twopin',
+                'displayName': '2-pin',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.twopin },
+                'stateSet': function(val) { stateP.filters.connection.twopin = val }
+            },
+            {
+                'name': 'twopinExtruded',
+                'displayName': '2-pin: Extruded',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.twopinExtruded },
+                'stateSet': function(val) { stateP.filters.connection.twopinExtruded = val }
             },
             {
                 'name': 'ipx',
@@ -482,9 +603,64 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.ipx },
                 'stateSet': function(val) { stateP.filters.connection.ipx = val }
+            },
+            {
+                'name': 'pentaconn',
+                'displayName': 'Pentaconn',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.pentaconn },
+                'stateSet': function(val) { stateP.filters.connection.pentaconn = val }
+            },
+            {
+                'name': 'proprietary',
+                'displayName': 'Proprietary',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.proprietary },
+                'stateSet': function(val) { stateP.filters.connection.proprietary = val }
+            },
+            {
+                'name': 'fixedCable',
+                'displayName': 'Fixed cable',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.fixedCable },
+                'stateSet': function(val) { stateP.filters.connection.fixedCable = val }
+            },
+            {
+                'name': 'wirelessTws',
+                'displayName': 'Wireless: TWS',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.wirelessTws },
+                'stateSet': function(val) { stateP.filters.connection.wirelessTws = val }
+            },
+            {
+                'name': 'wirelessCabled',
+                'displayName': 'Wireless: Cabled',
+                'values': [
+                    true,
+                    false,
+                ],
+                'defaultValue': false,
+                get stateLoc() { return stateP.filters.connection.wirelessCabled },
+                'stateSet': function(val) { stateP.filters.connection.wirelessCabled = val }
             },
         ],
     }
@@ -600,17 +776,24 @@ function applyStateUrl() {
     stateP.filters.availability.discontinued === stateDefaults.filters.availability.discontinued ? url.searchParams.delete('discontinued') : url.searchParams.set('discontinued', stateP.filters.availability.discontinued);
     
     // Connection filters
-    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', stateP.filters.connection.ipx);
     stateP.filters.connection.mmcx === stateDefaults.filters.connection.mmcx ? url.searchParams.delete('mmcx') : url.searchParams.set('mmcx', stateP.filters.connection.mmcx);
     stateP.filters.connection.twopin === stateDefaults.filters.connection.twopin ? url.searchParams.delete('twopin') : url.searchParams.set('twopin', stateP.filters.connection.twopin);
+    stateP.filters.connection.twopinExtruded === stateDefaults.filters.connection.twopinExtruded ? url.searchParams.delete('twopinExtruded') : url.searchParams.set('twopinExtruded', stateP.filters.connection.twopinExtruded);
+    stateP.filters.connection.ipx === stateDefaults.filters.connection.ipx ? url.searchParams.delete('ipx') : url.searchParams.set('ipx', stateP.filters.connection.ipx);
+    stateP.filters.connection.pentaconn === stateDefaults.filters.connection.pentaconn ? url.searchParams.delete('pentaconn') : url.searchParams.set('pentaconn', stateP.filters.connection.pentaconn);
+    stateP.filters.connection.proprietary === stateDefaults.filters.connection.proprietary ? url.searchParams.delete('proprietary') : url.searchParams.set('proprietary', stateP.filters.connection.proprietary);
+    stateP.filters.connection.fixedCable === stateDefaults.filters.connection.fixedCable ? url.searchParams.delete('fixedCable') : url.searchParams.set('fixedCable', stateP.filters.connection.fixedCable);
+    stateP.filters.connection.wirelessTws === stateDefaults.filters.connection.wirelessTws ? url.searchParams.delete('wirelessTws') : url.searchParams.set('wirelessTws', stateP.filters.connection.wirelessTws);
+    stateP.filters.connection.wirelessCabled === stateDefaults.filters.connection.wirelessCabled ? url.searchParams.delete('wirelessCabled') : url.searchParams.set('wirelessCabled', stateP.filters.connection.wirelessCabled);
     
     // Driver filters
     stateP.filters.drivers.ba === stateDefaults.filters.drivers.ba ? url.searchParams.delete('ba') : url.searchParams.set('ba', stateP.filters.drivers.ba);
     stateP.filters.drivers.dd === stateDefaults.filters.drivers.dd ? url.searchParams.delete('dd') : url.searchParams.set('dd', stateP.filters.drivers.dd);
     stateP.filters.drivers.est === stateDefaults.filters.drivers.est ? url.searchParams.delete('est') : url.searchParams.set('est', stateP.filters.drivers.est);
     stateP.filters.drivers.planar === stateDefaults.filters.drivers.planar ? url.searchParams.delete('planar') : url.searchParams.set('planar', stateP.filters.drivers.planar);
+    stateP.filters.drivers.pzt === stateDefaults.filters.drivers.pzt ? url.searchParams.delete('pzt') : url.searchParams.set('pzt', stateP.filters.drivers.pzt);
     stateP.filters.drivers.hybrid === stateDefaults.filters.drivers.hybrid ? url.searchParams.delete('hybrid') : url.searchParams.set('hybrid', stateP.filters.drivers.hybrid);
-    stateP.filters.drivers.tribrid === stateDefaults.filters.drivers.tribrid ? url.searchParams.delete('tribrid') : url.searchParams.set('tribrid', stateP.filters.drivers.tribrid);
+    stateP.filters.drivers.notHybrid === stateDefaults.filters.drivers.notHybrid ? url.searchParams.delete('notHybrid') : url.searchParams.set('notHybrid', stateP.filters.drivers.notHybrid);
     
     // Price filters
     stateP.filters.price.priceBracket === stateDefaults.filters.price.priceBracket ? url.searchParams.delete('priceBracket') : url.searchParams.set('priceBracket', stateP.filters.price.priceBracket);
@@ -637,16 +820,23 @@ function applyUrlToState() {
         demoableOnly = urlQueryParams.get('demoableOnly') === 'true' ? true : urlQueryParams.get('demoableOnly') === 'false' ? false : null,
         discontinued = urlQueryParams.get('discontinued') === 'true' ? true : urlQueryParams.get('discontinued') === 'false' ? false : null,
         
-        ipx = urlQueryParams.get('ipx') === 'true' ? true : urlQueryParams.get('ipx') === 'false' ? false : null,
         mmcx = urlQueryParams.get('mmcx') === 'true' ? true : urlQueryParams.get('mmcx') === 'false' ? false : null,
         twopin = urlQueryParams.get('twopin') === 'true' ? true : urlQueryParams.get('twopin') === 'false' ? false : null,
+        twopinExtruded = urlQueryParams.get('twopinExtruded') === 'true' ? true : urlQueryParams.get('twopinExtruded') === 'false' ? false : null,
+        ipx = urlQueryParams.get('ipx') === 'true' ? true : urlQueryParams.get('ipx') === 'false' ? false : null,
+        pentaconn = urlQueryParams.get('pentaconn') === 'true' ? true : urlQueryParams.get('pentaconn') === 'false' ? false : null,
+        proprietary = urlQueryParams.get('proprietary') === 'true' ? true : urlQueryParams.get('proprietary') === 'false' ? false : null,
+        fixedCable = urlQueryParams.get('fixedCable') === 'true' ? true : urlQueryParams.get('fixedCable') === 'false' ? false : null,
+        wirelessTws = urlQueryParams.get('wirelessTws') === 'true' ? true : urlQueryParams.get('wirelessTws') === 'false' ? false : null,
+        wirelessCabled = urlQueryParams.get('wirelessCabled') === 'true' ? true : urlQueryParams.get('wirelessCabled') === 'false' ? false : null,
         
         ba = urlQueryParams.get('ba') === 'true' ? true : urlQueryParams.get('ba') === 'false' ? false : null,
         dd = urlQueryParams.get('dd') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
         est = urlQueryParams.get('est') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
         planar = urlQueryParams.get('planar') === 'true' ? true : urlQueryParams.get('planar') === 'false' ? false : null,
+        pzt = urlQueryParams.get('pzt') === 'true' ? true : urlQueryParams.get('pzt') === 'false' ? false : null,
         hybrid = urlQueryParams.get('hybrid') === 'true' ? true : urlQueryParams.get('hybrid') === 'false' ? false : null,
-        tribrid = urlQueryParams.get('tribrid') === 'true' ? true : urlQueryParams.get('tribrid') === 'false' ? false : null,
+        notHybrid = urlQueryParams.get('notHybrid') === 'true' ? true : urlQueryParams.get('notHybrid') === 'false' ? false : null,
 
         priceBracket = urlQueryParams.get('priceBracket'),
         priceMin = urlQueryParams.get('priceMin'),
@@ -668,17 +858,24 @@ function applyUrlToState() {
     discontinued != null ? stateP.filters.availability.discontinued = discontinued : '';
     
     // Connection filters
-    ipx != null ? stateP.filters.connection.ipx = ipx : '';
     mmcx != null ? stateP.filters.connection.mmcx = mmcx : '';
     twopin != null ? stateP.filters.connection.twopin = twopin : '';
+    twopinExtruded != null ? stateP.filters.connection.twopinExtruded = twopinExtruded : '';
+    ipx != null ? stateP.filters.connection.ipx = ipx : '';
+    pentaconn != null ? stateP.filters.connection.pentaconn = pentaconn : '';
+    proprietary != null ? stateP.filters.connection.proprietary = proprietary : '';
+    fixedCable != null ? stateP.filters.connection.fixedCable = fixedCable : '';
+    wirelessTws != null ? stateP.filters.connection.wirelessTws = wirelessTws : '';
+    wirelessCabled != null ? stateP.filters.connection.wirelessCabled = wirelessCabled : '';
     
     // Driver filters
     ba != null ? stateP.filters.drivers.ba = ba : '';
     dd != null ? stateP.filters.drivers.dd = dd : '';
     est != null ? stateP.filters.drivers.est = est : '';
     planar != null ? stateP.filters.drivers.planar = planar : '';
+    pzt != null ? stateP.filters.drivers.pzt = pzt : '';
     hybrid != null ? stateP.filters.drivers.hybrid = hybrid : '';
-    tribrid != null ? stateP.filters.drivers.tribrid = tribrid : '';
+    notHybrid != null ? stateP.filters.drivers.notHybrid = notHybrid : '';
     
     // Price filters
     priceBracket != null ? stateP.filters.price.priceBracket = priceBracket : '';
@@ -745,29 +942,35 @@ function getDataFresh (json) {
         })
         .then(function(data) {
             data.forEach(function(item) {
-                let itemObject = {
-                    'itemId': item['Brand'] ? item['Brand'].toString().toLowerCase().replaceAll(' ', '') + item['IEM Model'].toString().toLowerCase().replaceAll(' ', '') : item['IEM Model'] ? item['IEM Model'].toString().toLowerCase().replaceAll(' ', '') : 'unknown',
-                    'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
-                    'brand': item['Brand'] ? item['Brand'] : '',
-                    'connection': item['Connection'] ? item['Connection'] : '',
-                    'demoable': item['Available at Hangout for Demo'] === 'Yes' ? true : false,
-                    'drivers': item['Driver Configuration'] ? item['Driver Configuration'] : '',
-                    'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
-                    'linkShowcase': item['Showcase Link (YouTube)'] ? item['Showcase Link (YouTube)'] : '',
-                    'linkMeasurement': item['Measurement Link'] ? item['Measurement Link'] : '',
-                    'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
-                    'model': item['IEM Model'] ? item['IEM Model'] : '',
-                    'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : 0,
-                    'priceBracket': getPriceBracket(item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : ''),
-                    'remarks': item['Remarks'] ? item['Remarks'] : '',
-                    'signature': item['Sound Signature'] ? item['Sound Signature'] : '',
-                    'status': item['Status'] ? item['Status'] : '',
-                    'tested': item['Crinacle-tested'] ? item['Crinacle-tested'].toLowerCase() : '',
-                    'userFave': false,
-                    '_end': ''
-                };
-                
-                dataArr.push(itemObject);
+                try {
+                    if (item['Brand'] && item['IEM Model']) {
+                        let itemObject = {
+                            'itemId': item['Brand'] ? item['Brand'].toString().toLowerCase().replaceAll(' ', '') + item['IEM Model'].toString().toLowerCase().replaceAll(' ', '') : item['IEM Model'] ? item['IEM Model'].toString().toLowerCase().replaceAll(' ', '') : 'unknown',
+                            'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
+                            'brand': item['Brand'] ? item['Brand'] : '',
+                            'connection': item['Connection'] ? item['Connection'] : '',
+                            'demoable': item['Available at Hangout for Demo'] === 'Yes' ? true : false,
+                            'drivers': item['Driver Configuration'] ? item['Driver Configuration'] : '',
+                            'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
+                            'linkShowcase': item['Showcase Link (YouTube)'] ? item['Showcase Link (YouTube)'] : '',
+                            'linkMeasurement': item['Measurement Link'] ? item['Measurement Link'] : '',
+                            'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
+                            'model': item['IEM Model'] ? item['IEM Model'] : '',
+                            'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : 0,
+                            'priceBracket': getPriceBracket(item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : ''),
+                            'remarks': item['Remarks'] ? item['Remarks'] : '',
+                            'signature': item['Sound Signature'] ? item['Sound Signature'] : '',
+                            'status': item['Status'] ? item['Status'] : '',
+                            'tested': item['Crinacle-tested'] ? item['Crinacle-tested'].toLowerCase() : '',
+                            'userFave': false,
+                            '_end': ''
+                        };
+
+                        dataArr.push(itemObject);
+                    }
+                } catch {
+                    console.log(item);
+                }
             });
         })
         .then(function() {
@@ -833,19 +1036,33 @@ function dataFilter(data, filters) {
             isDd = item.drivers.toLowerCase().indexOf('dd') > -1 ? 1 : 0,
             isEst = item.drivers.toLowerCase().indexOf('est') > -1 ? 1 : 0,
             isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
-            isHybrid = isBa + isDd + isEst + isPlanar >= 2 ? true : false,
-            isTribrid = isBa + isDd + isEst + isPlanar >= 3 ? true : false,
-            meetsDriverBaFilter = filters.drivers.ba ? true : !isBa,
-            meetsDriverDdFilter = filters.drivers.dd ? true : !isDd,
-            meetsDriverEstFilter = filters.drivers.est ? true : !isEst,
-            meetsDriverPlanarFilter = filters.drivers.planar ? true : !isPlanar,
-            meetsDriverHybridFilter = filters.drivers.hybrid ? true : !isHybrid,
-            meetsDriverTribridFilter = filters.drivers.tribrid ? true : !isTribrid,
+            isPzt = item.drivers.toLowerCase().indexOf('pzt') > -1 ? 1 : 0,
+            isHybrid = isBa + isDd + isEst + isPlanar + isPzt >= 2 ? true : false,
+            isNotHybrid = isBa + isDd + isEst + isPlanar + isPzt < 2 ? true : false,
+            driverTypeFilterActive = filters.drivers.ba ? true : filters.drivers.dd ? true : filters.drivers.est ? true : filters.drivers.planar ? true : filters.drivers.pzt ? true : false,
+            driverComboFilterActive = filters.drivers.hybrid ? true : filters.drivers.notHybrid ? true : false,
+            meetsDriverBaFilter = filters.drivers.ba ? isBa : true,
+            meetsDriverDdFilter = filters.drivers.dd ? isDd : true,
+            meetsDriverEstFilter = filters.drivers.est ? isEst : true,
+            meetsDriverPlanarFilter = filters.drivers.planar ? isPlanar : true,
+            meetsDriverPztFilter = filters.drivers.pzt ? isPzt : true,
+            meetsDriverHybridFilter = filters.drivers.hybrid ? isHybrid : false,
+            meetsDriverNotHybridFilter = filters.drivers.notHybrid ? isNotHybrid : false,
+            meetsDriverTypeFilter = driverTypeFilterActive ? (meetsDriverBaFilter && meetsDriverDdFilter && meetsDriverEstFilter && meetsDriverPlanarFilter && meetsDriverPztFilter) ? 1 : 0 : 1,
+            meetsDriverComboFilter = driverComboFilterActive ? (meetsDriverHybridFilter | meetsDriverNotHybridFilter) ? 1 : 0 : 1,
             
             // Connection filters
-            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
-            meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
-            meetsConnectionIpxFilter = filters.connection.ipx ? true : item.connection.toLowerCase().indexOf('ipx') === -1,
+            connectionFilterActive = filters.connection.mmcx ? true : filters.connection.twopin ? true : filters.connection.twopinExtruded ? true : filters.connection.ipx ? true : filters.connection.pentaconn ? true : filters.connection.proprietary ? true : filters.connection.fixedCable ? true : filters.connection.wirelessTws ? true :  filters.connection.wirelessCabled ? true : 0,
+            meetsConnectionMmcxFilter = filters.connection.mmcx ? item.connection.toLowerCase().indexOf('mmcx') > -1 : false,
+            meetsConnectionTwopinFilter = filters.connection.twopin ? (item.connection.toLowerCase().indexOf('2-pin') > -1 && item.connection.toLowerCase().indexOf('extruded 2-pin') === -1) : false,
+            meetsConnectionTwopinExtrudedFilter = filters.connection.twopinExtruded ? item.connection.toLowerCase().indexOf('extruded 2-pin') > -1 : false,
+            meetsConnectionIpxFilter = filters.connection.ipx ? item.connection.toLowerCase().indexOf('ipx') > -1 : false,
+            meetsConnectionPentaconnFilter = filters.connection.pentaconn ? item.connection.toLowerCase().indexOf('pentaconn') > -1 : false,
+            meetsConnectionProprietaryFilter = filters.connection.proprietary ? item.connection.toLowerCase().indexOf('proprietary') > -1 : false,
+            meetsConnectionFixedCableFilter = filters.connection.fixedCable ? item.connection.toLowerCase().indexOf('fixed cable') > -1 : false,
+            meetsConnectionWirelessTwsFilter = filters.connection.wirelessTws ? item.connection.toLowerCase().indexOf('true wireless') > -1 : false,
+            meetsConnectionWirelessCabledFilter = filters.connection.wirelessCabled ? item.connection.toLowerCase().indexOf('cabled wireless') > -1 : false,
+            meetsConnectionFilter =  connectionFilterActive ? (meetsConnectionMmcxFilter | meetsConnectionTwopinFilter | meetsConnectionTwopinExtrudedFilter | meetsConnectionIpxFilter | meetsConnectionPentaconnFilter | meetsConnectionProprietaryFilter | meetsConnectionFixedCableFilter | meetsConnectionWirelessTwsFilter | meetsConnectionWirelessCabledFilter) : 1,
             
             // Availability filters
             meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
@@ -867,17 +1084,20 @@ function dataFilter(data, filters) {
         && meetsDemoFilter
         
         // Driver filters
-        && meetsDriverBaFilter
-        && meetsDriverDdFilter
-        && meetsDriverEstFilter
-        && meetsDriverPlanarFilter
-        && meetsDriverHybridFilter
-        && meetsDriverTribridFilter
+        && meetsDriverTypeFilter
+        && meetsDriverComboFilter
         
         // Connection filters
-        && meetsConnectionTwopinFilter
-        && meetsConnectionMmcxFilter
-        && meetsConnectionIpxFilter
+//        && meetsConnectionMmcxFilter
+//        && meetsConnectionTwopinFilter
+//        && meetsConnectionTwopinExtrudedFilter
+//        && meetsConnectionIpxFilter
+//        && meetsConnectionPentaconnFilter
+//        && meetsConnectionProprietaryFilter
+//        && meetsConnectionFixedCableFilter
+//        && meetsConnectionWirelessTwsFilter
+//        && meetsConnectionWirelessCabledFilter
+        && meetsConnectionFilter
         
         // Availability filters
         && meetsBuyableFilter
@@ -897,39 +1117,52 @@ function dataFilter(data, filters) {
 // Sort functions
 function dataSort(data, sort) {
     data.sort(function(a, b) {
-        let modelA = a.model,
-            modelB = b.model,
+        let brandA = a.brand.toLowerCase(),
+            brandB = b.brand.toLowerCase(),
+            modelA = a.model.toLowerCase(),
+            modelB = b.model.toLowerCase(),
+            brandComparison = brandA > brandB ? 1 : brandB > brandA ? -1 : 0,
+            modelComparison = modelA > modelB ? 1:  modelB > modelA ? -1 : 0,
+            alphaSort = brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
             priceA = parseInt(a.price),
             priceB = parseInt(b.price),
             priceSortable = priceA > 0 && priceB > 0 ? true : false;
-                
-        if (priceSortable) {
-            // Sort: Price low to high
-            if (sort === 'priceLowHigh') {
-                if (priceA > priceB) {
-                    return 1;
-                } else if (priceA < priceB) {
-                    return -1;
-                } else {
-                    return 0;
+        
+        if (sort === 'priceLowHigh' | sort === 'priceHighLow') {
+            if (priceSortable) {
+                // Sort: Price low to high
+                if (sort === 'priceLowHigh') {
+                    if (priceA > priceB) {
+                        return 1;
+                    } else if (priceA < priceB) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } else if (sort === 'priceHighLow') {
+                    if (priceA > priceB) {
+                        return -1;
+                    } else if (priceA < priceB) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }
-            } else if (sort === 'priceHighLow') {
-                if (priceA > priceB) {
-                    return -1;
-                } else if (priceA < priceB) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        } else {
-            if (priceA > 0) {
-                return -1;
-            } else if (priceB) {
-                return 1;
             } else {
-                return 0;
+                if (priceA > 0) {
+                    return -1;
+                } else if (priceB) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
+        } else if (sort === 'alpha') {
+            return alphaSort;
+        } else if (sort === 'alpha-reverse') {
+            return -(alphaSort);
+        } else {
+            return 0;
         }
     });
     
@@ -943,13 +1176,19 @@ function dataSort(data, sort) {
 
 // Build DOM: Controls
 function constructFiltersUi(controls) {
+    let filtersResultContainer = newElem('section', 'filter-result-container', [{'key': 'phones-hiddem', 'val': "false"}]),
+        filtersResult = newElem('span', 'filter-result', [{'key': 'id', 'val': 'filter-result'}]);
+    
+    filtersResultContainer.append(filtersResult);
+    elemListFilters.prepend(filtersResultContainer);
+    
     controls.forEach(function(control) {
         // Create toggles
         if (control.type === 'toggle') {
             // Create section container for control
             let controlContainer = newElem('section', 'control-toggle', [{'key': 'control-id', 'val': control.name}]),
                 controlHeading = newElem('h3', 'control-heading', null, control.displayName),
-                parentContainer = control.location === 'listManager' ? elemListManager : elemListFilters;
+                parentContainer = control.location === 'listManager' ? elemListManager : control.location === 'resultContainer' ? filtersResultContainer : elemListFilters;
             controlContainer.append(controlHeading);
             parentContainer.append(controlContainer);
             
@@ -1062,7 +1301,10 @@ function constructFiltersUi(controls) {
             
             // Handle return key
             searchInput.addEventListener('keyup', function(e) {
-                if (e.keyCode === 13) searchInput.blur();
+                if (e.keyCode === 13) {
+                    searchInput.blur();
+                    stateP.overlayFilters = false;
+                }
             });
             searchInput.addEventListener('blur', function() {
                 try { clearTimeout(searchDelay); } catch {}
@@ -1109,11 +1351,6 @@ function constructFiltersUi(controls) {
             });
         }
     });
-    
-    let filtersResultContainer = newElem('section', 'filter-result-container', [{'key': 'phones-hiddem', 'val': "false"}]),
-        filtersResult = newElem('span', 'filter-result', [{'key': 'id', 'val': 'filter-result'}]);
-    filtersResultContainer.append(filtersResult);
-    elemListFilters.prepend(filtersResultContainer);
 }
 constructFiltersUi(controls);
 
@@ -1208,11 +1445,12 @@ function createGroupContainer(groupIndex, data) {
     let groupContainer = newElem('div', 'group-container', [{'key': 'group-index', 'val': groupIndex}]);
     
     let observerOptions = {
-            root: document.querySelector('body'),
-            //root: elemListContentsContainer,
-            //rootMargin: "-200px",
-            rootMargin: "0px",
-            threshold: 0.000001
+        root: null,
+        //root: document.querySelector('body'),
+        //root: elemListContentsContainer,
+        //rootMargin: "-200px",
+        rootMargin: "0px",
+        threshold: 0.000001
     };
     let observerCallback = (entries, observerOptions) => {
         entries.forEach(entry => {
@@ -1262,17 +1500,20 @@ function buildTableHeader(data, container) {
         tableHead.append(headDrivers);
         tableHead.append(headConnection);
         tableBody.append(tableHead);
-        elemListContents.prepend(tableBody);
+//        elemListContents.prepend(tableBody);
+        elemListContents.insertAdjacentElement('beforebegin', tableBody)
     }
     
     buildTable(data, container);
+    scrollTable();
 }
 
 function buildTable(data, container) {
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
         let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
-            phoneName = newElem('div', 'table-phone-name', null, item.brand + ' ' + item.model),
+            phoneDisplayName = item.model.indexOf(item.brand) === -1 ? item.brand + ' ' + item.model : item.model,
+            phoneName = newElem('div', 'table-phone-name', null, phoneDisplayName),
             phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]),
             phoneFave = newElem('div', 'table-phone-fave', [{'key': 'is-user-fave', 'val': item.userFave}]);
         phoneContainer.append(phoneName);
@@ -1284,7 +1525,7 @@ function buildTable(data, container) {
             phoneBuyLink = item.linkStore
                 ? newElem('a', 'table-phone-buy-link', [{'key': 'href', 'val': item.linkStore}])
                 : newElem('a', 'table-phone-buy-link'),
-            displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$--',
+            displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$ unknown',
             phonePrice = newElem('span', 'table-phone-price', null, displayPrice),
             phoneDemoable = newElem('div', 'table-phone-demoable', [{'key': 'data-demoable', 'val': item.demoable}]);
         phoneBuyLink.append(phonePrice);
@@ -1316,12 +1557,52 @@ function buildTable(data, container) {
         container.append(phoneContainer);
     });
 }
+// Scroll table header with table
+let scrollSyncActive = 0;
+
+function scrollTableHeader() {
+    elemListContents.addEventListener('scroll', function() {
+        try { clearTimeout(scrollDelay); } catch {}
+        scrollDelay = setTimeout(function() {
+            let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false,
+                scrollPosListContents = elemListContents.scrollLeft;
+            
+            if (tableHeaderExists) {
+                scrollSyncActive = 1;
+                document.querySelector('section.table-header').scrollLeft = scrollPosListContents;
+                scrollSyncActive = 0;
+            }
+        }, 10);
+    });
+}
+scrollTableHeader();
+
+function scrollTable() {
+    let tableHeader = document.querySelectorAll('section.list-table.table-header').length ? document.querySelector('section.list-table.table-header') : false;
+    
+    if (tableHeader && !scrollSyncActive) {
+        tableHeader.addEventListener('scroll', function() {
+            try { clearTimeout(scrollDelay); } catch {}
+            scrollDelay = setTimeout(function() {
+                scrollSyncActive = 1;
+                let scrollPosTableHeader = tableHeader.scrollLeft;
+
+                elemListContents.scrollLeft = scrollPosTableHeader;
+                scrollSyncActive = 0;
+            }, 10);
+        });
+    }
+}
 
 
 
 // Build DOM: Cards
 function buildCards(data, container) {
     // Clear DOM & set mode
+    let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false;
+    
+    if (tableHeaderExists) document.querySelector('section.list-table.table-header').remove();
+    
     elemListContents.setAttribute('list-mode', 'cards');
     elemList.setAttribute('list-mode', 'cards');
     let lastPriceBracket = '-1';
@@ -1401,7 +1682,7 @@ function buildCards(data, container) {
                             ? newElem('a', 'phone-link phone-link-store', [{'key': 'href', 'val': item.linkStore}], 'Buy')
                             : newElem('a', 'phone-link phone-link-store', null, ''),
 //            displayPrice = item.status.toLowerCase().indexOf('discontinued') < 0 ? item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : 'unknown' : 'discontinued',
-            displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$ --',
+            displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$ unknown',
             storePrice = newElem('span', 'phone-store-price', null, displayPrice);
         
         linkFave.addEventListener('click', () => toggleUserFave(item));
