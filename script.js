@@ -791,8 +791,9 @@ function applyStateUrl() {
     stateP.filters.drivers.dd === stateDefaults.filters.drivers.dd ? url.searchParams.delete('dd') : url.searchParams.set('dd', stateP.filters.drivers.dd);
     stateP.filters.drivers.est === stateDefaults.filters.drivers.est ? url.searchParams.delete('est') : url.searchParams.set('est', stateP.filters.drivers.est);
     stateP.filters.drivers.planar === stateDefaults.filters.drivers.planar ? url.searchParams.delete('planar') : url.searchParams.set('planar', stateP.filters.drivers.planar);
+    stateP.filters.drivers.pzt === stateDefaults.filters.drivers.pzt ? url.searchParams.delete('pzt') : url.searchParams.set('pzt', stateP.filters.drivers.pzt);
     stateP.filters.drivers.hybrid === stateDefaults.filters.drivers.hybrid ? url.searchParams.delete('hybrid') : url.searchParams.set('hybrid', stateP.filters.drivers.hybrid);
-    stateP.filters.drivers.tribrid === stateDefaults.filters.drivers.tribrid ? url.searchParams.delete('tribrid') : url.searchParams.set('tribrid', stateP.filters.drivers.tribrid);
+    stateP.filters.drivers.notHybrid === stateDefaults.filters.drivers.notHybrid ? url.searchParams.delete('notHybrid') : url.searchParams.set('notHybrid', stateP.filters.drivers.notHybrid);
     
     // Price filters
     stateP.filters.price.priceBracket === stateDefaults.filters.price.priceBracket ? url.searchParams.delete('priceBracket') : url.searchParams.set('priceBracket', stateP.filters.price.priceBracket);
@@ -833,8 +834,9 @@ function applyUrlToState() {
         dd = urlQueryParams.get('dd') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
         est = urlQueryParams.get('est') === 'true' ? true : urlQueryParams.get('dd') === 'false' ? false : null,
         planar = urlQueryParams.get('planar') === 'true' ? true : urlQueryParams.get('planar') === 'false' ? false : null,
+        pzt = urlQueryParams.get('pzt') === 'true' ? true : urlQueryParams.get('pzt') === 'false' ? false : null,
         hybrid = urlQueryParams.get('hybrid') === 'true' ? true : urlQueryParams.get('hybrid') === 'false' ? false : null,
-        tribrid = urlQueryParams.get('tribrid') === 'true' ? true : urlQueryParams.get('tribrid') === 'false' ? false : null,
+        notHybrid = urlQueryParams.get('notHybrid') === 'true' ? true : urlQueryParams.get('notHybrid') === 'false' ? false : null,
 
         priceBracket = urlQueryParams.get('priceBracket'),
         priceMin = urlQueryParams.get('priceMin'),
@@ -871,8 +873,9 @@ function applyUrlToState() {
     dd != null ? stateP.filters.drivers.dd = dd : '';
     est != null ? stateP.filters.drivers.est = est : '';
     planar != null ? stateP.filters.drivers.planar = planar : '';
+    pzt != null ? stateP.filters.drivers.pzt = pzt : '';
     hybrid != null ? stateP.filters.drivers.hybrid = hybrid : '';
-    tribrid != null ? stateP.filters.drivers.tribrid = tribrid : '';
+    notHybrid != null ? stateP.filters.drivers.notHybrid = notHybrid : '';
     
     // Price filters
     priceBracket != null ? stateP.filters.price.priceBracket = priceBracket : '';
