@@ -1167,7 +1167,7 @@ section.list-table.table-header {
     display: block;
     width: 100%;
     
-    overflow: hidden;
+    overflow-x: scroll;
 }
 
 article.table-head {

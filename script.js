@@ -1505,6 +1505,7 @@ function buildTableHeader(data, container) {
     }
     
     buildTable(data, container);
+    scrollTable();
 }
 
 function buildTable(data, container) {
@@ -1557,6 +1558,8 @@ function buildTable(data, container) {
     });
 }
 // Scroll table header with table
+let scrollSyncActive = 0;
+
 function scrollTableHeader() {
     elemListContents.addEventListener('scroll', function() {
         try { clearTimeout(scrollDelay); } catch {}
@@ -1564,11 +1567,32 @@ function scrollTableHeader() {
             let tableHeaderExists = document.querySelectorAll('section.list-table.table-header').length ? true : false,
                 scrollPosListContents = elemListContents.scrollLeft;
             
-            if (tableHeaderExists) document.querySelector('article.table-head').setAttribute('style', 'margin-left: -' + scrollPosListContents + 'px; transition: margin-left 0.05s ease;');
+            if (tableHeaderExists) {
+                scrollSyncActive = 1;
+                document.querySelector('section.table-header').scrollLeft = scrollPosListContents;
+                scrollSyncActive = 0;
+            }
         }, 10);
     });
 }
 scrollTableHeader();
+
+function scrollTable() {
+    let tableHeader = document.querySelectorAll('section.list-table.table-header').length ? document.querySelector('section.list-table.table-header') : false;
+    
+    if (tableHeader && !scrollSyncActive) {
+        tableHeader.addEventListener('scroll', function() {
+            try { clearTimeout(scrollDelay); } catch {}
+            scrollDelay = setTimeout(function() {
+                scrollSyncActive = 1;
+                let scrollPosTableHeader = tableHeader.scrollLeft;
+
+                elemListContents.scrollLeft = scrollPosTableHeader;
+                scrollSyncActive = 0;
+            }, 10);
+        });
+    }
+}
 
 
 
