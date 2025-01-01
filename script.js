@@ -1023,12 +1023,14 @@ function dataFilter(data, filters) {
             isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
             isHybrid = isBa + isDd + isEst + isPlanar >= 2 ? true : false,
             isTribrid = isBa + isDd + isEst + isPlanar >= 3 ? true : false,
-            meetsDriverBaFilter = filters.drivers.ba ? true : !isBa,
-            meetsDriverDdFilter = filters.drivers.dd ? true : !isDd,
-            meetsDriverEstFilter = filters.drivers.est ? true : !isEst,
-            meetsDriverPlanarFilter = filters.drivers.planar ? true : !isPlanar,
-            meetsDriverHybridFilter = filters.drivers.hybrid ? true : !isHybrid,
-            meetsDriverTribridFilter = filters.drivers.tribrid ? true : !isTribrid,
+            driverFilterActive = filters.drivers.ba ? true : filters.drivers.dd ? true : filters.drivers.est ? true : filters.drivers.planar ? true : filters.drivers.hybrid ? true : filters.drivers.tribrid ? true : false,
+            meetsDriverBaFilter = !driverFilterActive ? true : filters.drivers.ba ? isBa : false,
+            meetsDriverDdFilter = !driverFilterActive ? true : filters.drivers.dd ? isDd : false,
+            meetsDriverEstFilter = !driverFilterActive ? true : filters.drivers.est ? isEst : false,
+            meetsDriverPlanarFilter = !driverFilterActive ? true : filters.drivers.planar ? isPlanar : false,
+            meetsDriverHybridFilter = !driverFilterActive ? true : filters.drivers.hybrid ? isHybrid : false,
+            meetsDriverTribridFilter = !driverFilterActive ? true : filters.drivers.tribrid ? isTribrid : false,
+            meetsDriverFilter = meetsDriverBaFilter + meetsDriverDdFilter + meetsDriverEstFilter + meetsDriverPlanarFilter + meetsDriverHybridFilter + meetsDriverTribridFilter,
             
             // Connection filters
             meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
@@ -1050,6 +1052,8 @@ function dataFilter(data, filters) {
             meetsApprovedFilter = filters.featured.crinApprovedOnly ? item.approved === 'yes' : true,
             meetsUserFaveFilter = filters.featured.userFavesOnly ? item.userFave : true;
         
+         //console.log('Meets driver filter: ' + meetsDriverFilter);
+        
         // Search filter
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
@@ -1061,12 +1065,13 @@ function dataFilter(data, filters) {
         && meetsDemoFilter
         
         // Driver filters
-        && meetsDriverBaFilter
-        && meetsDriverDdFilter
-        && meetsDriverEstFilter
-        && meetsDriverPlanarFilter
-        && meetsDriverHybridFilter
-        && meetsDriverTribridFilter
+//        && meetsDriverBaFilter
+//        && meetsDriverDdFilter
+//        && meetsDriverEstFilter
+//        && meetsDriverPlanarFilter
+//        && meetsDriverHybridFilter
+//        && meetsDriverTribridFilter
+        && meetsDriverFilter
         
         // Connection filters
         && meetsConnectionMmcxFilter
