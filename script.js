@@ -163,7 +163,7 @@ let state = {
             'est': false,
             'planar': false,
             'hybrid': false,
-            'tribrid': false,
+            'notHybrid': false,
             },
         'price': {
             'priceBracket': '',
@@ -523,25 +523,25 @@ let controls = [
             },
             {
                 'name': 'hybrid',
-                'displayName': 'Hybrid',
+                'displayName': 'Hybrid, tribrid, etc.',
                 'values': [
                     true,
                     false,
                 ],
                 'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.hybrid },
-                'stateSet': function(val) { stateP.filters.drivers.hybrid = val }
+                'stateSet': function(val) { stateP.filters.drivers.hybrid = val; if (val) stateP.filters.drivers.notHybrid = false }
             },
             {
-                'name': 'tribrid',
-                'displayName': 'Tribrid',
+                'name': 'notHybrid',
+                'displayName': 'Not hybrid',
                 'values': [
                     true,
                     false,
                 ],
                 'defaultValue': false,
-                get stateLoc() { return stateP.filters.drivers.tribrid },
-                'stateSet': function(val) { stateP.filters.drivers.tribrid = val }
+                get stateLoc() { return stateP.filters.drivers.notHybrid },
+                'stateSet': function(val) { stateP.filters.drivers.notHybrid = val; if (val) stateP.filters.drivers.hybrid = false }
             },
         ],
     },
@@ -1022,15 +1022,17 @@ function dataFilter(data, filters) {
             isEst = item.drivers.toLowerCase().indexOf('est') > -1 ? 1 : 0,
             isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
             isHybrid = isBa + isDd + isEst + isPlanar >= 2 ? true : false,
-            isTribrid = isBa + isDd + isEst + isPlanar >= 3 ? true : false,
-            driverFilterActive = filters.drivers.ba ? true : filters.drivers.dd ? true : filters.drivers.est ? true : filters.drivers.planar ? true : filters.drivers.hybrid ? true : filters.drivers.tribrid ? true : false,
-            meetsDriverBaFilter = !driverFilterActive ? true : filters.drivers.ba ? isBa : false,
-            meetsDriverDdFilter = !driverFilterActive ? true : filters.drivers.dd ? isDd : false,
-            meetsDriverEstFilter = !driverFilterActive ? true : filters.drivers.est ? isEst : false,
-            meetsDriverPlanarFilter = !driverFilterActive ? true : filters.drivers.planar ? isPlanar : false,
-            meetsDriverHybridFilter = !driverFilterActive ? true : filters.drivers.hybrid ? isHybrid : false,
-            meetsDriverTribridFilter = !driverFilterActive ? true : filters.drivers.tribrid ? isTribrid : false,
-            meetsDriverFilter = meetsDriverBaFilter + meetsDriverDdFilter + meetsDriverEstFilter + meetsDriverPlanarFilter + meetsDriverHybridFilter + meetsDriverTribridFilter,
+            isNotHybrid = isBa + isDd + isEst + isPlanar < 2 ? true : false,
+            driverTypeFilterActive = filters.drivers.ba ? true : filters.drivers.dd ? true : filters.drivers.est ? true : filters.drivers.planar ? true : false,
+            driverComboFilterActive = filters.drivers.hybrid ? true : filters.drivers.notHybrid ? true : false,
+            meetsDriverBaFilter = !driverTypeFilterActive ? true : filters.drivers.ba ? isBa : false,
+            meetsDriverDdFilter = !driverTypeFilterActive ? true : filters.drivers.dd ? isDd : false,
+            meetsDriverEstFilter = !driverTypeFilterActive ? true : filters.drivers.est ? isEst : false,
+            meetsDriverPlanarFilter = !driverTypeFilterActive ? true : filters.drivers.planar ? isPlanar : false,
+            meetsDriverHybridFilter = !driverComboFilterActive ? true : filters.drivers.hybrid ? isHybrid : false,
+            meetsDriverNotHybridFilter = !driverComboFilterActive ? true : filters.drivers.notHybrid ? isNotHybrid : false,
+            meetsDriverTypeFilter = meetsDriverBaFilter + meetsDriverDdFilter + meetsDriverEstFilter + meetsDriverPlanarFilter,
+            meetsDriverComboFilter = meetsDriverHybridFilter + meetsDriverNotHybridFilter,
             
             // Connection filters
             meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
@@ -1051,9 +1053,7 @@ function dataFilter(data, filters) {
             meetsTestedFilter = filters.featured.crinTestedOnly ? item.tested === 'yes' : true,
             meetsApprovedFilter = filters.featured.crinApprovedOnly ? item.approved === 'yes' : true,
             meetsUserFaveFilter = filters.featured.userFavesOnly ? item.userFave : true;
-        
-         //console.log('Meets driver filter: ' + meetsDriverFilter);
-        
+                
         // Search filter
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
@@ -1071,7 +1071,8 @@ function dataFilter(data, filters) {
 //        && meetsDriverPlanarFilter
 //        && meetsDriverHybridFilter
 //        && meetsDriverTribridFilter
-        && meetsDriverFilter
+        && meetsDriverTypeFilter
+        && meetsDriverComboFilter
         
         // Connection filters
         && meetsConnectionMmcxFilter
