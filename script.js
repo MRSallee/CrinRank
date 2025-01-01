@@ -1052,15 +1052,17 @@ function dataFilter(data, filters) {
             meetsDriverComboFilter = driverComboFilterActive ? (meetsDriverHybridFilter | meetsDriverNotHybridFilter) ? 1 : 0 : 1,
             
             // Connection filters
-            meetsConnectionMmcxFilter = filters.connection.mmcx ? true : item.connection.toLowerCase().indexOf('mmcx') === -1,
-            meetsConnectionTwopinFilter = filters.connection.twopin ? true : item.connection.toLowerCase().indexOf('2-pin') === -1,
-            meetsConnectionTwopinExtrudedFilter = filters.connection.twopinExtruded ? true : item.connection.toLowerCase().indexOf('extruded 2-pin') === -1,
-            meetsConnectionIpxFilter = filters.connection.ipx ? true : item.connection.toLowerCase().indexOf('ipx') === -1,
-            meetsConnectionPentaconnFilter = filters.connection.pentaconn ? true : item.connection.toLowerCase().indexOf('pentaconn') === -1,
-            meetsConnectionProprietaryFilter = filters.connection.proprietary ? true : item.connection.toLowerCase().indexOf('proprietary') === -1,
-            meetsConnectionFixedCableFilter = filters.connection.fixedCable ? true : item.connection.toLowerCase().indexOf('fixed cable') === -1,
-            meetsConnectionWirelessTwsFilter = filters.connection.wirelessTws ? true : item.connection.toLowerCase().indexOf('true wireless') === -1,
-            meetsConnectionWirelessCabledFilter = filters.connection.wirelessCabled ? true : item.connection.toLowerCase().indexOf('cabled wireless') === -1,
+            connectionFilterActive = filters.connection.mmcx ? true : filters.connection.twopin ? true : filters.connection.twopinExtruded ? true : filters.connection.ipx ? true : filters.connection.pentaconn ? true : filters.connection.proprietary ? true : filters.connection.fixedCable ? true : filters.connection.wirelessTws ? true :  filters.connection.wirelessCabled ? true : 0,
+            meetsConnectionMmcxFilter = filters.connection.mmcx ? item.connection.toLowerCase().indexOf('mmcx') > -1 : false,
+            meetsConnectionTwopinFilter = filters.connection.twopin ? item.connection.toLowerCase().indexOf('2-pin') > -1 : false,
+            meetsConnectionTwopinExtrudedFilter = filters.connection.twopinExtruded ? item.connection.toLowerCase().indexOf('extruded 2-pin') > -1 : false,
+            meetsConnectionIpxFilter = filters.connection.ipx ? item.connection.toLowerCase().indexOf('ipx') > -1 : false,
+            meetsConnectionPentaconnFilter = filters.connection.pentaconn ? item.connection.toLowerCase().indexOf('pentaconn') > -1 : false,
+            meetsConnectionProprietaryFilter = filters.connection.proprietary ? item.connection.toLowerCase().indexOf('proprietary') > -1 : false,
+            meetsConnectionFixedCableFilter = filters.connection.fixedCable ? item.connection.toLowerCase().indexOf('fixed cable') > -1 : false,
+            meetsConnectionWirelessTwsFilter = filters.connection.wirelessTws ? item.connection.toLowerCase().indexOf('true wireless') > -1 : false,
+            meetsConnectionWirelessCabledFilter = filters.connection.wirelessCabled ? item.connection.toLowerCase().indexOf('cabled wireless') > -1 : false,
+            meetsConnectionFilter =  connectionFilterActive ? (meetsConnectionMmcxFilter | meetsConnectionTwopinFilter | meetsConnectionTwopinExtrudedFilter | meetsConnectionIpxFilter | meetsConnectionPentaconnFilter | meetsConnectionProprietaryFilter | meetsConnectionFixedCableFilter | meetsConnectionWirelessTwsFilter | meetsConnectionWirelessCabledFilter) : 1,
             
             // Availability filters
             meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
@@ -1070,8 +1072,6 @@ function dataFilter(data, filters) {
             meetsTestedFilter = filters.featured.crinTestedOnly ? item.tested === 'yes' : true,
             meetsApprovedFilter = filters.featured.crinApprovedOnly ? item.approved === 'yes' : true,
             meetsUserFaveFilter = filters.featured.userFavesOnly ? item.userFave : true;
-        
-        //console.log(meetsDriverBaFilter, meetsDriverDdFilter, meetsDriverEstFilter, meetsDriverPlanarFilter);
         
         // Search filter
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
@@ -1088,15 +1088,16 @@ function dataFilter(data, filters) {
         && meetsDriverComboFilter
         
         // Connection filters
-        && meetsConnectionMmcxFilter
-        && meetsConnectionTwopinFilter
-        && meetsConnectionTwopinExtrudedFilter
-        && meetsConnectionIpxFilter
-        && meetsConnectionPentaconnFilter
-        && meetsConnectionProprietaryFilter
-        && meetsConnectionFixedCableFilter
-        && meetsConnectionWirelessTwsFilter
-        && meetsConnectionWirelessCabledFilter
+//        && meetsConnectionMmcxFilter
+//        && meetsConnectionTwopinFilter
+//        && meetsConnectionTwopinExtrudedFilter
+//        && meetsConnectionIpxFilter
+//        && meetsConnectionPentaconnFilter
+//        && meetsConnectionProprietaryFilter
+//        && meetsConnectionFixedCableFilter
+//        && meetsConnectionWirelessTwsFilter
+//        && meetsConnectionWirelessCabledFilter
+        && meetsConnectionFilter
         
         // Availability filters
         && meetsBuyableFilter
