@@ -1511,7 +1511,8 @@ function buildTable(data, container) {
     // Handle each item in filtered + sorted list
     data.forEach(function(item) {
         let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
-            phoneName = newElem('div', 'table-phone-name', null, item.brand + ' ' + item.model),
+            phoneDisplayName = item.model.indexOf(item.brand) === -1 ? item.brand + ' ' + item.model : item.model,
+            phoneName = newElem('div', 'table-phone-name', null, phoneDisplayName),
             phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]),
             phoneFave = newElem('div', 'table-phone-fave', [{'key': 'is-user-fave', 'val': item.userFave}]);
         phoneContainer.append(phoneName);
