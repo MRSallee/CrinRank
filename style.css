@@ -568,9 +568,11 @@ select.controls-dropdown {
     font-family: var(--font-primary);
     font-size: 3rem;
     line-height: 4rem;
+    
+    cursor: pointer;
 
-  -webkit-appearance: none;
-  -moz-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 section[control-id="filtersOverlay"] h3,

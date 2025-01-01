@@ -147,23 +147,23 @@ let state = {
             'discontinued': false,
             },
         'connection': {
-            'mmcx': true,
-            'twopin': true,
-            'twopinExtruded': true,
-            'ipx': true,
-            'pentaconn': true,
-            'proprietary': true,
-            'fixedCable': true,
-            'wirelessTws': true,
-            'wirelessCabled': true,
+            'mmcx': false,
+            'twopin': false,
+            'twopinExtruded': false,
+            'ipx': false,
+            'pentaconn': false,
+            'proprietary': false,
+            'fixedCable': false,
+            'wirelessTws': false,
+            'wirelessCabled': false,
             },
         'drivers': {
-            'ba': true,
-            'dd': true,
-            'est': true,
-            'planar': true,
-            'hybrid': true,
-            'tribrid': true,
+            'ba': false,
+            'dd': false,
+            'est': false,
+            'planar': false,
+            'hybrid': false,
+            'tribrid': false,
             },
         'price': {
             'priceBracket': '',
@@ -305,7 +305,7 @@ let controls = [
         'toggles': [
             {
                 'name': 'crinApprovedOnly',
-                'displayName': 'Crin-approved only',
+                'displayName': 'Crin-approved',
                 'values': [
                     true,
                     false,
@@ -316,7 +316,7 @@ let controls = [
             },
             {
                 'name': 'crinTestedOnly',
-                'displayName': 'Crin-tested only',
+                'displayName': 'Crin-tested',
                 'values': [
                     true,
                     false,
@@ -327,7 +327,7 @@ let controls = [
             },
             {
                 'name': 'favoritesOnly',
-                'displayName': 'My faves only',
+                'displayName': 'My faves',
                 'values': [
                     true,
                     false,
@@ -438,7 +438,7 @@ let controls = [
         'toggles': [
             {
                 'name': 'buyableOnly',
-                'displayName': 'Buyable only',
+                'displayName': 'Buyable',
                 'values': [
                     true,
                     false,
@@ -449,7 +449,7 @@ let controls = [
             },
             {
                 'name': 'demoableOnly',
-                'displayName': 'Demoable only',
+                'displayName': 'Demoable',
                 'values': [
                     true,
                     false,
@@ -473,7 +473,7 @@ let controls = [
     },
     {
         'name': 'driver',
-        'displayName': 'Driver configurations',
+        'displayName': 'Driver configuration',
         'type': 'toggle',
         'location': 'listFilters',
         'toggles': [
@@ -484,7 +484,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.ba },
                 'stateSet': function(val) { stateP.filters.drivers.ba = val }
             },
@@ -495,7 +495,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.dd },
                 'stateSet': function(val) { stateP.filters.drivers.dd = val }
             },
@@ -506,7 +506,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.est },
                 'stateSet': function(val) { stateP.filters.drivers.est = val }
             },
@@ -517,7 +517,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.planar },
                 'stateSet': function(val) { stateP.filters.drivers.planar = val }
             },
@@ -528,7 +528,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.hybrid },
                 'stateSet': function(val) { stateP.filters.drivers.hybrid = val }
             },
@@ -539,7 +539,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.drivers.tribrid },
                 'stateSet': function(val) { stateP.filters.drivers.tribrid = val }
             },
@@ -558,7 +558,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.mmcx },
                 'stateSet': function(val) { stateP.filters.connection.mmcx = val }
             },
@@ -569,7 +569,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.twopin },
                 'stateSet': function(val) { stateP.filters.connection.twopin = val }
             },
@@ -580,7 +580,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.twopinExtruded },
                 'stateSet': function(val) { stateP.filters.connection.twopinExtruded = val }
             },
@@ -591,7 +591,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.ipx },
                 'stateSet': function(val) { stateP.filters.connection.ipx = val }
             },
@@ -602,7 +602,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.pentaconn },
                 'stateSet': function(val) { stateP.filters.connection.pentaconn = val }
             },
@@ -613,7 +613,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.proprietary },
                 'stateSet': function(val) { stateP.filters.connection.proprietary = val }
             },
@@ -624,7 +624,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.fixedCable },
                 'stateSet': function(val) { stateP.filters.connection.fixedCable = val }
             },
@@ -635,7 +635,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.wirelessTws },
                 'stateSet': function(val) { stateP.filters.connection.wirelessTws = val }
             },
@@ -646,7 +646,7 @@ let controls = [
                     true,
                     false,
                 ],
-                'defaultValue': true,
+                'defaultValue': false,
                 get stateLoc() { return stateP.filters.connection.wirelessCabled },
                 'stateSet': function(val) { stateP.filters.connection.wirelessCabled = val }
             },
