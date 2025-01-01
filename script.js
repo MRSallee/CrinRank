@@ -1054,7 +1054,7 @@ function dataFilter(data, filters) {
             // Connection filters
             connectionFilterActive = filters.connection.mmcx ? true : filters.connection.twopin ? true : filters.connection.twopinExtruded ? true : filters.connection.ipx ? true : filters.connection.pentaconn ? true : filters.connection.proprietary ? true : filters.connection.fixedCable ? true : filters.connection.wirelessTws ? true :  filters.connection.wirelessCabled ? true : 0,
             meetsConnectionMmcxFilter = filters.connection.mmcx ? item.connection.toLowerCase().indexOf('mmcx') > -1 : false,
-            meetsConnectionTwopinFilter = filters.connection.twopin ? item.connection.toLowerCase().indexOf('2-pin') > -1 : false,
+            meetsConnectionTwopinFilter = filters.connection.twopin ? (item.connection.toLowerCase().indexOf('2-pin') > -1 && item.connection.toLowerCase().indexOf('extruded 2-pin') === -1) : false,
             meetsConnectionTwopinExtrudedFilter = filters.connection.twopinExtruded ? item.connection.toLowerCase().indexOf('extruded 2-pin') > -1 : false,
             meetsConnectionIpxFilter = filters.connection.ipx ? item.connection.toLowerCase().indexOf('ipx') > -1 : false,
             meetsConnectionPentaconnFilter = filters.connection.pentaconn ? item.connection.toLowerCase().indexOf('pentaconn') > -1 : false,
