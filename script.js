@@ -75,7 +75,25 @@ function initSiteHeader() {
                     'label': '+Create Squiglink',
                     'linkUrl': 'https://squig.link/create/'
                 },
-            ]
+            ],
+            'linksSocial': [
+                {
+                    'label': '&#xf24d;',
+                    'linkUrl': 'https://www.youtube.com/@HangoutAudio',
+                },
+                {
+                    'label': '&#xf243;',
+                    'linkUrl': 'https://x.com/crinacle',
+                },
+                {
+                    'label': '&#xf231;',
+                    'linkUrl': 'https://www.facebook.com',
+                },
+                {
+                    'label': '&#xf351;',
+                    'linkUrl': 'https://www.instagram.com',
+                },
+            ],
         };
     siteHeaderContainer.append(siteHeaderToggle);
     siteHeaderContainer.append(siteHeaderLogo);
@@ -108,6 +126,16 @@ function initSiteHeader() {
         linkContainer.append(linkLink);
         siteHeaderLinks.append(linkContainer);
     })
+    
+    siteHeaderData.linksSocial.forEach(function(link) {
+        let linkContainer = newElem('li', 'site-header-link-container'),
+            linkLink = newElem('a', 'site-header-link social', [{'key': 'href', 'val': link.linkUrl}]);
+        
+        linkLink.innerHTML = link.label;
+        linkContainer.append(linkLink);
+        siteHeaderLinks.append(linkContainer);
+    })
+    
     
     document.querySelector('body').prepend(siteHeaderContainer);
 }
