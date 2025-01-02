@@ -78,20 +78,24 @@ function initSiteHeader() {
             ],
             'linksSocial': [
                 {
-                    'label': '&#xf24d;',
+                    'label': '&#xf167;',
                     'linkUrl': 'https://www.youtube.com/@HangoutAudio',
                 },
                 {
-                    'label': '&#xf243;',
+                    'label': '&#xe61b;',
                     'linkUrl': 'https://x.com/crinacle',
                 },
                 {
-                    'label': '&#xf231;',
+                    'label': '&#xf09a;',
                     'linkUrl': 'https://www.facebook.com',
                 },
                 {
-                    'label': '&#xf351;',
+                    'label': '&#xf16d;',
                     'linkUrl': 'https://www.instagram.com',
+                },
+                {
+                    'label': '&#xe07b;',
+                    'linkUrl': 'https://www.tiktoke.com/',
                 },
             ],
         };
