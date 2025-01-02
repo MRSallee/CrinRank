@@ -126,6 +126,7 @@ div.site-header-logo {
     flex: 75rem 0 0;
     height: 48px;
     padding: 12px 0;
+    margin: 0 auto 0 0;
 }
 
 a.site-header-logo-link {
@@ -145,7 +146,7 @@ ul.site-header-links {
     justify-content: flex-end;
     gap: 0 32px;
     
-    flex: 100% 0 1;
+    flex: auto 0 1;
     margin: 0;
     padding: 0 16px;
 }
@@ -162,6 +163,11 @@ a.site-header-link {
     font-size: 14px;
     line-height: 1em;
     text-decoration: none;
+}
+
+li.site-header-link-container.site-header-links-social {
+    display: flex;
+    gap: 16px;
 }
 
 a.site-header-link.social {

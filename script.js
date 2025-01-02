@@ -48,6 +48,7 @@ function initSiteHeader() {
     let siteHeaderContainer = newElem('header', 'site-header'),
         siteHeaderLogo = newElem('div', 'site-header-logo'),
         siteHeaderLinks = newElem('ul', 'site-header-links'),
+        siteHeaderLinksSocial = newElem('li', 'site-header-link-container site-header-links-social'),
         siteHeaderToggle = newElem('button', 'site-header-toggle'),
         siteHeaderData = {
             'logo': {
@@ -132,13 +133,12 @@ function initSiteHeader() {
     })
     
     siteHeaderData.linksSocial.forEach(function(link) {
-        let linkContainer = newElem('li', 'site-header-link-container'),
-            linkLink = newElem('a', 'site-header-link social', [{'key': 'href', 'val': link.linkUrl}]);
+        let linkLink = newElem('a', 'site-header-link social', [{'key': 'href', 'val': link.linkUrl}]);
         
         linkLink.innerHTML = link.label;
-        linkContainer.append(linkLink);
-        siteHeaderLinks.append(linkContainer);
+        siteHeaderLinksSocial.append(linkLink);
     })
+    siteHeaderLinks.append(siteHeaderLinksSocial);
     
     
     document.querySelector('body').prepend(siteHeaderContainer);
