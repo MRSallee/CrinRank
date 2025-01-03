@@ -74,18 +74,18 @@ function initSiteHeader() {
                     'label': '&#xf167;',
                     'linkUrl': 'https://www.youtube.com/@HangoutAudio',
                 },
-//                {
-//                    'label': '&#xe61b;',
-//                    'linkUrl': 'https://x.com/crinacle',
-//                },
-//                {
-//                    'label': '&#xf09a;',
-//                    'linkUrl': 'https://www.facebook.com',
-//                },
                 {
                     'label': '&#xf16d;',
                     'linkUrl': 'https://www.instagram.com',
                 },
+//                {
+//                    'label': '&#xe61b;',
+//                    'linkUrl': 'https://x.com/',
+//                },
+//                {
+//                    'label': '&#xf09a;',
+//                    'linkUrl': 'https://www.facebook.com/',
+//                },
 //                {
 //                    'label': '&#xe07b;',
 //                    'linkUrl': 'https://www.tiktoke.com/',
@@ -155,8 +155,8 @@ document.querySelector('body').append(elemList);
 let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
-    'tableMode': false,
-    'sort': 'priceLowHigh',
+    'tableMode': true,
+    'sort': 'alpha',
     'overlayFilters': false,
     'filters': {
         'featured': {
@@ -278,7 +278,7 @@ let controls = [
                     true,
                     false
                 ],
-                'defaultValue': false,
+                'defaultValue': true,
                 get stateLoc() { return stateP.tableMode },
                 'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'alpha'} else {stateP.sort = 'priceLowHigh'}; }
             }
@@ -308,7 +308,7 @@ let controls = [
                 'value': 'priceLowHigh',
             },
         ],
-        'defaultValue': 'priceLowHigh',
+        'defaultValue': 'alpha',
         get stateLoc() { return stateP.sort },
         'stateSet': function(val) { stateP.sort = val }
     },
@@ -831,7 +831,7 @@ function applyUrlToState() {
     let urlQueryString = window.location.search,
         urlQueryParams = new URLSearchParams(urlQueryString),
         
-        tableMode = urlQueryParams.get('tableMode'),
+        tableMode = urlQueryParams.get('tableMode') === 'false' ? false : true,
         sort = urlQueryParams.get('sort'),
         searchString = urlQueryParams.get('searchString'),
         
@@ -1381,6 +1381,7 @@ constructFiltersUi(controls);
 
 // Build DOM: Content initialization
 function buildListItems(data, tableMode, saveScroll) {
+    console.log(data, tableMode);
     saveScroll ? '' : elemListContentsContainer.scrollTop = 0;
     elemListContents.innerHTML = '';
     
