@@ -176,7 +176,7 @@ a.site-header-link.social {
     line-height: 14px;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 800px) {
     button.site-header-toggle {
         display: block;
     }

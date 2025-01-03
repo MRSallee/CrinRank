@@ -57,24 +57,16 @@ function initSiteHeader() {
             },
             'links': [
                 {
-                    'label': 'IEMs (B&K Type 5128)',
-                    'linkUrl': 'https://graph.hangout.audio/iem/5128'
+                    'label': 'Hangout.Audio Store',
+                    'linkUrl': ''
                 },
                 {
-                    'label': 'IEMs (711)',
-                    'linkUrl': 'https://graph.hangout.audio/iem/711'
-                },
-                {
-                    'label': 'Headphones (GRAS 43AG-7)',
-                    'linkUrl': 'https://graph.hangout.audio/headphones'
+                    'label': 'Graph Comparison Tools',
+                    'linkUrl': ''
                 },
                 {
                     'label': 'The List',
                     'linkUrl': ''
-                },
-                {
-                    'label': '+Create Squiglink',
-                    'linkUrl': 'https://squig.link/create/'
                 },
             ],
             'linksSocial': [
@@ -82,22 +74,22 @@ function initSiteHeader() {
                     'label': '&#xf167;',
                     'linkUrl': 'https://www.youtube.com/@HangoutAudio',
                 },
-                {
-                    'label': '&#xe61b;',
-                    'linkUrl': 'https://x.com/crinacle',
-                },
-                {
-                    'label': '&#xf09a;',
-                    'linkUrl': 'https://www.facebook.com',
-                },
+//                {
+//                    'label': '&#xe61b;',
+//                    'linkUrl': 'https://x.com/crinacle',
+//                },
+//                {
+//                    'label': '&#xf09a;',
+//                    'linkUrl': 'https://www.facebook.com',
+//                },
                 {
                     'label': '&#xf16d;',
                     'linkUrl': 'https://www.instagram.com',
                 },
-                {
-                    'label': '&#xe07b;',
-                    'linkUrl': 'https://www.tiktoke.com/',
-                },
+//                {
+//                    'label': '&#xe07b;',
+//                    'linkUrl': 'https://www.tiktoke.com/',
+//                },
             ],
         };
     siteHeaderContainer.append(siteHeaderToggle);
