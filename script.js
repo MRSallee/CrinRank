@@ -124,14 +124,6 @@ function initSiteHeader() {
     siteHeaderLogo.append(logoLink);
     
     // Create site header links
-    siteHeaderData.links.forEach(function(link) {
-        let linkContainer = newElem('li', 'site-header-link-container'),
-            linkLink = newElem('a', 'site-header-link', [{'key': 'href', 'val': link.linkUrl}], link.label);
-        
-        linkContainer.append(linkLink);
-        siteHeaderLinks.append(linkContainer);
-    })
-    
     siteHeaderData.linksSocial.forEach(function(link) {
         let linkLink = newElem('a', 'site-header-link social', [{'key': 'href', 'val': link.linkUrl}]);
         
@@ -140,6 +132,13 @@ function initSiteHeader() {
     })
     siteHeaderLinks.append(siteHeaderLinksSocial);
     
+    siteHeaderData.links.forEach(function(link) {
+        let linkContainer = newElem('li', 'site-header-link-container'),
+            linkLink = newElem('a', 'site-header-link', [{'key': 'href', 'val': link.linkUrl}], link.label);
+        
+        linkContainer.append(linkLink);
+        siteHeaderLinks.append(linkContainer);
+    })
     
     document.querySelector('body').prepend(siteHeaderContainer);
 }
