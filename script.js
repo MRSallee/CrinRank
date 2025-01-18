@@ -155,18 +155,18 @@ elemListContentsContainer.append(elemListContents);
 elemList.append(elemListContentsContainer);
 document.querySelector('body').append(elemList);
 
-function getDefaultTableMode() {
+function getDefaultTableView() {
     let pageWidth = window.innerWidth,
-        tableMode = pageWidth > 690 ? true : false;
+        tableView = pageWidth > 690 ? true : false;
     
-    return tableMode;
+    return tableView;
 }
 
 // Define state object for the list
 let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
-    'tableMode': true,
+    'tableMode': getDefaultTableView(),
     'sort': 'alpha',
     'overlayFilters': false,
     'filters': {
@@ -289,7 +289,7 @@ let controls = [
                     true,
                     false
                 ],
-                'defaultValue': true,
+                'defaultValue': getDefaultTableView(),
                 get stateLoc() { return stateP.tableMode },
                 'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'alpha'} else {stateP.sort = 'priceLowHigh'}; }
             }
@@ -842,7 +842,7 @@ function applyUrlToState() {
     let urlQueryString = window.location.search,
         urlQueryParams = new URLSearchParams(urlQueryString),
         
-        tableMode = urlQueryParams.get('tableMode') === 'false' ? false : true,
+        tableMode = urlQueryParams.get('tableMode') === 'false' ? false : urlQueryParams.get('tableMode') === 'true' ? true : getDefaultTableView(),
         sort = urlQueryParams.get('sort'),
         searchString = urlQueryParams.get('searchString'),
         
