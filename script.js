@@ -162,12 +162,19 @@ function getDefaultTableView() {
     return tableView;
 }
 
+function getDefaultSort() {
+    let pageWidth = window.innerWidth,
+        sortMode = pageWidth > 690 ? 'alpha' : 'priceLowHigh';
+    
+    return sortMode;
+}
+
 // Define state object for the list
 let state = {
     'environment': 'dev',
     'jqueryLoaded': false,
-    'tableMode': getDefaultTableView(),
-    'sort': 'alpha',
+    'tableMode': 'varies',
+    'sort': 'varies',
     'overlayFilters': false,
     'filters': {
         'featured': {
@@ -289,7 +296,7 @@ let controls = [
                     true,
                     false
                 ],
-                'defaultValue': getDefaultTableView(),
+                'defaultValue': 'varies',
                 get stateLoc() { return stateP.tableMode },
                 'stateSet': function(val) { stateP.tableMode = val; if (val) {stateP.sort = 'alpha'} else {stateP.sort = 'priceLowHigh'}; }
             }
@@ -319,7 +326,7 @@ let controls = [
                 'value': 'priceLowHigh',
             },
         ],
-        'defaultValue': 'alpha',
+        'defaultValue': 'varies',
         get stateLoc() { return stateP.sort },
         'stateSet': function(val) { stateP.sort = val }
     },
@@ -843,7 +850,7 @@ function applyUrlToState() {
         urlQueryParams = new URLSearchParams(urlQueryString),
         
         tableMode = urlQueryParams.get('tableMode') === 'false' ? false : urlQueryParams.get('tableMode') === 'true' ? true : getDefaultTableView(),
-        sort = urlQueryParams.get('sort'),
+        sort = urlQueryParams.has('sort') ? urlQueryParams.get('sort') : getDefaultSort(),
         searchString = urlQueryParams.get('searchString'),
         
         crinApprovedOnly = urlQueryParams.get('crinApprovedOnly') === 'true' ? true : urlQueryParams.get('crinApprovedOnly') === 'false' ? false : null,
@@ -926,8 +933,6 @@ function applyUrlToState() {
 let json = 'data.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
-
-
 
 // Get data
 function getDataFresh (json) {
@@ -1392,7 +1397,6 @@ constructFiltersUi(controls);
 
 // Build DOM: Content initialization
 function buildListItems(data, tableMode, saveScroll) {
-    console.log(data, tableMode);
     saveScroll ? '' : elemListContentsContainer.scrollTop = 0;
     elemListContents.innerHTML = '';
     
