@@ -159,7 +159,7 @@ function getDefaultTableMode() {
     let pageWidth = window.innerWidth,
         tableMode = pageWidth > 690 ? true : false;
     
-    console.log(tableMode);
+    return tableMode;
 }
 getDefaultTableMode();
 
