@@ -155,6 +155,14 @@ elemListContentsContainer.append(elemListContents);
 elemList.append(elemListContentsContainer);
 document.querySelector('body').append(elemList);
 
+function getDefaultTableMode() {
+    let pageWidth = window.innerWidth,
+        tableMode = pageWidth > 690 ? true : false;
+    
+    console.log(tableMode);
+}
+getDefaultTableMode();
+
 // Define state object for the list
 let state = {
     'environment': 'dev',
