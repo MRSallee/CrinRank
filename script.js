@@ -161,7 +161,6 @@ function getDefaultTableMode() {
     
     return tableMode;
 }
-getDefaultTableMode();
 
 // Define state object for the list
 let state = {
