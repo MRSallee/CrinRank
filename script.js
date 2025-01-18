@@ -75,6 +75,10 @@ function initSiteHeader() {
                     'linkUrl': 'https://www.youtube.com/@HangoutAudio',
                 },
                 {
+                    'label': '&#xf392;',
+                    'linkUrl': 'https://www.Discord.com',
+                },
+                {
                     'label': '&#xf16d;',
                     'linkUrl': 'https://www.instagram.com',
                 },
