@@ -15,6 +15,11 @@
     
     --font-primary: 'Twentieth Century', 'Poppins', sans-serif;
     
+    /*
+        https://tabler.io/icons
+        https://yoksel.github.io/url-encoder/
+    */
+    
     --icon-tested-new: url("data:image/svg+xml,%3Csvg width='56' height='56' viewBox='0 0 56 56' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_173_33)'%3E%3Cpath d='M8 1H48C51.866 1 55 4.13401 55 8V48C55 51.866 51.866 55 48 55H8C4.13401 55 1 51.866 1 48V8C1 4.13401 4.13401 1 8 1Z' stroke='%23F7931D' stroke-width='2'/%3E%3Cpath d='M42.2221 20.9603L20.6711 42.5149C20.1994 42.9866 19.6395 43.3608 19.0233 43.6162C18.4071 43.8715 17.7466 44.003 17.0796 44.003C15.7324 44.0032 14.4404 43.4682 13.4877 42.5158C12.535 41.5633 11.9997 40.2714 11.9995 38.9243C11.9993 37.5771 12.5343 36.2851 13.4868 35.3324L35.0378 13.7778' stroke='%23F7931D' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M33.6437 29.5422L20.6711 42.5149C20.1994 42.9866 19.6395 43.3609 19.0233 43.6162C18.4071 43.8715 17.7466 44.003 17.0796 44.0031C15.7324 44.0033 14.4404 43.4683 13.4877 42.5158C12.535 41.5634 11.9997 40.2714 11.9995 38.9243C11.9993 37.5772 12.5343 36.2851 13.4868 35.3324L19.277 29.5422' fill='%23F7931D'/%3E%3Cpath d='M33.6437 29.5422L20.6711 42.5149C20.1994 42.9866 19.6395 43.3609 19.0233 43.6162C18.4071 43.8715 17.7466 44.003 17.0796 44.0031C15.7324 44.0033 14.4404 43.4683 13.4877 42.5158C12.535 41.5634 11.9997 40.2714 11.9995 38.9243C11.9993 37.5772 12.5343 36.2851 13.4868 35.3324L19.277 29.5422' stroke='%23F7931D' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M19.1099 29.7784H33.3326' stroke='%23F7931D' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M39.2612 37.5198L40.4439 36.2583L41.6265 37.5198C41.8156 37.741 41.9389 38.011 41.9822 38.299C42.0268 38.5951 41.985 38.8977 41.8618 39.1706C41.7386 39.4435 41.5393 39.675 41.2878 39.8374C41.0363 39.9998 40.7433 40.0862 40.4439 40.0862C40.1445 40.0862 39.8515 39.9998 39.5999 39.8374C39.3484 39.675 39.1491 39.4435 39.026 39.1706C38.9028 38.8977 38.861 38.5951 38.9055 38.299C38.9489 38.011 39.0722 37.741 39.2612 37.5198Z' fill='%23F7931D' stroke='%23F7931D' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M33.3325 12L43.9996 22.6671' stroke='%23F7931D' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_173_33'%3E%3Crect width='56' height='56' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
     --icon-approved-new: url("data:image/svg+xml,%3Csvg width='56' height='56' viewBox='0 0 56 56' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_174_41)'%3E%3Cpath d='M8 1H48C51.866 1 55 4.13401 55 8V48C55 51.866 51.866 55 48 55H8C4.13401 55 1 51.866 1 48V8C1 4.13401 4.13401 1 8 1Z' fill='%2338C704' stroke='%23FFF9E9' stroke-width='2'/%3E%3Cpath d='M16 28L24.6667 37L42 19' stroke='%23FFF9E9' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_174_41'%3E%3Crect width='56' height='56' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
     
@@ -29,6 +34,7 @@
     --icon-sliders: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-adjustments-horizontal'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 6l8 0' /%3E%3Cpath d='M16 6l4 0' /%3E%3Cpath d='M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 12l2 0' /%3E%3Cpath d='M10 12l10 0' /%3E%3Cpath d='M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' /%3E%3Cpath d='M4 18l11 0' /%3E%3Cpath d='M19 18l1 0' /%3E%3C/svg%3E");
     --icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-x'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M18 6l-12 12' /%3E%3Cpath d='M6 6l12 12' /%3E%3C/svg%3E");
     --icon-hamburger: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 25.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 120 120' style='enable-background:new 0 0 120 120;' xml:space='preserve'%3E%3Cpath class='st0' d='M105,65H15c-2.76,0-5-2.24-5-5v0c0-2.76,2.24-5,5-5h90c2.76,0,5,2.24,5,5v0C110,62.76,107.76,65,105,65z'/%3E%3Cpath class='st0' d='M105,20H15c-2.76,0-5-2.24-5-5v0c0-2.76,2.24-5,5-5h90c2.76,0,5,2.24,5,5v0C110,17.76,107.76,20,105,20z'/%3E%3Cpath class='st0' d='M105,110H15c-2.76,0-5-2.24-5-5v0c0-2.76,2.24-5,5-5h90c2.76,0,5,2.24,5,5v0C110,107.76,107.76,110,105,110z'/%3E%3C/svg%3E%0A");
+    --icon-pin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-pin'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M15 4.5l-4 4l-4 1.5l-1.5 1.5l7 7l1.5 -1.5l1.5 -4l4 -4' /%3E%3Cpath d='M9 15l-4.5 4.5' /%3E%3Cpath d='M14.5 4l5.5 5.5' /%3E%3C/svg%3E");
     
     --icon-fave-empty: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon icon-tabler icons-tabler-outline icon-tabler-heart'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572' /%3E%3C/svg%3E");
     --icon-fave-full: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='currentColor' class='icon icon-tabler icons-tabler-filled icon-tabler-heart'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z' /%3E%3C/svg%3E");
@@ -1244,10 +1250,12 @@ Phone items */
 
 main[list-mode="table"] div.group-container {
     display: table;
+    display: flex;
+    flex-direction: column;
 }
 
 article.table-phone-container {
-    
+    order: 1;
 }
 
 article.table-phone-container div {
@@ -1258,6 +1266,39 @@ article.table-phone-container div {
 
 div.list-contents[list-mode="table"] article.table-phone-container div + div {
     border-left: 1px solid transparent;
+}
+
+/* Pinned items */
+
+article.table-phone-container.pinned {
+    order: 0;
+}
+
+article.table-phone-container.pinned:nth-child(-n+10) {
+    display: none;
+}
+
+article.table-phone-container.pinned .table-phone-name {
+}
+
+article.table-phone-container.pinned .table-phone-name:before {
+    content: '';
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    margin: 0 1rem 0 0;
+    
+    background-color: var(--color-orange);
+    
+    mask-image: var(--icon-pin);
+    -webkit-mask-image: var(--icon-pin);
+    
+    mask-size: 100%;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
 }
 
 

@@ -1002,6 +1002,7 @@ function getDataFresh (json) {
                             'status': item['Status'] ? item['Status'] : '',
                             'tested': item['Crinacle-tested'] ? item['Crinacle-tested'].toLowerCase() : '',
                             'userFave': false,
+                            'pinned': item['Pinned'] ? item['Pinned'] : false,
                             '_end': ''
                         };
 
@@ -1594,6 +1595,15 @@ function buildTable(data, container) {
         phoneContainer.append(phoneConnection);
         
         container.append(phoneContainer);
+        
+        // Duplicate item if pinned
+        if (item.pinned) {
+            let pinnedClone = phoneContainer.cloneNode(true);
+            
+            pinnedClone.classList.add('pinned');
+            container.append(pinnedClone);
+        }
+        
     });
 }
 // Scroll table header with table

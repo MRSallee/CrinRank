@@ -45464,7 +45464,8 @@
         "Physical demo unit available now?": "Yes",
         "Measurement done?": "Yes",
         "Position": null,
-        "Remarks": null
+        "Remarks": null,
+        "Pinned": true
     },
     {
         "Brand": "Moondrop",
