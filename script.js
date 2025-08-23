@@ -1030,15 +1030,21 @@ function getDataFresh (json) {
 }
 
 // User favorites functions
-function toggleUserFave(item) {
-    let startingFaveState = item.userFave,
+function toggleUserFave(thisItem, data) {
+    let thisItemId = thisItem.itemId,
+        startingFaveState = thisItem.userFave,
         newFaveState = startingFaveState ? false : true,
         saveScroll = true;
     
-    item.userFave = newFaveState;
+    let itemsInData = data.filter(item => item.itemId === thisItemId);
+
+    itemsInData.forEach(function(itemInData) {
+        itemInData.userFave = newFaveState;
+    })
+
     applyState(state, saveScroll);
     
-    saveUserFaves(item, newFaveState);
+    saveUserFaves(thisItem, newFaveState);
 }
 
 function saveUserFaves(item, newFaveState) {
@@ -1068,7 +1074,6 @@ function readUserFaves(data) {
             faveInData.userFave = true;
         })
     });
-    
 }
 
 
@@ -1573,7 +1578,7 @@ function buildTable(data, container) {
         phoneContainer.append(phoneName);
         phoneContainer.append(phoneTested);
         phoneContainer.append(phoneFave);
-        phoneFave.addEventListener('click', () => toggleUserFave(item));
+        phoneFave.addEventListener('click', () => toggleUserFave(item, data));
         
         let phoneBuy = newElem('div', 'table-phone-buy'),
             phoneBuyLink = item.linkStore
@@ -1749,7 +1754,7 @@ function buildCards(data, container) {
             displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$ unknown',
             storePrice = newElem('span', 'phone-store-price', null, displayPrice);
         
-        linkFave.addEventListener('click', () => toggleUserFave(item));
+        linkFave.addEventListener('click', () => toggleUserFave(item, data));
         
         elemCardBody.append(bodyLinks);
         bodyLinks.append(linkFave);
