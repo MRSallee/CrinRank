@@ -217,6 +217,7 @@ let state = {
             'u-shaped': true,
             },
         },
+    'pinsActive': 0
     },
     stateDefaults = structuredClone(state);
 
@@ -1164,6 +1165,10 @@ function dataFilter(data, filters) {
         && meetsUserFaveFilter
     });
     
+    // Set active pin count
+    let activePinsCount = filteredData.filter(item => item.pinnedClone === true).length;
+    state.pinsActive = activePinsCount;
+    
     return filteredData;
 }
 
@@ -1571,7 +1576,12 @@ function buildTableHeader(data, container) {
 
 function buildTable(data, container) {
     // Handle each item in filtered + sorted list
-    data.forEach(function(item) {
+    data.forEach(function(item, i) {
+        // Skip item if pinned clone is too close
+        if (item.pinned && !item.pinnedClone && i < 10 + state.pinsActive) {
+            return;
+        }
+        
         let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
             phoneDisplayName = item.model.indexOf(item.brand) === -1 ? item.brand + ' ' + item.model : item.model,
             phoneName = newElem('div', 'table-phone-name', null, phoneDisplayName),
@@ -1674,7 +1684,12 @@ function buildCards(data, container) {
     let lastPriceBracket = '-1';
     
     // Handle each item in filtered + sorted list
-    data.forEach(function(item) {
+    data.forEach(function(item, i) {
+        // Skip item if pinned clone is too close
+        if (item.pinned && !item.pinnedClone && i < 10 + state.pinsActive) {
+            return;
+        }
+        
         // Price bracket divider
         let addPriceBracketDividers = stateP.sort.includes('price') ? true : false;
         
