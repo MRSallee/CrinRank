@@ -1002,11 +1002,17 @@ function getDataFresh (json) {
                             'status': item['Status'] ? item['Status'] : '',
                             'tested': item['Crinacle-tested'] ? item['Crinacle-tested'].toLowerCase() : '',
                             'userFave': false,
-                            'pinned': item['Pinned'] ? item['Pinned'] : false,
+                            'pinned': false,
                             '_end': ''
                         };
 
                         dataArr.push(itemObject);
+                        
+                        if (item['Pinned']) {
+                            let cloneObject = structuredClone(itemObject);
+                            cloneObject['pinned'] = true;
+                            dataArr.push(cloneObject);
+                        }
                     }
                 } catch {
                     console.log(item);
@@ -1039,6 +1045,8 @@ function saveUserFaves(item, newFaveState) {
     let faveObj = localStorage.getItem('userFaves') ? JSON.parse(localStorage.getItem('userFaves')) : [],
         indexOfitem = faveObj.indexOf(item.itemId);
     
+    console.log(item.pinned);
+    
     if (newFaveState) {
         indexOfitem > -1 ? '' : faveObj.push(item.itemId);
     } else {
@@ -1052,9 +1060,13 @@ function readUserFaves(data) {
     let faveObj = localStorage.getItem('userFaves') ? JSON.parse(localStorage.getItem('userFaves')) : [];
     
     faveObj.forEach(function(favorite) {
-        let faveInData = data.find(item => item.itemId === favorite);
+        let favesInData = data.filter(item => item.itemId === favorite);
         
-        faveInData ? faveInData.userFave = true : '';
+        console.log(favesInData);
+        
+        favesInData.forEach(function(faveInData) {
+            faveInData.userFave = true;
+        })
     });
     
 }
@@ -1157,13 +1169,15 @@ function dataFilter(data, filters) {
 // Sort functions
 function dataSort(data, sort) {
     data.sort(function(a, b) {
-        let brandA = a.brand.toLowerCase(),
+        let pinnedComparison = a.pinned > b.pinned ? -1 : a.pinned < b.pinned ? 1 : 0,
+            brandA = a.brand.toLowerCase(),
             brandB = b.brand.toLowerCase(),
             modelA = a.model.toLowerCase(),
             modelB = b.model.toLowerCase(),
             brandComparison = brandA > brandB ? 1 : brandB > brandA ? -1 : 0,
             modelComparison = modelA > modelB ? 1:  modelB > modelA ? -1 : 0,
-            alphaSort = brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
+            alphaSort = pinnedComparison != 0 ? pinnedComparison : brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
+            alphaSortReverse = pinnedComparison != 0 ? pinnedComparison : brandComparison != 0 ? -brandComparison : modelComparison != 0 ? -modelComparison : 0,
             priceA = parseInt(a.price),
             priceB = parseInt(b.price),
             priceSortable = priceA > 0 && priceB > 0 ? true : false;
@@ -1200,7 +1214,7 @@ function dataSort(data, sort) {
         } else if (sort === 'alpha') {
             return alphaSort;
         } else if (sort === 'alpha-reverse') {
-            return -(alphaSort);
+            return alphaSortReverse;
         } else {
             return 0;
         }
@@ -1596,12 +1610,13 @@ function buildTable(data, container) {
         
         container.append(phoneContainer);
         
-        // Duplicate item if pinned
+        // Add class if pinned
         if (item.pinned) {
-            let pinnedClone = phoneContainer.cloneNode(true);
-            
-            pinnedClone.classList.add('pinned');
-            container.append(pinnedClone);
+            phoneContainer.classList.add('pinned');
+//            let pinnedClone = phoneContainer.cloneNode(true);
+//            
+//            pinnedClone.classList.add('pinned');
+//            container.append(pinnedClone);
         }
         
     });

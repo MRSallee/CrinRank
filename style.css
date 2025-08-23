@@ -1271,11 +1271,11 @@ div.list-contents[list-mode="table"] article.table-phone-container div + div {
 /* Pinned items */
 
 article.table-phone-container.pinned {
-    order: 0;
+/*    order: 0;*/
 }
 
 article.table-phone-container.pinned:nth-child(-n+10) {
-    display: none;
+/*    display: none;*/
 }
 
 article.table-phone-container.pinned .table-phone-name {
