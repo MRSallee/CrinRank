@@ -303,6 +303,26 @@ article.card-container + article.card-container {
     margin-top: 4rem;
 }
 
+article.card-container.pinned .phone-model:before {
+    content: '';
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    margin: 0 1rem 0 0;
+    
+    background-color: currentColor;
+    
+    mask-image: var(--icon-pin);
+    -webkit-mask-image: var(--icon-pin);
+    
+    mask-size: 100%;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+
 
 
 /* -----
@@ -1270,17 +1290,6 @@ div.list-contents[list-mode="table"] article.table-phone-container div + div {
 
 /* Pinned items */
 
-article.table-phone-container.pinned {
-/*    order: 0;*/
-}
-
-article.table-phone-container.pinned:nth-child(-n+10) {
-/*    display: none;*/
-}
-
-article.table-phone-container.pinned .table-phone-name {
-}
-
 article.table-phone-container.pinned .table-phone-name:before {
     content: '';
     display: inline-block;
@@ -1300,6 +1309,7 @@ article.table-phone-container.pinned .table-phone-name:before {
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
 }
+
 
 
 /* ----

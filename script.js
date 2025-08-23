@@ -1011,6 +1011,7 @@ function getDataFresh (json) {
                         if (item['Pinned']) {
                             let cloneObject = structuredClone(itemObject);
                             cloneObject['pinned'] = true;
+                            cloneObject['priceBracket'] = '';
                             dataArr.push(cloneObject);
                         }
                     }
@@ -1174,15 +1175,15 @@ function dataFilter(data, filters) {
 // Sort functions
 function dataSort(data, sort) {
     data.sort(function(a, b) {
-        let pinnedComparison = a.pinned > b.pinned ? -1 : a.pinned < b.pinned ? 1 : 0,
+        let pinnedSort = a.pinned > b.pinned ? -1 : a.pinned < b.pinned ? 1 : 0,
             brandA = a.brand.toLowerCase(),
             brandB = b.brand.toLowerCase(),
             modelA = a.model.toLowerCase(),
             modelB = b.model.toLowerCase(),
             brandComparison = brandA > brandB ? 1 : brandB > brandA ? -1 : 0,
             modelComparison = modelA > modelB ? 1:  modelB > modelA ? -1 : 0,
-            alphaSort = pinnedComparison != 0 ? pinnedComparison : brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
-            alphaSortReverse = pinnedComparison != 0 ? pinnedComparison : brandComparison != 0 ? -brandComparison : modelComparison != 0 ? -modelComparison : 0,
+            alphaSort = pinnedSort != 0 ? pinnedSort : brandComparison != 0 ? brandComparison : modelComparison != 0 ? modelComparison : 0,
+            alphaSortReverse = pinnedSort != 0 ? pinnedSort : brandComparison != 0 ? -brandComparison : modelComparison != 0 ? -modelComparison : 0,
             priceA = parseInt(a.price),
             priceB = parseInt(b.price),
             priceSortable = priceA > 0 && priceB > 0 ? true : false;
@@ -1191,7 +1192,9 @@ function dataSort(data, sort) {
             if (priceSortable) {
                 // Sort: Price low to high
                 if (sort === 'priceLowHigh') {
-                    if (priceA > priceB) {
+                    if (pinnedSort) {
+                        return pinnedSort;
+                    } else if (priceA > priceB) {
                         return 1;
                     } else if (priceA < priceB) {
                         return -1;
@@ -1199,7 +1202,9 @@ function dataSort(data, sort) {
                         return 0;
                     }
                 } else if (sort === 'priceHighLow') {
-                    if (priceA > priceB) {
+                    if (pinnedSort) {
+                        return pinnedSort;
+                    } else if (priceA > priceB) {
                         return -1;
                     } else if (priceA < priceB) {
                         return 1;
@@ -1618,12 +1623,7 @@ function buildTable(data, container) {
         // Add class if pinned
         if (item.pinned) {
             phoneContainer.classList.add('pinned');
-//            let pinnedClone = phoneContainer.cloneNode(true);
-//            
-//            pinnedClone.classList.add('pinned');
-//            container.append(pinnedClone);
         }
-        
     });
 }
 // Scroll table header with table
@@ -1682,7 +1682,7 @@ function buildCards(data, container) {
         let addPriceBracketDividers = stateP.sort.includes('price') ? true : false;
         
         if (addPriceBracketDividers) {
-            let newPriceBracket = parseInt(item.priceBracket) === parseInt(lastPriceBracket) ? false : true;
+            let newPriceBracket = item.priceBracket ? parseInt(item.priceBracket) === parseInt(lastPriceBracket) ? false : true : false;
             
             if (newPriceBracket) {
                 let priceBracketHeadingText = item.priceBracket === 0 ? 'Price unknown' : item.priceBracket < 1000000 ? 'Up to ' + numDisplay(item.priceBracket, 'currency', 'usd', 0) : 'Price no limit',
@@ -1770,5 +1770,10 @@ function buildCards(data, container) {
         
         // Add finished card DOM
         container.append(elemCardContainer);
+        
+        // Add class if pinned
+        if (item.pinned) {
+            elemCardContainer.classList.add('pinned');
+        }
     });
 }
