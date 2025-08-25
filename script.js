@@ -723,8 +723,8 @@ function getDataFresh (json) {
                             'linkShop': phone.shopLink ? phone.shopLink : '',
                             'linkReview': phone.reviewLink ? phone.reviewLink : '',
                             'linkMeasurement': 'https://squig.link/',
-                            'price': phone.price ? phone.price.replaceAll('$', '') : 0,
-                            'priceBracket': phone.price ? getPriceBracket(parseInt(phone.price.replaceAll('$', ''))) : 0,
+                            'price': phone.price ? phone.price.replaceAll(/[$,]/g, '') : 0,
+                            'priceBracket': phone.price ? getPriceBracket(parseInt(phone.price.replaceAll(/[$,]/g, ''))) : 0,
                             'userFave': false
                         };
 
