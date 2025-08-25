@@ -985,8 +985,6 @@ function getDataFresh (json) {
                     let brandName = brand.name;
                     
                     brand.phones.forEach(function(phone) {
-//                        console.log(phone);
-                    
                         let phoneObject = {
                             'brand': brandName,
                             'model': phone.name,
@@ -994,10 +992,9 @@ function getDataFresh (json) {
                             'reviewScore': phone.reviewScore ? phone.reviewScore : '',
                             'linkShop': phone.shopLink ? phone.shopLink : '',
                             'linkReview': phone.reviewLink ? phone.reviewLink : '',
-                            //'linkMeasurement': '?share=' + phone.file.replaceAll(' ', '_'),
                             'linkMeasurement': 'https://squig.link/',
                             'price': phone.price ? phone.price.replaceAll('$', '') : 0,
-                            'priceBracket': getPriceBracket(parseInt(phone.price)),
+                            'priceBracket': phone.price ? getPriceBracket(parseInt(phone.price.replaceAll('$', ''))) : 0,
                             'userFave': false
                         };
 
