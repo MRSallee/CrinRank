@@ -930,7 +930,7 @@ function applyUrlToState() {
 // Data handlng
 
 // Set data variables
-let json = 'data.json',
+let json = 'https://squig.link/data/phone_book.json',
     freshData = getDataFresh(json),
     jqueryLoaded = false;
 
@@ -980,37 +980,34 @@ function getDataFresh (json) {
         $.getJSON(json, function(data) {
         })
         .then(function(data) {
-            data.forEach(function(item) {
+            data.forEach(function(brand) {
                 try {
-                    if (item['Brand'] && item['IEM Model']) {
-                        let itemObject = {
-                            'itemId': item['Brand'] ? item['Brand'].toString().toLowerCase().replaceAll(' ', '') + item['IEM Model'].toString().toLowerCase().replaceAll(' ', '') : item['IEM Model'] ? item['IEM Model'].toString().toLowerCase().replaceAll(' ', '') : 'unknown',
-                            'approved': item['Crinacle Approved ✔️'] ? 'yes' : 'no',
-                            'brand': item['Brand'] ? item['Brand'] : '',
-                            'connection': item['Connection'] ? item['Connection'] : '',
-                            'demoable': item['Available at Hangout for Demo'] === 'Yes' ? true : false,
-                            'drivers': item['Driver Configuration'] ? item['Driver Configuration'] : '',
-                            'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
-                            'linkShowcase': item['Showcase Link (YouTube)'] ? item['Showcase Link (YouTube)'] : '',
-                            'linkMeasurement': item['Measurement Link'] ? item['Measurement Link'] : '',
-                            'linkStore': item['Hangout Store Link'] ? item['Hangout Store Link'] : '',
-                            'model': item['IEM Model'] ? item['IEM Model'] : '',
-                            'price': item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : 0,
-                            'priceBracket': getPriceBracket(item['Price (MSRP, USD)'] ? parseInt(item['Price (MSRP, USD)']) : ''),
-                            'remarks': item['Remarks'] ? item['Remarks'] : '',
-                            'signature': item['Sound Signature'] ? item['Sound Signature'] : '',
-                            'status': item['Status'] ? item['Status'] : '',
-                            'tested': item['Crinacle-tested'] ? item['Crinacle-tested'].toLowerCase() : '',
-                            'userFave': false,
-                            '_end': ''
+                    let brandName = brand.name;
+                    
+                    brand.phones.forEach(function(phone) {
+//                        console.log(phone);
+                    
+                        let phoneObject = {
+                            'brand': brandName,
+                            'model': phone.name,
+                            'phoneId': brandName.toString().toLowerCase().replaceAll(' ', '') + phone.name.toString().toLowerCase().replaceAll(' ', ''),
+                            'reviewScore': phone.reviewScore ? phone.reviewScore : '',
+                            'linkShop': phone.shopLink ? phone.shopLink : '',
+                            'linkReview': phone.reviewLink ? phone.reviewLink : '',
+                            //'linkMeasurement': '?share=' + phone.file.replaceAll(' ', '_'),
+                            'linkMeasurement': 'https://squig.link/',
+                            'price': phone.price ? phone.price.replaceAll('$', '') : 0,
+                            'priceBracket': getPriceBracket(parseInt(phone.price)),
+                            'userFave': false
                         };
 
-                        dataArr.push(itemObject);
-                    }
+                        dataArr.push(phoneObject);
+                    });
                 } catch {
-                    console.log(item);
+                    console.log(brand, 'Whiff!');
                 }
             });
+            console.log(dataArr);
         })
         .then(function() {
             readUserFaves(freshData);
