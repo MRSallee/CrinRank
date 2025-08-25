@@ -10,7 +10,6 @@ function newElem(type, classes, attributes, content) {
     
     if (attributes) {
         attributes.forEach(function(attribute) {
-            //element.setAttribute(attribute.key.toLowerCase().replace(' ', '-'), attribute.val.toLowerCase().replace(' ', '-'));
             element.setAttribute(attribute.key, attribute.val);
         })
     }
@@ -1064,81 +1063,18 @@ function dataFilter(data, filters) {
             meetsMinPrice =  filters.price.priceMin > 0 ? item.price >= filters.price.priceMin : true,
             meetsMaxPrice =  filters.price.priceMax > 0 ? item.price <= filters.price.priceMax : true,
             
-            // Driver filters
-            isBa = item.drivers.toLowerCase().indexOf('ba') > -1 ? 1 : 0,
-            isDd = item.drivers.toLowerCase().indexOf('dd') > -1 ? 1 : 0,
-            isEst = item.drivers.toLowerCase().indexOf('est') > -1 ? 1 : 0,
-            isPlanar = item.drivers.toLowerCase().indexOf('planar') > -1 ? 1 : 0,
-            isPzt = item.drivers.toLowerCase().indexOf('pzt') > -1 ? 1 : 0,
-            isHybrid = isBa + isDd + isEst + isPlanar + isPzt >= 2 ? true : false,
-            isNotHybrid = isBa + isDd + isEst + isPlanar + isPzt < 2 ? true : false,
-            driverTypeFilterActive = filters.drivers.ba ? true : filters.drivers.dd ? true : filters.drivers.est ? true : filters.drivers.planar ? true : filters.drivers.pzt ? true : false,
-            driverComboFilterActive = filters.drivers.hybrid ? true : filters.drivers.notHybrid ? true : false,
-            meetsDriverBaFilter = filters.drivers.ba ? isBa : true,
-            meetsDriverDdFilter = filters.drivers.dd ? isDd : true,
-            meetsDriverEstFilter = filters.drivers.est ? isEst : true,
-            meetsDriverPlanarFilter = filters.drivers.planar ? isPlanar : true,
-            meetsDriverPztFilter = filters.drivers.pzt ? isPzt : true,
-            meetsDriverHybridFilter = filters.drivers.hybrid ? isHybrid : false,
-            meetsDriverNotHybridFilter = filters.drivers.notHybrid ? isNotHybrid : false,
-            meetsDriverTypeFilter = driverTypeFilterActive ? (meetsDriverBaFilter && meetsDriverDdFilter && meetsDriverEstFilter && meetsDriverPlanarFilter && meetsDriverPztFilter) ? 1 : 0 : 1,
-            meetsDriverComboFilter = driverComboFilterActive ? (meetsDriverHybridFilter | meetsDriverNotHybridFilter) ? 1 : 0 : 1,
-            
-            // Connection filters
-            connectionFilterActive = filters.connection.mmcx ? true : filters.connection.twopin ? true : filters.connection.twopinExtruded ? true : filters.connection.ipx ? true : filters.connection.pentaconn ? true : filters.connection.proprietary ? true : filters.connection.fixedCable ? true : filters.connection.wirelessTws ? true :  filters.connection.wirelessCabled ? true : 0,
-            meetsConnectionMmcxFilter = filters.connection.mmcx ? item.connection.toLowerCase().indexOf('mmcx') > -1 : false,
-            meetsConnectionTwopinFilter = filters.connection.twopin ? (item.connection.toLowerCase().indexOf('2-pin') > -1 && item.connection.toLowerCase().indexOf('extruded 2-pin') === -1) : false,
-            meetsConnectionTwopinExtrudedFilter = filters.connection.twopinExtruded ? item.connection.toLowerCase().indexOf('extruded 2-pin') > -1 : false,
-            meetsConnectionIpxFilter = filters.connection.ipx ? item.connection.toLowerCase().indexOf('ipx') > -1 : false,
-            meetsConnectionPentaconnFilter = filters.connection.pentaconn ? item.connection.toLowerCase().indexOf('pentaconn') > -1 : false,
-            meetsConnectionProprietaryFilter = filters.connection.proprietary ? item.connection.toLowerCase().indexOf('proprietary') > -1 : false,
-            meetsConnectionFixedCableFilter = filters.connection.fixedCable ? item.connection.toLowerCase().indexOf('fixed cable') > -1 : false,
-            meetsConnectionWirelessTwsFilter = filters.connection.wirelessTws ? item.connection.toLowerCase().indexOf('true wireless') > -1 : false,
-            meetsConnectionWirelessCabledFilter = filters.connection.wirelessCabled ? item.connection.toLowerCase().indexOf('cabled wireless') > -1 : false,
-            meetsConnectionFilter =  connectionFilterActive ? (meetsConnectionMmcxFilter | meetsConnectionTwopinFilter | meetsConnectionTwopinExtrudedFilter | meetsConnectionIpxFilter | meetsConnectionPentaconnFilter | meetsConnectionProprietaryFilter | meetsConnectionFixedCableFilter | meetsConnectionWirelessTwsFilter | meetsConnectionWirelessCabledFilter) : 1,
-            
-            // Availability filters
-            meetsBuyableFilter = filters.availability.buyableOnly ? item.linkStore.length > 0 : true,
-            meetsDiscontinuedFilter = filters.availability.discontinued ? item.status.toLowerCase().indexOf('discontinued') < 0 : true,
-        
-            // Featured filters
-            meetsTestedFilter = filters.featured.crinTestedOnly ? item.tested === 'yes' : true,
-            meetsApprovedFilter = filters.featured.crinApprovedOnly ? item.approved === 'yes' : true,
+            // Other filters
             meetsUserFaveFilter = filters.featured.userFavesOnly ? item.userFave : true;
-        
+            
         // Search filter
+        console.log(fullName);
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
         // Price filters
         && meetsMinPrice
         && meetsMaxPrice
         
-        // Demo filter
-        && meetsDemoFilter
-        
-        // Driver filters
-        && meetsDriverTypeFilter
-        && meetsDriverComboFilter
-        
-        // Connection filters
-//        && meetsConnectionMmcxFilter
-//        && meetsConnectionTwopinFilter
-//        && meetsConnectionTwopinExtrudedFilter
-//        && meetsConnectionIpxFilter
-//        && meetsConnectionPentaconnFilter
-//        && meetsConnectionProprietaryFilter
-//        && meetsConnectionFixedCableFilter
-//        && meetsConnectionWirelessTwsFilter
-//        && meetsConnectionWirelessCabledFilter
-        && meetsConnectionFilter
-        
-        // Availability filters
-        && meetsBuyableFilter
-        && meetsDiscontinuedFilter
-        
         // Featured filters
-        && meetsTestedFilter
-        && meetsApprovedFilter
         && meetsUserFaveFilter
     });
     
@@ -1543,9 +1479,13 @@ function buildTableHeader(data, container) {
 
 function buildTable(data, container) {
     // Handle each item in filtered + sorted list
+    console.log(data);
     data.forEach(function(item) {
+        console.warn('!!');
+        console.log(item);
+        
         let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
-            phoneDisplayName = item.model.indexOf(item.brand) === -1 ? item.brand + ' ' + item.model : item.model,
+            phoneDisplayName =item.model,
             phoneName = newElem('div', 'table-phone-name', null, phoneDisplayName),
             phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]),
             phoneFave = newElem('div', 'table-phone-fave', [{'key': 'is-user-fave', 'val': item.userFave}]);
