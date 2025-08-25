@@ -734,7 +734,6 @@ function getDataFresh (json) {
                     console.log(brand, 'Whiff!');
                 }
             });
-            console.log(dataArr);
         })
         .then(function() {
             readUserFaves(freshData);
@@ -798,7 +797,6 @@ function dataFilter(data, filters) {
             meetsUserFaveFilter = filters.featured.userFavesOnly ? item.userFave : true;
             
         // Search filter
-        console.log(fullName);
         return fullName.toLowerCase().includes(filters.searchString.toLowerCase())
         
         // Price filters
@@ -1215,8 +1213,8 @@ function buildTable(data, container) {
         console.warn('!!');
         console.log(item);
         
-        let phoneContainer = newElem('article', 'table-phone-container', [{'key': 'status', 'val': item.status.toLowerCase().replace(' ', '-')}]),
-            phoneDisplayName =item.model,
+        let phoneContainer = newElem('article', 'table-phone-container'),
+            phoneDisplayName = item.brand + ' ' + item.model,
             phoneName = newElem('div', 'table-phone-name', null, phoneDisplayName),
             phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]),
             phoneFave = newElem('div', 'table-phone-fave', [{'key': 'is-user-fave', 'val': item.userFave}]);
