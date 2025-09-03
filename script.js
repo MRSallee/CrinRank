@@ -51,36 +51,36 @@ function initSiteHeader() {
         siteHeaderToggle = newElem('button', 'site-header-toggle'),
         siteHeaderData = {
             'logo': {
-                'imageUrl': 'https://graph.hangout.audio/hangout-logo-white-text.svg',
+                'imageUrl': 'https://squig.link/squiglink-logo-w.png',
                 'linkUrl': 'https://hangout.audio/',
             },
             'links': [
                 {
-                    'label': 'Hangout.Audio Store',
+                    'label': 'IEM graphs',
                     'linkUrl': ''
                 },
                 {
-                    'label': 'Graph Comparison Tools',
+                    'label': 'Headphone graphs',
                     'linkUrl': ''
                 },
                 {
-                    'label': 'The List',
+                    'label': 'Merch',
                     'linkUrl': ''
                 },
             ],
             'linksSocial': [
                 {
                     'label': '&#xf167;',
-                    'linkUrl': 'https://www.youtube.com/@HangoutAudio',
+                    'linkUrl': '',
                 },
-                {
-                    'label': '&#xf392;',
-                    'linkUrl': 'https://www.Discord.com',
-                },
-                {
-                    'label': '&#xf16d;',
-                    'linkUrl': 'https://www.instagram.com',
-                },
+//                {
+//                    'label': '&#xf392;',
+//                    'linkUrl': 'https://www.Discord.com',
+//                },
+//                {
+//                    'label': '&#xf16d;',
+//                    'linkUrl': 'https://www.instagram.com',
+//                },
             ],
         };
     siteHeaderContainer.append(siteHeaderToggle);

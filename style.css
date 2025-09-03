@@ -1,6 +1,6 @@
 :root {
     --color-white: #fff;
-    --color-black: #000;
+    --color-black: #0C091B;
     --color-gray-light: #eee;
     --color-gray-dark: #999;
     --color-cream: #FFF9E9;
@@ -11,7 +11,31 @@
     --color-shade-dark: rgba(0,0,0, 0.1);
     --color-shade-faux: #f7f1e3;
     
-    --border-faint: 1px solid var(--color-shade-dark);
+    --color-black: #000;
+    --color-white: #fff;
+    
+    --color-dark-1: #0A0E10;
+    --color-dark-2: #131C20;
+    --color-dark-3: #263740;
+    --color-dark-4: #395360;
+    --color-dark-5: #4D6F80;
+    
+    --color-light-1: #EFF3F5;
+    --color-light-2: #E0E7EB;
+    --color-light-3: #C1CFD7;
+    --color-light-4: #A2B7C3;
+    --color-light-5: #839FAF;
+    
+    --color-yellow-dark: #E5D200;
+    --color-yellow-light: #FFEE33;
+    --color-blue-dark: #00AACC;
+    --color-blue-light: #33DDFF;
+    --color-magenta-dark: #BF00E5;
+    --color-magenta-light: #E566FF;
+    --color-red-dark: #E54D00;
+    --color-red-light: #FF7733;
+    --color-green-dark: #00B277;
+    --color-green-light: #;
     
     --font-primary: "Golos Text", sans-serif;
     
@@ -49,8 +73,8 @@ html {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
     
-    scrollbar-color: var(--color-cream) var(--color-white);
-    scrollbar-color: var(--color-shade-light) var(--color-cream);
+    scrollbar-color: var(--color-dark) var(--color-dark);
+    scrollbar-color: var(--color-black) var(--color-dark);
     scroll-behavior: smooth;
 }
 
@@ -73,7 +97,7 @@ body {
     line-height: 1em;
     letter-spacing: -0.02em;
     
-    background-color: var(--color-cream);
+    background-color: var(--color-dark);
     
     overflow-x: hidden;
     scrollbar-gutter: stable;
@@ -94,7 +118,7 @@ header.site-header {
     flex: 48px 0 0;
     width: 100%;
     
-    background-color: var(--color-brown);
+    background-color: var(--color-black);
     
     overflow: hidden;
 }
@@ -107,7 +131,7 @@ button.site-header-toggle {
     height: 36px;
     margin: 0 auto 0 0;
     
-    background-color: var(--color-cream);
+    background-color: var(--color-white);
     border: none;
     
     mask: var(--icon-hamburger);
@@ -200,7 +224,7 @@ a.site-header-link.social {
         width: 100%;
         height: calc(100dvh - 48px);
         
-        background-color: var(--color-cream);
+        background-color: var(--color-white);
         
         transform: translateX(-100vw);
     }
@@ -287,7 +311,7 @@ article.card-container {
     display: flex;
     flex-direction: column;
     
-	border: 1px solid var(--color-orange);
+	border: 1px solid var(--color-yellow);
     border-radius: 2rem;
     
     overflow: hidden;
@@ -330,10 +354,10 @@ section.filter-result-container {
     padding: 4rem 0;
     margin: 0 0 4rem 0;
     
-    background-color: var(--color-cream);
+    background-color: var(--color-dark);
     border-bottom: var(--border-faint);
     
-    color: var(--color-brown);
+    color: var(--color-gray-dark);
     font-size: 3rem;
     line-height: 8rem;
 }
@@ -370,7 +394,7 @@ h3.control-heading {
     
     font-size: 4rem;
     line-height: 1em;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 h4.toggle-heading {
@@ -449,7 +473,7 @@ label.toggle-label input + span.toggle-slider:before {
 }
 
 label.toggle-label input:checked + span.toggle-slider {
-    background-color: var(--color-cream);
+    background-color: var(--color-white);
     border: 1px solid var(--color-shade-dark);
 }
 
@@ -457,8 +481,8 @@ label.toggle-label input:checked + span.toggle-slider:before {
     left: auto;
     left: calc(8rem);
     
-    background-color: var(--color-orange);
-    border: 1px solid var(--color-orange);
+    background-color: var(--color-yellow);
+    border: 1px solid var(--color-yellow);
 }
 
 section.list-filters-container article.toggle-container {
@@ -506,8 +530,8 @@ input.min::placeholder {
 input.search-input:not(:placeholder-shown),
 input.max:not(:placeholder-shown),
 input.min:not(:placeholder-shown) {
-    background-color: var(--color-cream);
-    border: 1px solid var(--color-orange);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-light);
 }
 
 input.search-input {
@@ -555,7 +579,7 @@ section.control-dropdown:after {
     height: 5rem;
     margin: 0 1rem 0 0;
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     
     mask-image: var(--icon-chevron);
     -webkit-mask-image: var(--icon-chevron);
@@ -576,8 +600,8 @@ select.controls-dropdown {
     height: 8rem;
     padding: 0 3rem;
     
-    background-color: var(--color-cream);
-    border: 1px solid var(--color-orange);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-light);
     border-radius: 8rem;
     outline: none;
     
@@ -631,7 +655,7 @@ section[control-id="listMode"] label:before {
     height: 8rem;
     margin: 0;
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     
     mask-image: var(--icon-sliders);
     -webkit-mask-image: var(--icon-sliders);
@@ -675,7 +699,7 @@ section.list-manager-container {
     display: flex;
     padding: 4rem 0;
     
-    background-color: var(--color-cream);
+    background-color: var(--color-white);
     border-bottom: var(--border-faint);
 }
 
@@ -713,7 +737,7 @@ h2.price-bracket-heading {
     padding: 12rem 0 4rem 0;
     margin: 0 0 4rem 0;
     
-    background-color: var(--color-cream);
+    background-color: var(--color-white);
     border-bottom: var(--border-faint);
     
     color: var(--color-brown);
@@ -732,7 +756,7 @@ section.card-header {
     
     padding: 4rem;
     
-    border-bottom: 1px solid var(--color-orange);
+    border-bottom: 1px solid var(--color-yellow);
 }
 
 div.phone-id {
@@ -745,7 +769,7 @@ div.phone-brand {
 }
 
 div.phone-model {
-    font-weight: 700;
+    font-weight: 600;
 	font-size: 6rem;
     line-height: 6rem;
 }
@@ -819,10 +843,10 @@ a.phone-link {
     
     padding: 4rem;
     
-    border: 1px solid var(--color-orange);
+    border: 1px solid var(--color-yellow);
     border-radius: 2rem;
     
-    color: var(--color-orange);
+    color: var(--color-yellow);
     font-size: 4rem;
     line-height: 5rem;
     text-decoration: none;
@@ -840,14 +864,14 @@ a.phone-link-fave[is-user-fave="true"] {
     background-color: var(--color-red);
     border: 1px solid var(--color-red);
     
-    color: var(--color-cream);
+    color: var(--color-white);
 }
 
 a.phone-link-store {
-	background-color: var(--color-orange);
-    border: 1px solid var(--color-orange);
+	background-color: var(--color-yellow);
+    border: 1px solid var(--color-yellow);
     
-    color: var(--color-cream);
+    color: var(--color-white);
 }
 
 a.phone-link-store:not([href]) {
@@ -863,7 +887,7 @@ a.phone-link-store:not([href]) {
 span.phone-store-price {
     margin: 0 0 0 auto;
     
-    font-weight: 700;
+    font-weight: 600;
     font-size: 5rem;
     line-height: 5rem;
 }
@@ -880,7 +904,7 @@ a.phone-link:before {
     height: 5rem;
     margin: 0 1rem 0 0;
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     
     mask-image: var(--icon-gear);
     -webkit-mask-image: var(--icon-gear);
@@ -953,7 +977,7 @@ section.card-footer {
     border-top: 1px solid var(--color-gray-dark);
     background-color: var(--color-gray-light);
     
-    color: var(--color-cream);
+    color: var(--color-white);
     color: var(--color-gray-dark);
     font-size: 4rem;
     line-height: 1em;
@@ -997,8 +1021,8 @@ article[data-approved="true"] {
 Approved styles: Half dark */
 
 article[data-approved="true"] section.card-header  {
-    background-color: var(--color-orange);
-    border-color: var(--color-cream);
+    background-color: var(--color-yellow);
+    border-color: var(--color-white);
     
     color: var(--color-white);
 }
@@ -1044,10 +1068,10 @@ article[data-discontinued="true"] a.phone-link-store:not([href]) {
 }
 
 article[data-discontinued="true"] a.phone-link-store {
-	background-color: var(--color-orange);
-    border: 1px solid var(--color-orange);
+	background-color: var(--color-yellow);
+    border: 1px solid var(--color-yellow);
     
-    color: var(--color-cream);
+    color: var(--color-white);
 }
 
 article[data-discontinued="true"] div.phone-tested {
@@ -1055,7 +1079,7 @@ article[data-discontinued="true"] div.phone-tested {
 }
 
 article[data-discontinued="true"] a.phone-link:not(.phone-link-store):before {
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
 }
 
 
@@ -1189,7 +1213,7 @@ section.list-table.table-header {
 
 article.table-head {
     width: 330rem;
-    background-color: var(--color-shade-faux);
+    background-color: var(--color-gray-light);
 }
 
 article.table-head div {
@@ -1199,7 +1223,7 @@ article.table-head div {
     box-sizing: border-box;
     padding: 4rem 2rem;
     
-    background-color: var(--color-shade-faux);
+    background-color: var(--color-gray-light);
     border-bottom: var(--border-faint);
 }
 
@@ -1213,7 +1237,7 @@ article.table-head div.table-head-name {
     
     padding: 4rem;
     
-    background: linear-gradient(to right, var(--color-shade-faux) calc(100% - 4rem), transparent);
+    background: linear-gradient(to right, var(--color-gray-light) calc(100% - 4rem), transparent);
 }
 
 div.table-head-tested {
@@ -1277,9 +1301,9 @@ div.table-phone-name {
     
     font-size: 4rem;
     line-height: 1em;
-    font-weight: 700;
+    font-weight: 600;
     
-    background: linear-gradient(to right, var(--color-cream) calc(100% - 4rem), transparent);
+    background: linear-gradient(to right, var(--color-white) calc(100% - 4rem), transparent);
 }
 
 div.table-phone-tested {
@@ -1329,7 +1353,7 @@ div.table-phone-fave:before {
     
     line-height: 4rem;
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     
     mask-image: var(--icon-fave-empty);
     -webkit-mask-image: var(--icon-fave-empty);
@@ -1365,7 +1389,7 @@ div.table-phone-demoable:before {
 div.table-phone-demoable[data-demoable="true"]:before {
     content: 'Yes';
     
-    color: var(--color-orange);
+    color: var(--color-yellow);
 }
 
 div.table-phone-buy {
@@ -1378,10 +1402,10 @@ a.table-phone-buy-link {
     
     padding: 2rem;
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     border-radius: 2rem;
     
-    color: var(--color-cream);
+    color: var(--color-white);
     text-decoration: none;
 }
 
@@ -1391,7 +1415,7 @@ a.table-phone-buy-link[href]:before {
     height: 5rem;
     margin: 0 1rem 0 0;
     
-    background-color: var(--color-cream);
+    background-color: var(--color-white);
     
     mask-image: var(--icon-shop);
     -webkit-mask-image: var(--icon-shop);
@@ -1428,7 +1452,7 @@ a.table-phone-showcase-link {
     width: 14rem;
     height: 9rem;
     
-    border: 1px solid var(--color-orange);
+    border: 1px solid var(--color-yellow);
     border-radius: 2rem;
 }
 
@@ -1438,7 +1462,7 @@ a.table-phone-showcase-link:before {
     width: 5rem;
     height: calc(9rem - 2px);
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     
     mask-image: var(--icon-youtube);
     -webkit-mask-image: var(--icon-youtube);
@@ -1462,7 +1486,7 @@ a.table-phone-graph-link {
     width: 14rem;
     height: 9rem;
     
-    border: 1px solid var(--color-orange);
+    border: 1px solid var(--color-yellow);
     border-radius: 2rem;
 }
 
@@ -1472,7 +1496,7 @@ a.table-phone-graph-link:before {
     width: 5rem;
     height: calc(9rem - 2px);
     
-    background-color: var(--color-orange);
+    background-color: var(--color-yellow);
     
     mask-image: var(--icon-chart);
     -webkit-mask-image: var(--icon-chart);
@@ -1543,7 +1567,7 @@ Mobile styles */
         height: calc(100dvh - 48px);
         padding-bottom: 0;
       
-        background-color: var(--color-cream);
+        background-color: var(--color-white);
         overflow-y: scroll;
         
         transform: translateY(-100vh);
