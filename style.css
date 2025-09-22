@@ -397,7 +397,7 @@ section.filter-result-container {
     background-color: var(--color-base-2);
     border-bottom: 1px solid var(--color-base-3);
     
-    color: var(--color-light-5);
+    color: var(--color-alt-5);
     font-size: 3rem;
     line-height: 8rem;
 }
@@ -488,42 +488,38 @@ label.toggle-label input + span.toggle-slider {
     
     flex: 16rem 0 0;
     height: 100%;
-    background-color: var(--color-shade-light);
-    border: 1px solid var(--color-shade-dark);
+    background-color: var(--color-base-2);
+    border: 1px solid var(--color-base-3);
     border-radius: 4rem;
-    box-shadow: inset 0 1rem 1rem rgba(0,0,0, 0.05);
     
     transition: justify-content 0.4s ease;
 }
 
 label.toggle-label input + span.toggle-slider:before {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 4px;
+    left: 4px;
     
     content: '';
     box-sizing: border-box;
-    width: calc(8rem - 2px);
-    height: calc(8rem - 2px);
+    width: calc(8rem - 10px);
+    height: calc(8rem - 10px);
     
-    border: 1px solid var(--color-shade-dark);
-    background-color: var(--color-shade-light);
+    background-color: var(--color-base-4);
     border-radius: 8rem;
     
-    transition: left 0.1s ease;
+    transition: left 0.2s ease;
 }
 
 label.toggle-label input:checked + span.toggle-slider {
-    background-color: var(--color-white);
-    border: 1px solid var(--color-shade-dark);
+    background-color: var(--color-base-1);
 }
 
 label.toggle-label input:checked + span.toggle-slider:before {
     left: auto;
-    left: calc(8rem);
+    left: calc(8rem + 4px);
     
-    background-color: var(--color-yellow);
-    border: 1px solid var(--color-yellow);
+    background-color: var(--color-base-5);
 }
 
 section.list-filters-container article.toggle-container {
@@ -555,7 +551,7 @@ input.min {
     background-color: var(--color-base-1);
     border: 1px solid var(--color-base-3);
     
-    color: var(--color-alt-1);
+    color: var(--color-alt-5);
     font-family: var(--font-primary);
     font-size: 3rem;
     line-height: 4rem;
@@ -647,7 +643,7 @@ select.controls-dropdown {
     border-radius: 8rem;
     outline: none;
     
-    color: var(--color-base-5);
+    color: var(--color-alt-5);
     font-family: var(--font-primary);
     font-size: 3rem;
     line-height: 4rem;
@@ -816,21 +812,13 @@ div.phone-model {
     line-height: 6rem;
 }
 
-div.phone-tested  {
+div.phone-score  {
 	flex: 10rem 0 0;
     height: 10rem;
     
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-div.phone-tested[crin-tested='yes'] {
-	background-image: var(--icon-tested-new);
-}
-
-div.phone-tested[crin-approved='yes'] {
-	background-image: var(--icon-approved-new);
 }
 
 
@@ -1182,7 +1170,7 @@ div.table-phone-name {
 
 div.table-head-tested,
 div.table-head-fave,
-div.table-phone-tested,
+div.table-phone-review,
 div.table-phone-fave {
     box-sizing: border-box;
     display: table-cell;
@@ -1256,6 +1244,8 @@ section.list-table.table-header {
 article.table-head {
     width: 330rem;
     background-color: var(--color-base-3);
+    border-radius: 2rem;
+    overflow: hidden;
 }
 
 article.table-head div {
@@ -1349,14 +1339,14 @@ div.table-phone-name {
     background: linear-gradient(to right, var(--color-base-2) calc(100% - 4rem), transparent);
 }
 
-div.table-phone-tested {
+div.table-phone-review {
     padding: 0 2rem;
     
     vertical-align: middle;
     text-align: center;
 }
 
-div.table-phone-tested:before {
+div.table-phone-review:before {
     content: '';
     
     display: inline-block;
@@ -1368,14 +1358,6 @@ div.table-phone-tested:before {
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-div.table-phone-tested[crin-tested='yes']:before {
-	background-image: var(--icon-tested-new);
-}
-
-div.table-phone-tested[crin-approved='yes']:before {
-	background-image: var(--icon-approved-new);
 }
 
 div.table-phone-fave {
@@ -1474,7 +1456,7 @@ a.table-phone-buy-link[href]:before {
 a.table-phone-buy-link:not([href]) {
     background-color: transparent;
     
-    color: var(--color-gray-dark);
+    color: var(--color-alt-5);
 }
 
 span.table-phone-price {
@@ -1529,7 +1511,7 @@ a.table-phone-graph-link {
     width: 14rem;
     height: 9rem;
     
-    background-color: var(--color-base-3);
+    background-color: var(--color-blue);
     border-radius: 2rem;
 }
 

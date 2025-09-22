@@ -720,6 +720,7 @@ function getDataFresh (json) {
                             'model': phone.name,
                             'phoneId': brandName.toString().toLowerCase().replaceAll(' ', '') + phone.name.toString().toLowerCase().replaceAll(' ', ''),
                             'reviewScore': phone.reviewScore ? phone.reviewScore : '',
+                            'description': phone.description ? phone.description : '',
                             'linkShop': phone.shopLink ? phone.shopLink : '',
                             'linkReview': phone.reviewLink ? phone.reviewLink : '',
                             'linkMeasurement': 'https://squig.link/',
@@ -1178,27 +1179,18 @@ function buildTableHeader(data, container) {
         let tableBody = newElem('section', 'list-table table-header'),
             tableHead = newElem('article', 'table-head'),
             headName = newElem('div', 'table-head-name', null, 'Name'),
-            headTested = newElem('div', 'table-head-tested', null, 'Tested / Approved?'),
             headFave = newElem('div', 'table-head-fave', null, 'My fave'),
             headBuy = newElem('div', 'table-head-buy', null, 'Price'),
-            headDemoable = newElem('div', 'table-head-demoable', null, 'Demo @ The Hangout?'),
-            headShowcase = newElem('div', 'table-head-showcase', null, 'Showcase'),
-            headMeasurement = newElem('div', 'table-head-measurement', null, 'Graph'),
-            headSignature = newElem('div', 'table-head-signature', null, 'Sound signature'),
-            headDrivers = newElem('div', 'table-head-drivers', null, 'Driver config'),
-            headConnection = newElem('div', 'table-head-connection', null, 'Connection');
-        tableHead.append(headName);
-        tableHead.append(headTested);
+            headReview = newElem('div', 'table-head-showcase', null, 'Review'),
+            headGraph = newElem('div', 'table-head-graph', null, 'Graph'),
+            headDescription = newElem('div', 'table-head-description', null, 'Description');
         tableHead.append(headFave);
+        tableHead.append(headName);
+        tableHead.append(headReview);
         tableHead.append(headBuy);
-        tableHead.append(headDemoable);
-        tableHead.append(headShowcase);
-        tableHead.append(headMeasurement);
-        tableHead.append(headSignature);
-        tableHead.append(headDrivers);
-        tableHead.append(headConnection);
+        tableHead.append(headGraph);
+        tableHead.append(headDescription);
         tableBody.append(tableHead);
-//        elemListContents.prepend(tableBody);
         elemListContents.insertAdjacentElement('beforebegin', tableBody)
     }
     
@@ -1216,31 +1208,29 @@ function buildTable(data, container) {
         let phoneContainer = newElem('article', 'table-phone-container'),
             phoneDisplayName = item.brand + ' ' + item.model,
             phoneName = newElem('div', 'table-phone-name', null, phoneDisplayName),
-            phoneTested = newElem('div', 'table-phone-tested', [{'key': 'crin-tested', 'val': item.tested}, {'key': 'crin-approved', 'val': item.approved}]),
             phoneFave = newElem('div', 'table-phone-fave', [{'key': 'is-user-fave', 'val': item.userFave}]);
-        phoneContainer.append(phoneName);
-        phoneContainer.append(phoneTested);
         phoneContainer.append(phoneFave);
+        phoneContainer.append(phoneName);
         phoneFave.addEventListener('click', () => toggleUserFave(item));
         
+        let phoneReview = newElem('div', 'table-phone-review'),
+            phoneReviewLink = item.linkReview
+                ? newElem('a', 'table-phone-review-link', [{'key': 'href', 'val': item.linkReview}])
+                : newElem('a', 'table-phone-review-link'),
+            phoneReviewScore = newElem('span', 'table-phone-score', null, item.reviewScore);
+        phoneReviewLink.append(phoneReviewScore);
+        phoneReview.append(phoneReviewLink);
+        phoneContainer.append(phoneReview);
+
         let phoneBuy = newElem('div', 'table-phone-buy'),
             phoneBuyLink = item.linkStore
                 ? newElem('a', 'table-phone-buy-link', [{'key': 'href', 'val': item.linkStore}])
                 : newElem('a', 'table-phone-buy-link'),
             displayPrice = item.price > 0 ? numDisplay(item.price, 'currency', 'usd') : '$ unknown',
-            phonePrice = newElem('span', 'table-phone-price', null, displayPrice),
-            phoneDemoable = newElem('div', 'table-phone-demoable', [{'key': 'data-demoable', 'val': item.demoable}]);
+            phonePrice = newElem('span', 'table-phone-price', null, displayPrice);
         phoneBuyLink.append(phonePrice);
         phoneBuy.append(phoneBuyLink);
         phoneContainer.append(phoneBuy);
-        phoneContainer.append(phoneDemoable);
-        
-        let phoneShowcase = newElem('div', 'table-phone-showcase'),
-            phoneShowcasehLink = item.linkShowcase
-                ? newElem('a', 'table-phone-showcase-link', [{'key': 'href', 'val': item.linkShowcase}])
-                : '';
-        phoneShowcase.append(phoneShowcasehLink);
-        phoneContainer.append(phoneShowcase);
         
         let phoneGraph = newElem('div', 'table-phone-graph'),
             phoneGraphLink = item.linkMeasurement
@@ -1249,12 +1239,8 @@ function buildTable(data, container) {
         phoneGraph.append(phoneGraphLink);
         phoneContainer.append(phoneGraph);
         
-        let phoneSignature = newElem('div', 'table-phone-signature', null, item.signature),
-            phoneDrivers = newElem('div', 'table-phone-drivers', null, item.drivers),
-            phoneConnection = newElem('div', 'table-phone-connection', null, item.connection);
-        phoneContainer.append(phoneSignature);
-        phoneContainer.append(phoneDrivers);
-        phoneContainer.append(phoneConnection);
+        let phoneDescription = newElem('div', 'table-phone-description', null, item.description);
+        phoneContainer.append(phoneDescription);
         
         container.append(phoneContainer);
     });
